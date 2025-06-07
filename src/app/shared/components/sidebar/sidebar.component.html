@@ -1,52 +1,50 @@
-<div class="sidebar-modern p-3 h-100">
-  <div class="sidebar-title mb-4 text-primary fw-bold fs-5">Menu</div>
+<div class="sidebar-modern p-2 h-100">
+  <!-- <div class="sidebar-title mb-4 text-primary fw-bold fs-5">Menu</div> -->
   <ul class="nav flex-column sidebar-list">
-    <!-- Dashboard -->
-    <li class="nav-item mb-2">
-      <a class="nav-link d-flex align-items-center" routerLink="/dashboard" routerLinkActive="active">
-        <span class="me-2"><i class="bi bi-speedometer2"></i></span> Dashboard
-      </a>
-    </li>
-    <!-- Users (with sub-items and arrow) -->
-    <li class="nav-item mb-2">
-      <a class="nav-link d-flex align-items-center sidebar-arrow" data-bs-toggle="collapse" href="#usersSubmenu" role="button" aria-expanded="false" aria-controls="usersSubmenu">
-        <span class="me-2"><i class="bi bi-people"></i></span> Users
-        <i class="bi bi-chevron-right ms-auto arrow-icon"></i>
-      </a>
-      <div class="collapse ms-4" id="usersSubmenu">
-        <ul class="nav flex-column">
-          <li class="nav-item mb-1">
-            <a class="nav-link" routerLink="/users" routerLinkActive="active">
-              <i class="bi bi-list me-2"></i> Users List
-            </a>
-          </li>
-          <li class="nav-item mb-1">
-            <a class="nav-link" routerLink="/users/add" routerLinkActive="active">
-              <i class="bi bi-person-plus me-2"></i> Add User
-            </a>
-          </li>
-        </ul>
+    <!-- Dashboard Dropdown Style -->
+    <li class="nav-item mb-2 sidebar-dropdown">
+      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="dashboardOpen = !dashboardOpen" [attr.aria-expanded]="dashboardOpen">
+        <span class="d-flex align-items-center">
+          <span class="me-2"><i class="bi bi-speedometer2"></i></span> Dashboard
+        </span>
+        <i class="bi" [ngClass]="{'bi-chevron-down': dashboardOpen, 'bi-chevron-right': !dashboardOpen, 'arrow-icon': true}"></i>
+      </button>
+      <div class="sidebar-dropdown-menu" [class.show]="dashboardOpen">
+        <a class="dropdown-item nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="bi bi-speedometer2 me-2"></i> Dashboard Home
+        </a>
+        <!-- Add more dashboard sub-items here if needed -->
       </div>
     </li>
-    <!-- Settings (with sub-items and arrow) -->
-    <li class="nav-item mb-2">
-      <a class="nav-link d-flex align-items-center sidebar-arrow" data-bs-toggle="collapse" href="#settingsSubmenu" role="button" aria-expanded="false" aria-controls="settingsSubmenu">
-        <span class="me-2"><i class="bi bi-gear"></i></span> Settings
-        <i class="bi bi-chevron-right ms-auto arrow-icon"></i>
-      </a>
-      <div class="collapse ms-4" id="settingsSubmenu">
-        <ul class="nav flex-column">
-          <li class="nav-item mb-1">
-            <a class="nav-link" routerLink="/settings/profile" routerLinkActive="active">
-              <i class="bi bi-person me-2"></i> Profile
-            </a>
-          </li>
-          <li class="nav-item mb-1">
-            <a class="nav-link" routerLink="/settings/security" routerLinkActive="active">
-              <i class="bi bi-shield-lock me-2"></i> Security
-            </a>
-          </li>
-        </ul>
+    <!-- Users Dropdown -->
+    <li class="nav-item mb-2 sidebar-dropdown">
+      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="usersOpen = !usersOpen" [attr.aria-expanded]="usersOpen">
+        <span class="d-flex align-items-center">
+          <span class="me-2"><i class="bi bi-people"></i></span> User Management
+        </span>
+        <i class="bi" [ngClass]="{'bi-chevron-down': usersOpen, 'bi-chevron-right': !usersOpen, 'arrow-icon': true}"></i>
+      </button>
+      <div class="sidebar-dropdown-menu" [class.show]="usersOpen">
+        <a class="dropdown-item nav-link" routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="bi bi-list me-2"></i> Users List
+        </a>
+      </div>
+    </li>
+    <!-- Settings Dropdown -->
+    <li class="nav-item mb-2 sidebar-dropdown">
+      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="settingsOpen = !settingsOpen" [attr.aria-expanded]="settingsOpen">
+        <span class="d-flex align-items-center">
+          <span class="me-2"><i class="bi bi-gear"></i></span> Settings
+        </span>
+        <i class="bi" [ngClass]="{'bi-chevron-down': settingsOpen, 'bi-chevron-right': !settingsOpen, 'arrow-icon': true}"></i>
+      </button>
+      <div class="sidebar-dropdown-menu" [class.show]="settingsOpen">
+        <a class="dropdown-item nav-link" routerLink="/settings/profile" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="bi bi-person me-2"></i> Profile
+        </a>
+        <a class="dropdown-item nav-link" routerLink="/settings/security" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="bi bi-shield-lock me-2"></i> Security
+        </a>
       </div>
     </li>
     <!-- Add more main or sub items as needed -->
