@@ -44,3 +44,21 @@
 .sidebar-modern .nav .nav {
   margin-left: 0.5rem;
 }
+.sidebar-list .sidebar-arrow .arrow-icon {
+  transition: transform 0.2s;
+}
+.sidebar-list .sidebar-arrow[aria-expanded="true"] .arrow-icon {
+  transform: rotate(90deg);
+}
+.sidebar-list .nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+.sidebar-list .collapse {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding-left: 0.5rem;
+}
