@@ -19,3 +19,28 @@
   background: #6366f1;
   color: #fff !important;
 }
+.sidebar-modern .collapse {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding-left: 0.5rem;
+}
+.sidebar-modern .nav-link {
+  color: #374151;
+  border-radius: 0.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-modern .nav-link.active, .sidebar-modern .nav-link:hover {
+  background: #6366f1;
+  color: #fff !important;
+}
+.sidebar-modern .nav-link .bi-chevron-down {
+  font-size: 0.9em;
+  transition: transform 0.2s;
+}
+.sidebar-modern .nav-item > .nav-link[aria-expanded="true"] .bi-chevron-down {
+  transform: rotate(180deg);
+}
+.sidebar-modern .nav .nav {
+  margin-left: 0.5rem;
+}

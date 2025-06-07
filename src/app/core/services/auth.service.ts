@@ -1,35 +1,153 @@
+// #region Imports
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+// #endregion
 
+// #region Helpers
+function decodeJwt(token: string): any {
+  try {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+}
+// #endregion
+
+// #region AuthService
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  // #region Properties
   private apiUrl = environment.apiBaseUrl + '/api/Auth';
+  private tokenExpirationTimer: any;
+  // #endregion
 
-  constructor(private http: HttpClient) {}
+  // #region Constructor
+  constructor(private http: HttpClient, private router: Router) {
+    this.startAutoLogout(); // Start auto logout timer on service load
+  }
+  // #endregion
 
+  // #region Auth Methods
+  /**
+   * Login user and store JWT token
+   */
   login(data: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, data).pipe(
       tap((res: any) => {
         if (res && res.token) {
           localStorage.setItem('jwt_token', res.token);
+          this.startAutoLogout(); // Start timer after login
         }
       })
     );
   }
 
-  register(data: { fullName: string; email: string; password: string }): Observable<any> {
+  /**
+   * Register a new user
+   */
+  register(data: {
+    fullName: string;
+    email: string;
+    password: string;
+  }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
+  /**
+   * Logout user and clear token
+   */
   logout() {
-    localStorage.removeItem('jwt_token');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('jwt_token');
+    }
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    // Optionally redirect to login
+    this.router.navigate(['/auth/login']);
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('jwt_token');
+  /**
+   * Change user password
+   */
+  changePassword(data: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.post(`${this.apiUrl}/changePassword`, data, { headers });
   }
+  // #endregion
+
+  // #region Token Methods
+  /**
+   * Get JWT token from localStorage
+   */
+  getToken(): string | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('jwt_token');
+    }
+    return null;
+  }
+
+  /**
+   * Check if JWT token is expired
+   */
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+    const decoded = decodeJwt(token);
+    if (!decoded || !decoded.exp) return true;
+    const now = Math.floor(Date.now() / 1000);
+    return decoded.exp < now;
+  }
+
+  /**
+   * Get token expiration date
+   */
+  private getTokenExpirationDate(token: string): Date | null {
+    const decoded = decodeJwt(token);
+    if (!decoded || !decoded.exp) return null;
+    const expiryDate = new Date(0);
+    expiryDate.setUTCSeconds(decoded.exp);
+    return expiryDate;
+  }
+  // #endregion
+
+  // #region Auto Logout
+  /**
+   * Start auto logout timer based on token expiration
+   */
+  private startAutoLogout() {
+    const token = this.getToken();
+    if (!token) return;
+
+    const expiryDate = this.getTokenExpirationDate(token);
+    if (!expiryDate) return;
+
+    const now = new Date();
+    const timeout = expiryDate.getTime() - now.getTime();
+
+    if (timeout <= 0) {
+      this.logout();
+    } else {
+      this.tokenExpirationTimer = setTimeout(() => {
+        this.logout();
+        // Optionally redirect to login
+        // this.router.navigate(['/auth/login']);
+      }, timeout);
+    }
+  }
+  // #endregion
 }
+// #endregion

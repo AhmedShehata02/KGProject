@@ -10,4 +10,25 @@ import { RouterModule } from '@angular/router';
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css',
 })
-export class MainLayoutComponent {}
+export class MainLayoutComponent {
+  sidebarOpen = true;
+  isMobile = false;
+
+  constructor() {
+    this.checkScreen();
+    window.addEventListener('resize', this.checkScreen.bind(this));
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  private checkScreen() {
+    this.isMobile = window.innerWidth < 768;
+    if (this.isMobile) {
+      this.sidebarOpen = false;
+    } else {
+      this.sidebarOpen = true;
+    }
+  }
+}

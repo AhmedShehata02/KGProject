@@ -1,7 +1,11 @@
 <div class="main-layout-bg min-vh-100">
   <app-navbar></app-navbar>
+  <!-- Sidebar Toggle Button (visible on mobile) -->
+  <button class="btn btn-outline-light d-md-none me-2 position-absolute" style="top: 1rem; left: 1rem; z-index: 1100;" type="button" (click)="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+  </button>
   <div class="d-flex">
-    <div class="sidebar-area d-none d-md-block">
+    <div class="sidebar-area" [class.sidebar-collapsed]="!sidebarOpen" [class.d-none]="!sidebarOpen && isMobile">
       <app-sidebar></app-sidebar>
     </div>
     <div class="flex-grow-1 p-4 main-content-area">

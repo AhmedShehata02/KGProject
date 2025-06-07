@@ -5,10 +5,76 @@
 .navbar-brand {
   font-size: 1.5rem;
   letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff !important;
 }
 .nav-link.active {
   font-weight: bold;
   color: #fff !important;
   background: rgba(0,0,0,0.08);
   border-radius: 0.5rem;
+}
+
+.glass-navbar {
+  background: linear-gradient(90deg, #7f5af0 0%, #2cb67d 100%) !important; /* Modern purple to green gradient */
+  backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 4px 24px rgba(127, 90, 240, 0.10), 0 1.5px 8px rgba(0,0,0,0.06);
+  border-radius: 0 0 1.5rem 1.5rem;
+}
+
+.notification-btn {
+  transition: background 0.2s, color 0.2s;
+  border-radius: 50%;
+  padding: 0.5rem;
+}
+.notification-btn:hover {
+  background: rgba(127, 90, 240, 0.15);
+  color: #fff;
+}
+
+.profile-btn {
+  padding: 0.2rem 0.5rem;
+  border-radius: 2rem;
+  transition: background 0.2s;
+}
+.profile-btn:hover {
+  background: rgba(44, 182, 125, 0.12);
+}
+
+.glass-dropdown {
+  background: rgba(255,255,255,0.92) !important;
+  backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 4px 24px rgba(127, 90, 240, 0.10), 0 1.5px 8px rgba(0,0,0,0.06);
+  border-radius: 1rem;
+  border: none;
+}
+
+.dropdown-item {
+  border-radius: 0.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.dropdown-item:active, .dropdown-item:focus, .dropdown-item:hover {
+  background: #7f5af0;
+  color: #fff;
+}
+
+.settings-btn, .theme-btn {
+  transition: background 0.2s, color 0.2s;
+  border-radius: 50%;
+  padding: 0.5rem;
+}
+.settings-btn:hover, .theme-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+@media (max-width: 767.98px) {
+  .glass-navbar {
+    border-radius: 0 0 1rem 1rem;
+  }
+  .profile-btn span {
+    display: none !important;
+  }
 }

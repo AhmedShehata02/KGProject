@@ -1,6 +1,14 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm rounded-bottom">
+<nav
+  class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm rounded-bottom glass-navbar"
+>
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold" routerLink="/dashboard">KGProject</a>
+    <a
+      class="navbar-brand fw-bold d-flex align-items-center gap-2"
+      routerLink="/dashboard"
+    >
+      <i class="fa-solid fa-cube text-white fs-4"></i>
+      <span>KGProject</span>
+    </a>
     <button
       class="navbar-toggler"
       type="button"
@@ -12,13 +20,83 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center ms-auto gap-3">
+        <!-- Notification Icon -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+          <a
+            class="nav-link position-relative notification-btn"
+            href="#"
+            aria-label="Notifications"
+          >
+            <i class="fa-solid fa-bell fs-5"></i>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__bounceIn"
+              style="font-size: 0.7rem; min-width: 1.2em"
+              >3</span
+            >
+          </a>
         </li>
+        <!-- Settings Icon -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/users" routerLinkActive="active">Users</a>
+          <a
+            class="nav-link position-relative settings-btn"
+            href="#"
+            aria-label="Settings"
+          >
+            <i class="fa-solid fa-gear fs-5"></i>
+          </a>
+        </li>
+        <!-- Theme Toggle Icon -->
+        <li class="nav-item">
+          <a
+            class="nav-link position-relative theme-btn"
+            href="#"
+            aria-label="Toggle Theme"
+          >
+            <i class="fa-solid fa-moon fs-5"></i>
+          </a>
+        </li>
+        <!-- Profile Dropdown -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle d-flex align-items-center profile-btn"
+            href="#"
+            id="profileDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="assets/img/DefaultProfile.svg"
+              alt="Profile"
+              class="rounded-circle me-2"
+              style="width: 32px; height: 32px; object-fit: cover; background: #fff; border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)"
+            />
+            <span class="d-none d-md-inline text-white fw-semibold">Profile</span>
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end glass-dropdown"
+            aria-labelledby="profileDropdown"
+          >
+            <li>
+              <a
+                class="dropdown-item d-flex align-items-center"
+                routerLink="/auth/change-password"
+              >
+                <i class="bi bi-key me-2"></i> Change Password
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a
+                class="dropdown-item d-flex align-items-center"
+                (click)="logout()"
+              >
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
