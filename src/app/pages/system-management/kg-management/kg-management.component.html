@@ -1,0 +1,330 @@
+<div class="container py-1">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-outline-primary fw-bold" type="button" (click)="openCreateKgModal()">
+      Create New KG
+    </button>
+    <!-- Future: Add KG/Branch button here -->
+  </div>
+  <!-- Modal for Create New KG -->
+  <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showCreateKgModal ? 'block' : 'none', background: showCreateKgModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showCreateKgModal">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create New KG</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeCreateKgModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #kgForm="ngForm" autocomplete="off">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
+              <input type="text" name="kgNameAr" class="form-control" required minlength="3" maxlength="50"
+                [(ngModel)]="createKgData.kg.nameAr" #kgNameAr="ngModel">
+              <div *ngIf="kgNameAr.invalid && kgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
+              <input type="text" name="kgNameEn" class="form-control" required minlength="3" maxlength="50"
+                [(ngModel)]="createKgData.kg.nameEn" #kgNameEn="ngModel">
+              <div *ngIf="kgNameEn.invalid && kgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
+              <input type="text" name="kgAddress" class="form-control" required minlength="10" maxlength="100"
+                [(ngModel)]="createKgData.kg.address" #kgAddress="ngModel">
+              <div *ngIf="kgAddress.invalid && kgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Branches <span class="text-danger">*</span></label>
+              <div class="table-responsive mb-2">
+                <table class="table table-bordered table-sm mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Name (Ar)</th>
+                      <th>Name (En)</th>
+                      <th>Address</th>
+                      <th>Phone</th>
+                      <th>Email</th>
+                      <th style="width: 60px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let branch of createKgData.branches; let b = index">
+                      <td>{{ b + 1 }}</td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Name (Ar)" required minlength="3" maxlength="50"
+                          [(ngModel)]="branch.nameAr" name="branchNameAr{{b}}" #branchNameAr="ngModel">
+                        <div *ngIf="branchNameAr.invalid && branchNameAr.touched" class="text-danger small">
+                          Arabic name is required (3-50 chars).
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Name (En)" required minlength="3" maxlength="50"
+                          [(ngModel)]="branch.nameEn" name="branchNameEn{{b}}" #branchNameEn="ngModel">
+                        <div *ngIf="branchNameEn.invalid && branchNameEn.touched" class="text-danger small">
+                          English name is required (3-50 chars).
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Address" required minlength="10" maxlength="100"
+                          [(ngModel)]="branch.address" name="branchAddress{{b}}" #branchAddress="ngModel">
+                        <div *ngIf="branchAddress.invalid && branchAddress.touched" class="text-danger small">
+                          Address is required (10-100 chars).
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Phone" required minlength="1"
+                          [(ngModel)]="branch.phone" name="branchPhone{{b}}" #branchPhone="ngModel">
+                        <div *ngIf="branchPhone.invalid && branchPhone.touched" class="text-danger small">
+                          Phone number is required.
+                        </div>
+                      </td>
+                      <td>
+                        <input type="email" class="form-control form-control-sm" placeholder="Email" required minlength="1"
+                          [(ngModel)]="branch.email" name="branchEmail{{b}}" #branchEmail="ngModel">
+                        <div *ngIf="branchEmail.invalid && branchEmail.touched" class="text-danger small">
+                          <ng-container *ngIf="branchEmail.errors?.['required']">Email is required.</ng-container>
+                          <ng-container *ngIf="branchEmail.errors?.['email']">Invalid email address format.</ng-container>
+                        </div>
+                      </td>
+                      <td class="text-center align-middle">
+                        <button type="button" class="btn btn-sm btn-outline-danger px-2 py-0" (click)="removeBranch(b)" [disabled]="createKgData.branches.length === 1">Remove</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="addBranch()">Add Branch</button>
+              <div *ngIf="createKgData.branches.length === 0 && kgForm.submitted" class="text-danger small mt-2">
+                At least one branch is required.
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeCreateKgModal()">Cancel</button>
+          <button type="button" class="btn btn-primary"
+            [disabled]="!kgForm.valid || createKgData.branches.length < 1 || !allBranchesValid()"
+            (click)="onCreateKg()">
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Edit KG Modal -->
+  <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showEditKgModal ? 'block' : 'none', background: showEditKgModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showEditKgModal">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit KG</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeEditKgModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form #editKgForm="ngForm" autocomplete="off">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
+              <input type="text" name="editKgNameAr" class="form-control" required minlength="3" maxlength="50"
+                [(ngModel)]="editKgData.kg.nameAr" #editKgNameAr="ngModel">
+              <div *ngIf="editKgNameAr.invalid && editKgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
+              <input type="text" name="editKgNameEn" class="form-control" required minlength="3" maxlength="50"
+                [(ngModel)]="editKgData.kg.nameEn" #editKgNameEn="ngModel">
+              <div *ngIf="editKgNameEn.invalid && editKgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
+              <input type="text" name="editKgAddress" class="form-control" required minlength="10" maxlength="100"
+                [(ngModel)]="editKgData.kg.address" #editKgAddress="ngModel">
+              <div *ngIf="editKgAddress.invalid && editKgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Code</label>
+              <input type="text" class="form-control" [value]="editKgData.kg.kgCode || ''" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Branches <span class="text-danger">*</span></label>
+              <div class="table-responsive mb-2">
+                <table class="table table-bordered table-sm mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Name (Ar)</th>
+                      <th>Name (En)</th>
+                      <th>Address</th>
+                      <th>Phone</th>
+                      <th>Branch Code</th>
+                      <th>Email</th>
+                      <th style="width: 60px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let branch of editKgData.branches; let b = index">
+                      <td>{{ b + 1 }}</td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Name (Ar)" required minlength="3" maxlength="50"
+                          [(ngModel)]="branch.nameAr" name="editBranchNameAr{{b}}" #editBranchNameAr="ngModel">
+                        <div *ngIf="editBranchNameAr.invalid && editBranchNameAr.touched" class="text-danger small">
+                          Arabic name is required (3-50 chars).
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Name (En)" required minlength="3" maxlength="50"
+                          [(ngModel)]="branch.nameEn" name="editBranchNameEn{{b}}" #editBranchNameEn="ngModel">
+                        <div *ngIf="editBranchNameEn.invalid && editBranchNameEn.touched" class="text-danger small">
+                          English name is required (3-50 chars).
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Address" required minlength="10" maxlength="100"
+                          [(ngModel)]="branch.address" name="editBranchAddress{{b}}" #editBranchAddress="ngModel">
+                        <div *ngIf="editBranchAddress.invalid && editBranchAddress.touched" class="text-danger small">
+                          Address is required (10-100 chars).
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Phone" required minlength="1"
+                          [(ngModel)]="branch.phone" name="editBranchPhone{{b}}" #editBranchPhone="ngModel">
+                        <div *ngIf="editBranchPhone.invalid && editBranchPhone.touched" class="text-danger small">
+                          Phone number is required.
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control form-control-sm" placeholder="Branch Code" [value]="branch.branchCode || ''" disabled>
+                      </td>
+                      <td>
+                        <input type="email" class="form-control form-control-sm" placeholder="Email" required minlength="1"
+                          [(ngModel)]="branch.email" name="editBranchEmail{{b}}" #editBranchEmail="ngModel">
+                        <div *ngIf="editBranchEmail.invalid && editBranchEmail.touched" class="text-danger small">
+                          <ng-container *ngIf="editBranchEmail.errors?.['required']">Email is required.</ng-container>
+                          <ng-container *ngIf="editBranchEmail.errors?.['email']">Invalid email address format.</ng-container>
+                        </div>
+                      </td>
+                      <td class="text-center align-middle">
+                        <button type="button" class="btn btn-sm btn-outline-danger px-2 py-0" (click)="removeEditBranch(b)" [disabled]="editKgData.branches.length === 1">Remove</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="addEditBranch()">Add Branch</button>
+              <div *ngIf="editKgData.branches.length === 0 && editKgForm.submitted" class="text-danger small mt-2">
+                At least one branch is required.
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeEditKgModal()">Cancel</button>
+          <button type="button" class="btn btn-primary"
+            [disabled]="!editKgForm.valid || editKgData.branches.length < 1 || !allEditBranchesValid()"
+            (click)="onEditKg()">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Details KG Modal -->
+  <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showDetailsKgModal ? 'block' : 'none', background: showDetailsKgModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showDetailsKgModal">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">KG Details</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeDetailsKgModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form autocomplete="off">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Name (Arabic)</label>
+              <input type="text" class="form-control" [value]="detailsKgData.kg.nameAr" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Name (English)</label>
+              <input type="text" class="form-control" [value]="detailsKgData.kg.nameEn" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Address</label>
+              <input type="text" class="form-control" [value]="detailsKgData.kg.address" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">KG Code</label>
+              <input type="text" class="form-control" [value]="detailsKgData.kg.kgCode || ''" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Branches</label>
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Name (Ar)</th>
+                      <th>Name (En)</th>
+                      <th>Address</th>
+                      <th>Phone</th>
+                      <th>Branch Code</th>
+                      <th>Email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let branch of detailsKgData.branches; let b = index">
+                      <td>{{ b + 1 }}</td>
+                      <td>{{ branch.nameAr }}</td>
+                      <td>{{ branch.nameEn }}</td>
+                      <td>{{ branch.address }}</td>
+                      <td>{{ branch.phone }}</td>
+                      <td>{{ branch.branchCode || '' }}</td>
+                      <td>{{ branch.email }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeDetailsKgModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div class="table-responsive rounded shadow-sm bg-white">
+    <table *ngIf="!loading && !error && kgBranches.length" class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th class="text-center">#</th>
+          <th>KG Name (Ar)</th>
+          <th>KG Name (En)</th>
+          <th>KG Code</th>
+          <th>KG Address</th>
+          <th class="text-center" style="width: 80px; min-width: 80px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let kg of kgBranches; let i = index">
+          <td class="text-center fw-bold">{{ i + 1 }}</td>
+          <td>{{ kg.kg.nameAr }}</td>
+          <td>{{ kg.kg.nameEn }}</td>
+          <td>{{ kg.kg.kgCode }}</td>
+          <td>{{ kg.kg.address }}</td>
+          <td class="text-center" style="width: 80px; min-width: 80px; padding: 0.15rem 0.2rem;">
+            <div class="btn-group btn-group-xs" role="group" style="gap:2px;">
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1rem;min-width:44px;" (click)="openDetailsKgModal(kg)">Details</button>
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1rem;min-width:44px;" (click)="openEditKgModal(kg, i)">Edit</button>
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1rem;min-width:44px;" (click)="deleteKgBranch(kg.kg.id)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="!loading && !error && !kgBranches.length" class="alert alert-info">No KG branches found.</div>
+</div>

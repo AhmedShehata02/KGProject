@@ -1,6 +1,8 @@
 <div class="container py-1">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0 fw-bold text-primary">Users List</h2>
+    <button class="btn btn-outline-primary fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#createUserModal" (click)="openCreateUserModal()">
+      Create New User
+    </button>
     <div>
       <label class="me-2">Page size:</label>
       <select class="form-select d-inline-block w-auto" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
@@ -19,21 +21,26 @@
   <table *ngIf="!loading && !error && pagedUsers.length" class="table table-hover table-bordered rounded shadow-sm bg-white">
     <thead class="table-light">
       <tr>
-        <th>#</th>
+        <th class="text-center">#</th>
         <th>Name</th>
         <th>Email</th>
-        <th>Actions</th>
+        <th class="text-center" style="width: 70px; min-width: 70px;">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let user of pagedUsers; let i = index">
-        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+        <td class="text-center fw-bold">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
         <td>{{ user.userName || '-' }}</td>
         <td>{{ user.email || '-' }}</td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary me-1" (click)="openEditUser(user)">
-            <i class="bi bi-pencil-square"></i> Edit
-          </button>
+        <td class="text-center" style="width: 70px; min-width: 70px;">
+          <div class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-outline-primary px-2 py-0" (click)="openEditUser(user)">
+              <i class="bi bi-pencil-square"></i> Edit
+            </button>
+            <button class="btn btn-outline-primary px-2 py-0" (click)="deleteUser(user)">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -118,6 +125,86 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary" [disabled]="!selectedUser.userName || selectedUser.userName.trim() === ''">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create User Modal (Full Implementation) -->
+  <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true" (show.bs.modal)="openCreateUserModal()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createUserModalLabel">Create New User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form (ngSubmit)="submitCreateUser()">
+          <div class="modal-body">
+            <div *ngIf="createUserSuccess" class="alert alert-success">{{ createUserSuccess }}</div>
+            <div *ngIf="createUserErrorList.length" class="alert alert-danger">
+              <ul class="mb-0">
+                <li *ngFor="let err of createUserErrorList">{{ err }}</li>
+              </ul>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" [(ngModel)]="createUserForm.firstName" name="firstName" required minlength="2" maxlength="50" #firstName="ngModel" />
+              <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="text-danger small">
+                <div *ngIf="firstName.errors?.['required']">First name is required.</div>
+                <div *ngIf="firstName.errors?.['minlength']">First name must be at least 2 characters.</div>
+                <div *ngIf="firstName.errors?.['maxlength']">First name cannot exceed 50 characters.</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" [(ngModel)]="createUserForm.lastName" name="lastName" required minlength="2" maxlength="50" #lastName="ngModel" />
+              <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="text-danger small">
+                <div *ngIf="lastName.errors?.['required']">Last name is required.</div>
+                <div *ngIf="lastName.errors?.['minlength']">Last name must be at least 2 characters.</div>
+                <div *ngIf="lastName.errors?.['maxlength']">Last name cannot exceed 50 characters.</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" [(ngModel)]="createUserForm.email" name="email" required email #email="ngModel" />
+              <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger small">
+                <div *ngIf="email.errors?.['required']">Email is required.</div>
+                <div *ngIf="email.errors?.['email']">Email must be valid.</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-control" [(ngModel)]="createUserForm.phoneNumber" name="phoneNumber" #phoneNumber="ngModel" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Roles</label>
+              <div *ngIf="createUserAllRoles && createUserAllRoles.length; else noRoles">
+                <div class="row g-2">
+                  <div class="col-4" *ngFor="let role of createUserAllRoles; let i = index">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" [id]="'createRoleCheckbox' + i" [value]="role"
+                        [checked]="createUserForm.roles.includes(role)"
+                        (change)="onCreateUserRoleChange(role, $event)" />
+                      <label class="form-check-label" [for]="'createRoleCheckbox' + i">{{ role }}</label>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="!createUserForm.roles.length && createUserForm.roles !== undefined && createUserForm.roles !== null && createUserFormTouched" class="text-danger small mt-1">
+                  At least one role is required.
+                </div>
+              </div>
+              <ng-template #noRoles>
+                <span class="text-muted">No roles available</span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="createUserLoading">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="createUserLoading || !createUserForm.firstName || !createUserForm.lastName || !createUserForm.email || !createUserForm.roles.length">
+              <span *ngIf="createUserLoading" class="spinner-border spinner-border-sm me-2"></span>
+              Create
+            </button>
           </div>
         </form>
       </div>

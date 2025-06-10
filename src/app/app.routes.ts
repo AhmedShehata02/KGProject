@@ -4,6 +4,7 @@ import { authRoutes } from './pages/auth/auth-routing';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { userManagementRoutes } from './pages/user-management/user-management-routing';
+import { systemManagementRoutes } from './pages/system-management/system-management-routes';
 import { DashboardComponent } from './pages/dashboard/dashboard/dashboard.component';
 import { AuthGuard } from './core/guards/auth.guard';
 
@@ -19,8 +20,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'users', children: userManagementRoutes, canActivate: [AuthGuard] },
+      { path: 'systemManagement', children: systemManagementRoutes, canActivate: [AuthGuard] },
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-      // لاحقًا تقدر تضيف: { path: 'roles', children: roleManagementRoutes }
     ]
   },
   {

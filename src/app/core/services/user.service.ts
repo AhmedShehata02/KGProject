@@ -4,6 +4,15 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 
+ /**
+ * Generic API response structure matching backend.
+ */
+export interface ApiResponse<T> {
+  code: number;
+  status: string;
+  result: T;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private apiUrl = environment.apiBaseUrl + '/api/User';
@@ -76,5 +85,27 @@ export class UserService {
     const token = localStorage.getItem('jwt_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
     return this.http.post<string[]>(`${this.apiUrl}/${id}/claims`, claims, { headers });
+  }
+
+  /**
+   * Create a new user by admin (calls /create-by-admin endpoint)
+   * @param userData CreateUserByAdminDTO
+   * @returns Observable<ApiResponse<any>>
+   *   - Success: { code, status, result: { Message, UserId, EmailSent } }
+   *   - Validation Error: { code, status, result: string[] }
+   *   - Error: { code, status, result: { Message, Details } }
+   */
+  createUserByAdmin(userData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber?: string;
+    roles: string[];
+    redirectUrlAfterResetPassword: string;
+  }): Observable<ApiResponse<any>> {
+    const token = localStorage.getItem('jwt_token');
+    console.log('JWT token used for createUserByAdmin:', token); // Debug: log token
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/create-by-admin`, userData, { headers });
   }
 }

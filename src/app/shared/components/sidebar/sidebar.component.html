@@ -16,8 +16,8 @@
         <!-- Add more dashboard sub-items here if needed -->
       </div>
     </li>
-    <!-- Users Dropdown -->
-    <li class="nav-item mb-2 sidebar-dropdown">
+    <!-- Users Dropdown (Admin or Super Admin only) -->
+    <li class="nav-item mb-2 sidebar-dropdown" *ngIf="hasRole('Admin') || hasRole('Super Admin')">
       <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="usersOpen = !usersOpen" [attr.aria-expanded]="usersOpen">
         <span class="d-flex align-items-center">
           <span class="me-2"><i class="bi bi-people"></i></span> User Management
@@ -27,6 +27,20 @@
       <div class="sidebar-dropdown-menu" [class.show]="usersOpen">
         <a class="dropdown-item nav-link" routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <i class="bi bi-list me-2"></i> Users List
+        </a>
+      </div>
+    </li>
+        <!-- System Management Dropdown -->
+    <li class="nav-item mb-2 sidebar-dropdown">
+      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="systemOpen = !systemOpen" [attr.aria-expanded]="systemOpen">
+        <span class="d-flex align-items-center">
+          <span class="me-2"><i class="bi bi-sliders"></i></span> System Management
+        </span>
+        <i class="bi" [ngClass]="{'bi-chevron-down': systemOpen, 'bi-chevron-right': !systemOpen, 'arrow-icon': true}"></i>
+      </button>
+      <div class="sidebar-dropdown-menu" [class.show]="systemOpen">
+        <a class="dropdown-item nav-link" routerLink="/systemManagement/kg-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="bi bi-building me-2"></i> KG Management
         </a>
       </div>
     </li>
@@ -47,6 +61,7 @@
         </a>
       </div>
     </li>
+
     <!-- Add more main or sub items as needed -->
   </ul>
 </div>

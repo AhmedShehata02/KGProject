@@ -29,11 +29,33 @@ export class UsersListComponent implements OnInit {
   selectedUserRoles: string[] = [];
   selectedUserClaims: string[] = [];
   @ViewChild('editUserModal') editUserModal!: ElementRef;
+  createUserForm: any = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    roles: [],
+    redirectUrlAfterResetPassword: ''
+  };
+  createUserLoading = false;
+  createUserError: string | string[] = '';
+  createUserSuccess = '';
+  createUserAllRoles: string[] = [];
+  createUserFormTouched = false;
 
   constructor(public userService: UserService) {}
 
   ngOnInit() {
     this.fetchUsers();
+    // Fetch all roles for create user modal
+    this.userService.getAllRoles().subscribe({
+      next: (roles) => {
+        this.createUserAllRoles = roles || [];
+      },
+      error: () => {
+        this.createUserAllRoles = [];
+      }
+    });
   }
 
   fetchUsers() {
@@ -175,5 +197,118 @@ export class UsersListComponent implements OnInit {
         this.fetchUsers();
       }
     });
+  }
+
+  deleteUser(user: any) {
+    if (confirm(`Are you sure you want to delete user '${user.userName || user.email}'?`)) {
+      this.loading = true;
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.fetchUsers();
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'Failed to delete user.';
+          this.loading = false;
+        }
+      });
+    }
+  }
+
+  openCreateUserModal() {
+    this.createUserForm = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      roles: [],
+      redirectUrlAfterResetPassword: window.location.origin + '/reset-temporary-password'
+    };
+    this.createUserError = '';
+    this.createUserSuccess = '';
+    this.createUserLoading = false;
+  }
+
+  onCreateUserRoleChange(role: string, event: any) {
+    if (event.target.checked) {
+      if (!this.createUserForm.roles.includes(role)) {
+        this.createUserForm.roles.push(role);
+      }
+    } else {
+      this.createUserForm.roles = this.createUserForm.roles.filter((r: string) => r !== role);
+    }
+  }
+
+  submitCreateUser() {
+    this.createUserFormTouched = true;
+    // Prevent submit if invalid (frontend validation)
+    if (!this.createUserForm.firstName || this.createUserForm.firstName.length < 2 || this.createUserForm.firstName.length > 50 ||
+        !this.createUserForm.lastName || this.createUserForm.lastName.length < 2 || this.createUserForm.lastName.length > 50 ||
+        !this.createUserForm.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.createUserForm.email) ||
+        (this.createUserForm.phoneNumber && !/^\+?[0-9]{7,15}$/.test(this.createUserForm.phoneNumber)) ||
+        !this.createUserForm.roles || !this.createUserForm.roles.length ||
+        !this.createUserForm.redirectUrlAfterResetPassword) {
+      this.createUserError = 'Please fill all required fields correctly.';
+      this.createUserLoading = false;
+      return;
+    }
+    this.createUserLoading = true;
+    this.createUserError = '';
+    this.createUserSuccess = '';
+    console.log('Payload sent to backend:', this.createUserForm); // Debug: log payload
+    this.userService.createUserByAdmin(this.createUserForm).subscribe({
+      next: (res) => {
+        if (res && res.code === 200) {
+          // Prefer both Message and message (backend may use either)
+          this.createUserSuccess = res.result?.Message || res.result?.message || 'User created successfully.';
+        } else if (res && res.result) {
+          // Display error(s) from backend
+          if (Array.isArray(res.result)) {
+            this.createUserError = res.result;
+          } else if (typeof res.result === 'string') {
+            this.createUserError = res.result;
+          } else if (res.result.Message || res.result.message) {
+            this.createUserError = res.result.Message || res.result.message;
+          } else {
+            this.createUserError = 'Failed to create user.';
+          }
+        } else {
+          this.createUserError = 'Failed to create user.';
+        }
+        this.createUserLoading = false;
+        // Only close modal and refresh if success
+        if (this.createUserSuccess) {
+          setTimeout(() => {
+            (window as any).bootstrap.Modal.getOrCreateInstance(document.getElementById('createUserModal')).hide();
+            this.fetchUsers();
+          }, 1200);
+        }
+      },
+      error: (err) => {
+        // Try to extract error message(s) from backend
+        if (err?.error?.result) {
+          if (Array.isArray(err.error.result)) {
+            this.createUserError = err.error.result;
+          } else if (typeof err.error.result === 'string') {
+            this.createUserError = err.error.result;
+          } else if (err.error.result.Message || err.error.result.message) {
+            this.createUserError = err.error.result.Message || err.error.result.message;
+          } else {
+            this.createUserError = 'Failed to create user.';
+          }
+        } else if (err?.error?.Message || err?.error?.message) {
+          this.createUserError = err.error.Message || err.error.message;
+        } else {
+          this.createUserError = 'Failed to create user.';
+        }
+        this.createUserLoading = false;
+      }
+    });
+  }
+
+  get createUserErrorList(): string[] {
+    if (Array.isArray(this.createUserError)) return this.createUserError;
+    if (typeof this.createUserError === 'string' && this.createUserError) return [this.createUserError];
+    return [];
   }
 }

@@ -43,6 +43,7 @@ export class AuthService {
         if (res && res.token) {
           localStorage.setItem('jwt_token', res.token);
           this.startAutoLogout(); // Start timer after login
+          this.router.navigate(['/dashboard']); // Always redirect to dashboard after login
         }
       })
     );
@@ -149,5 +150,31 @@ export class AuthService {
     }
   }
   // #endregion
+
+  // --- JWT Role/Claim helpers ---
+  getDecodedToken(): any {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload));
+    } catch {
+      return null;
+    }
+  }
+
+  getRoles(): string[] {
+    const decoded = this.getDecodedToken();
+    if (!decoded) return [];
+    if (Array.isArray(decoded.roles)) return decoded.roles;
+    if (typeof decoded.roles === 'string') return [decoded.roles];
+    if (typeof decoded['role'] === 'string') return [decoded['role']];
+    if (Array.isArray(decoded['role'])) return decoded['role'];
+    return [];
+  }
+
+  hasRole(role: string): boolean {
+    return this.getRoles().includes(role);
+  }
 }
 // #endregion

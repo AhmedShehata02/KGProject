@@ -9,7 +9,7 @@
 
 .auth-bg {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%), url('/assets/bg.jpg') center/cover no-repeat;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
 }
 
 .auth-glass-card {
