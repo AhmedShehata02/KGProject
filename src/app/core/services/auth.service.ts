@@ -112,6 +112,13 @@ export class AuthService {
     });
     return this.http.post<{ token: string }>(`${this.apiUrl}/change-password-first-time`, data, { headers });
   }
+
+  /**
+   * Forgot password - send reset to backend
+   */
+  forgotPassword(data: { email: string; loginUrl: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, data);
+  }
   // #endregion
 
   // #region Token Methods

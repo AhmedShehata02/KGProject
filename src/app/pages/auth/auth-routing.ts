@@ -10,7 +10,7 @@ import { ChangePasswordFirstTimeComponent } from './change-password-first-time/c
 
 export const authRoutes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  // { path: 'register', component: RegisterComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'reset-temporary-password', component: ResetTemporaryPasswordComponent },
