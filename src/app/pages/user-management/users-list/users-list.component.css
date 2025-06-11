@@ -89,3 +89,42 @@
 .modal-dialog {
   max-width: 700px;
 }
+/* Pagination controls styles */
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+.pagination {
+  --bs-pagination-bg: transparent;
+  --bs-pagination-border-radius: 1.5rem;
+  --bs-pagination-color: #2cb67d;
+  --bs-pagination-hover-color: #fff;
+  --bs-pagination-hover-bg: #2cb67d;
+  --bs-pagination-active-bg: #7f5af0;
+  --bs-pagination-active-color: #fff;
+  --bs-pagination-border-color: #2cb67d;
+  --bs-pagination-hover-border-color: #7f5af0;
+  --bs-pagination-active-border-color: #7f5af0;
+  font-size: 1rem;
+  box-shadow: none;
+}
+.pagination .page-link {
+  border-radius: 1.5rem !important;
+  border: 1.5px solid #2cb67d;
+  color: #2cb67d;
+  background: transparent;
+  margin: 0 2px;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.pagination .page-link:hover, .pagination .page-item.active .page-link {
+  background: linear-gradient(90deg, #2cb67d 0%, #7f5af0 100%);
+  color: #fff;
+  border-color: #7f5af0;
+}
+.pagination .page-item.disabled .page-link {
+  color: #aaa;
+  background: #f8f9fa;
+  border-color: #eee;
+}

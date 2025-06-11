@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ResetTemporaryPasswordComponent } from './reset-temporary-password/reset-temporary-password.component';
+import { ChangePasswordFirstTimeComponent } from './change-password-first-time/change-password-first-time.component';
 
 
 export const authRoutes: Routes = [
@@ -13,4 +14,5 @@ export const authRoutes: Routes = [
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'reset-temporary-password', component: ResetTemporaryPasswordComponent },
+  { path: 'change-password-first-time', component: ChangePasswordFirstTimeComponent },
 ];

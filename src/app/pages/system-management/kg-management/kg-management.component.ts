@@ -33,6 +33,11 @@ export class KgManagementComponent implements OnInit {
 
   detailsKgData: any = null;
 
+  // Pagination state
+  page = 1;
+  pageSize = 10;
+  pageSizes = [10, 50, 100];
+
   constructor(private kgBranchService: KGBranchService) {}
 
   ngOnInit() {
@@ -203,6 +208,26 @@ export class KgManagementComponent implements OnInit {
   closeDetailsKgModal() {
     this.showDetailsKgModal = false;
     this.detailsKgData = null;
+  }
+
+  // Pagination logic
+  get pagedKgBranches() {
+    const start = (this.page - 1) * this.pageSize;
+    return this.kgBranches.slice(start, start + this.pageSize);
+  }
+
+  onPageSizeChange(size: number) {
+    this.pageSize = size;
+    this.page = 1;
+  }
+
+  onPageChange(page: number) {
+    this.page = page;
+  }
+
+  getPageArray(): number[] {
+    const totalPages = Math.ceil(this.kgBranches.length / this.pageSize);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
   // Placeholder for future CRUD methods (add, edit, delete, etc.)

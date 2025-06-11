@@ -3,8 +3,8 @@
     <button class="btn btn-outline-primary fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#createUserModal" (click)="openCreateUserModal()">
       Create New User
     </button>
-    <div>
-      <label class="me-2">Page size:</label>
+    <div class="d-flex align-items-center ms-auto">
+      <label class="me-2 mb-0">Page size:</label>
       <select class="form-select d-inline-block w-auto" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
         <option [ngValue]="10">10</option>
         <option [ngValue]="50">50</option>
@@ -18,47 +18,50 @@
     </div>
   </div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <table *ngIf="!loading && !error && pagedUsers.length" class="table table-hover table-bordered rounded shadow-sm bg-white">
-    <thead class="table-light">
-      <tr>
-        <th class="text-center">#</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th class="text-center" style="width: 70px; min-width: 70px;">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of pagedUsers; let i = index">
-        <td class="text-center fw-bold">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-        <td>{{ user.userName || '-' }}</td>
-        <td>{{ user.email || '-' }}</td>
-        <td class="text-center" style="width: 70px; min-width: 70px;">
-          <div class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-outline-primary px-2 py-0" (click)="openEditUser(user)">
-              <i class="bi bi-pencil-square"></i> Edit
-            </button>
-            <button class="btn btn-outline-primary px-2 py-0" (click)="deleteUser(user)">
-              <i class="bi bi-trash"></i> Delete
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <!-- Pagination Controls -->
-  <nav *ngIf="!loading && !error && totalPages > 1" aria-label="User pagination">
-    <ul class="pagination justify-content-end">
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&laquo;</button>
-      </li>
-      <li class="page-item" *ngFor="let page of [].constructor(totalPages); let idx = index" [class.active]="currentPage === idx + 1">
-        <button class="page-link" (click)="goToPage(idx + 1)">{{ idx + 1 }}</button>
-      </li>
-      <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&raquo;</button>
-      </li>
-    </ul>
-  </nav>
+  <div class="table-responsive rounded shadow-sm bg-white">
+    <table *ngIf="!loading && !error && pagedUsers.length" class="table table-hover table-bordered rounded shadow-sm bg-white">
+      <thead class="table-light">
+        <tr>
+          <th class="text-center">#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th class="text-center" style="width: 70px; min-width: 70px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of pagedUsers; let i = index">
+          <td class="text-center fw-bold">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+          <td>{{ user.userName || '-' }}</td>
+          <td>{{ user.email || '-' }}</td>
+          <td class="text-center" style="width: 70px; min-width: 70px;">
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-outline-primary px-2 py-0" (click)="openEditUser(user)">
+                <i class="bi bi-pencil-square"></i> Edit
+              </button>
+              <button class="btn btn-outline-primary px-2 py-0" (click)="deleteUser(user)">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!loading && !error && totalPages > 1" class="pagination-container mt-2 justify-content-end d-flex">
+      <nav>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&laquo;</button>
+          </li>
+          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let idx = index" [class.active]="currentPage === idx + 1">
+            <button class="page-link" (click)="goToPage(idx + 1)">{{ idx + 1 }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">&raquo;</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 
   <!-- Edit User Modal -->
   <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true" #editUserModal>
@@ -139,7 +142,7 @@
           <h5 class="modal-title" id="createUserModalLabel">Create New User</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form (ngSubmit)="submitCreateUser()">
+        <form #createUserNgForm="ngForm" (ngSubmit)="submitCreateUser()">
           <div class="modal-body">
             <div *ngIf="createUserSuccess" class="alert alert-success">{{ createUserSuccess }}</div>
             <div *ngIf="createUserErrorList.length" class="alert alert-danger">

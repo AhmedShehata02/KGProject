@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
@@ -29,6 +29,7 @@ export class UsersListComponent implements OnInit {
   selectedUserRoles: string[] = [];
   selectedUserClaims: string[] = [];
   @ViewChild('editUserModal') editUserModal!: ElementRef;
+  @ViewChild('createUserNgForm') createUserNgForm!: NgForm;
   createUserForm: any = {
     firstName: '',
     lastName: '',
@@ -259,8 +260,30 @@ export class UsersListComponent implements OnInit {
     this.userService.createUserByAdmin(this.createUserForm).subscribe({
       next: (res) => {
         if (res && res.code === 200) {
-          // Prefer both Message and message (backend may use either)
           this.createUserSuccess = res.result?.Message || res.result?.message || 'User created successfully.';
+          // Reset the create user form model after successful creation
+          this.createUserForm = {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phoneNumber: '',
+            roles: [],
+            redirectUrlAfterResetPassword: window.location.origin + '/reset-temporary-password'
+          };
+          this.createUserFormTouched = false;
+          // Reset validation state of the form
+          setTimeout(() => {
+            if (this.createUserNgForm) {
+              this.createUserNgForm.resetForm({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phoneNumber: '',
+                roles: [],
+                redirectUrlAfterResetPassword: window.location.origin + '/reset-temporary-password'
+              });
+            }
+          });
         } else if (res && res.result) {
           // Display error(s) from backend
           if (Array.isArray(res.result)) {

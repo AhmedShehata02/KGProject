@@ -35,9 +35,9 @@ export class LoginComponent {
       this.loading = true;
       this.error = null;
       this.authService.login(this.loginForm.value).subscribe({
-        next: (res: any) => {
+        next: () => {
           this.loading = false;
-          this.router.navigate(['/dashboard']);
+          // Do not navigate here; AuthService handles navigation based on IsFirstLogin
         },
         error: (err: any) => {
           this.loading = false;

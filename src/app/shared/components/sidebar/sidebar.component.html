@@ -31,7 +31,7 @@
       </div>
     </li>
         <!-- System Management Dropdown -->
-    <li class="nav-item mb-2 sidebar-dropdown">
+    <li class="nav-item mb-2 sidebar-dropdown" *ngIf="hasRole('Admin') || hasRole('Super Admin')">
       <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="systemOpen = !systemOpen" [attr.aria-expanded]="systemOpen">
         <span class="d-flex align-items-center">
           <span class="me-2"><i class="bi bi-sliders"></i></span> System Management

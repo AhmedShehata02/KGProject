@@ -43,7 +43,14 @@ export class AuthService {
         if (res && res.token) {
           localStorage.setItem('jwt_token', res.token);
           this.startAutoLogout(); // Start timer after login
-          this.router.navigate(['/dashboard']); // Always redirect to dashboard after login
+          // Check IsFirstLogin claim in JWT
+          const decoded = decodeJwt(res.token);
+          console.log('IsFirstLogin claim:', decoded?.IsFirstLogin);
+          if (decoded && (decoded.IsFirstLogin === true || decoded.IsFirstLogin === 'true' || decoded.IsFirstLogin === 1 || decoded.IsFirstLogin === '1')) {
+            this.router.navigate(['/auth/change-password-first-time']);
+            return;
+          }
+          this.router.navigate(['/dashboard']);
         }
       })
     );
@@ -87,6 +94,23 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
     return this.http.post(`${this.apiUrl}/changePassword`, data, { headers });
+  }
+
+  /**
+   * Change password for first login (calls /change-password-first-time endpoint)
+   * @param data { oldPassword, newPassword, confirmPassword }
+   * @returns Observable<{ token: string }>
+   */
+  changePasswordFirstTime(data: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Observable<{ token: string }> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.post<{ token: string }>(`${this.apiUrl}/change-password-first-time`, data, { headers });
   }
   // #endregion
 
