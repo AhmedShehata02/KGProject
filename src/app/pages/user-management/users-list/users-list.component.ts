@@ -168,11 +168,13 @@ export class UsersListComponent implements OnInit {
 
   saveUser() {
     // Save user name and email (email is disabled but must be sent to backend)
-    this.userService.updateUser(this.selectedUser.id, {
-      id: this.selectedUser.id,
-      userName: this.selectedUser.userName,
-      email: this.selectedUser.email
-    }).subscribe({
+    const payload = {
+      Id: this.selectedUser.id,
+      UserName: this.selectedUser.userName,
+      Email: this.selectedUser.email
+    };
+    console.log('saveUser payload:', payload, 'id:', this.selectedUser.id);
+    this.userService.updateUser(this.selectedUser.id, payload).subscribe({
       next: () => {
         // Save roles
         this.userService.updateUserRoles(this.selectedUser.id, this.selectedUserRoles).subscribe({

@@ -34,7 +34,13 @@ export class UserService {
   updateUser(id: string, user: any): Observable<any> {
     const token = localStorage.getItem('jwt_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.put<any>(`${this.apiUrl}/${id}`, user, { headers });
+    // Ensure property names match backend ApplicationUser model (Id, UserName, Email)
+    const payload = {
+      Id: user.id || user.Id,
+      UserName: user.userName || user.UserName,
+      Email: user.email || user.Email
+    };
+    return this.http.put<any>(`${this.apiUrl}/${id}`, payload, { headers });
   }
 
   deleteUser(id: string): Observable<any> {
@@ -107,5 +113,41 @@ export class UserService {
     console.log('JWT token used for createUserByAdmin:', token); // Debug: log token
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/create-by-admin`, userData, { headers });
+  }
+
+  /**
+   * Complete a user's basic profile (self, Admin, or SuperAdmin)
+   */
+  completeBasicProfile(userId: string, dto: any): Observable<ApiResponse<string>> {
+    const token = localStorage.getItem('jwt_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/${userId}/complete-profile`, dto, { headers });
+  }
+
+  /**
+   * Get all user profiles (Admin, Super Admin only)
+   */
+  getAllUserProfiles(): Observable<ApiResponse<any>> {
+    const token = localStorage.getItem('jwt_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profiles`, { headers });
+  }
+
+  /**
+   * Get a user's profile status (self, Admin, or SuperAdmin)
+   */
+  getUserRequestStatus(userId: string): Observable<ApiResponse<any>> {
+    const token = localStorage.getItem('jwt_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${userId}/status`, { headers });
+  }
+
+  /**
+   * Admin reviews a user profile
+   */
+  profileReviewByAdmin(dto: any): Observable<ApiResponse<string>> {
+    const token = localStorage.getItem('jwt_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/ProfileReviewByAdmin`, dto, { headers });
   }
 }

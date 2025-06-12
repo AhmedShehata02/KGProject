@@ -6,6 +6,7 @@ import { ForgetPasswordComponent } from './forget-password/forget-password.compo
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ResetTemporaryPasswordComponent } from './reset-temporary-password/reset-temporary-password.component';
 import { ChangePasswordFirstTimeComponent } from './change-password-first-time/change-password-first-time.component';
+import { CompleteUserProfileComponent } from './complete-user-profile/complete-user-profile.component';
 
 
 export const authRoutes: Routes = [
@@ -15,4 +16,5 @@ export const authRoutes: Routes = [
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'reset-temporary-password', component: ResetTemporaryPasswordComponent },
   { path: 'change-password-first-time', component: ChangePasswordFirstTimeComponent },
+  { path: 'complete-user-profile', component: CompleteUserProfileComponent }
 ];
