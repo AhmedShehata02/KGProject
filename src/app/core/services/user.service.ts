@@ -130,7 +130,7 @@ export class UserService {
   getAllUserProfiles(): Observable<ApiResponse<any>> {
     const token = localStorage.getItem('jwt_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profiles`, { headers });
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profilesForAdmin`, { headers });
   }
 
   /**
@@ -149,5 +149,15 @@ export class UserService {
     const token = localStorage.getItem('jwt_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
     return this.http.post<ApiResponse<string>>(`${this.apiUrl}/ProfileReviewByAdmin`, dto, { headers });
+  }
+
+  /**
+   * Get a user's full profile by userId (self, Admin, or SuperAdmin)
+   */
+  getUserProfileByUserId(userId: string): Observable<ApiResponse<any>> {
+    const token = localStorage.getItem('jwt_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    // Corrected endpoint to /profiles/{userId}
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profiles/${userId}`, { headers });
   }
 }

@@ -8,6 +8,7 @@ import { systemManagementRoutes } from './pages/system-management/system-managem
 import { DashboardComponent } from './pages/dashboard/dashboard/dashboard.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
+import { CompleteUserProfileComponent } from './pages/auth/complete-user-profile/complete-user-profile.component';
 
 export const routes: Routes = [
   {
@@ -20,29 +21,43 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { 
-        path: 'users', 
-        children: userManagementRoutes, 
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
         canActivate: [AuthGuard],
-        data: { roles: ['Admin', 'Super Admin'] } // Only allow Admin/Super Admin
       },
-      { path: 'systemManagement',
-        children: systemManagementRoutes, 
+      {
+        path: 'users',
+        children: userManagementRoutes,
         canActivate: [AuthGuard],
-        data: { roles: ['Admin', 'Super Admin'] } // Only allow Admin/Super Admin 
+        data: { roles: ['Admin', 'Super Admin'] }, // Only allow Admin/Super Admin
       },
-      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-    ]
+      {
+        path: 'systemManagement',
+        children: systemManagementRoutes,
+        canActivate: [AuthGuard],
+        data: { roles: ['Admin', 'Super Admin'] }, // Only allow Admin/Super Admin
+      },
+    ],
   },
   {
     path: 'unauthorized',
-    component: UnauthorizedComponent
+    component: UnauthorizedComponent,
+  },
+  {
+    path: 'complete-user-profile',
+    component: CompleteUserProfileComponent,
   },
   {
     path: '',
     redirectTo: '/dashboard',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: 'dashboard' },
 ];
+
+
+
+
+
 

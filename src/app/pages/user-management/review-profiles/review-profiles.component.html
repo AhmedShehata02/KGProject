@@ -1,0 +1,189 @@
+<div class="review-profiles-container">
+  <h2>User Profiles Review</h2>
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <table *ngIf="!loading && !error && profiles.length" class="table table-bordered table-hover mt-3">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Full Name</th>
+        <th>Phone</th>
+        <th>Personal Image</th>
+        <th>Status</th>
+        <th>Rejection Reason</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let profile of profiles; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ profile.fullName || profile.FullName }}</td>
+        <td>{{ profile.primaryPhone || profile.PrimaryPhone }}</td>
+        <td>
+          <a *ngIf="profile.personalPhotoPath || profile.PersonalPhotoPath" [href]="(environment.apiBaseUrl + (profile.personalPhotoPath || profile.PersonalPhotoPath))" target="_blank">
+            <img [src]="environment.apiBaseUrl + (profile.personalPhotoPath || profile.PersonalPhotoPath)" alt="Personal Photo" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 1.5px solid #2cb67d;" />
+          </a>
+          <span *ngIf="!(profile.personalPhotoPath || profile.PersonalPhotoPath)">-</span>
+        </td>
+        <td>{{ profile.statusText || profile.StatusText || profile.status || profile.Status }}</td>
+        <td>{{ profile.rejectionReason || profile.RejectionReason || '-' }}</td>
+        <td>{{ (profile.createdOn || profile.CreatedOn) | date:'yyyy-MM-dd' }}</td>
+        <td>
+          <div class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-outline-primary px-2 py-0" (click)="openViewModal(profile)">
+              <i class="fas fa-eye"></i> View
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !error && !profiles.length" class="alert alert-info mt-4">
+    No profiles found.
+  </div>
+  <!-- View Profile Modal -->
+  <div class="modal fade" id="viewProfileModal" tabindex="-1" aria-labelledby="viewProfileModalLabel" aria-hidden="true" [ngClass]="{ 'show': showProfileModal }" [ngStyle]="{ display: showProfileModal ? 'block' : 'none' }">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content glass-card shadow-lg border-0">
+        <div class="modal-header border-0 pb-0" style="background: linear-gradient(90deg, #7f5af0 0%, #2cb67d 100%); border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;">
+          <h5 class="modal-title text-white fw-bold" id="viewProfileModalLabel">Profile Details</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeProfileModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body py-4 px-4" *ngIf="selectedProfile">
+          <div class="container-fluid profile-details-bordered">
+            <div class="row justify-content-center mb-4">
+              <div class="col-12 text-center">
+                <a *ngIf="selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath" [href]="environment.apiBaseUrl + (selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath)" target="_blank">
+                  <img [src]="environment.apiBaseUrl + (selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath)" alt="Personal Photo" class="profile-avatar mb-2" />
+                </a>
+                <span *ngIf="!(selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath)">
+                  <img src="/assets/img/DefaultProfile.svg" alt="No Photo" class="profile-avatar profile-avatar-default mb-2" />
+                </span>
+                <div class="fw-bold fs-4 mt-2 text-dark">{{ selectedProfile.fullName || selectedProfile.FullName }}</div>
+                <div class="badge bg-gradient fs-6 px-3 py-2 mt-2" [ngClass]="{
+                  'bg-success': (selectedProfile.statusText || selectedProfile.StatusText || selectedProfile.status || selectedProfile.Status) === 'approved' || (selectedProfile.statusText || selectedProfile.StatusText || selectedProfile.status || selectedProfile.Status) === 'Approved',
+                  'bg-danger': (selectedProfile.statusText || selectedProfile.StatusText || selectedProfile.status || selectedProfile.Status) === 'rejected' || (selectedProfile.statusText || selectedProfile.StatusText || selectedProfile.status || selectedProfile.Status) === 'Rejected',
+                  'bg-warning text-dark': (selectedProfile.statusText || selectedProfile.StatusText || selectedProfile.status || selectedProfile.Status) === 'pending' || (selectedProfile.statusText || selectedProfile.StatusText || selectedProfile.status || selectedProfile.Status) === 'Pending'
+                }">
+                  {{ selectedProfile.statusText || selectedProfile.StatusText || selectedProfile.status || selectedProfile.Status }}
+                </div>
+              </div>
+            </div>
+            <!-- Full Name, Birth Date, Graduation Year in one line -->
+            <div class="row g-3 mb-2">
+              <div class="col-md-4">
+                <div class="info-group">
+                  <span class="info-label">Full Name:</span>
+                  <span class="info-value">{{ selectedProfile.fullName || selectedProfile.FullName }}</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="info-group">
+                  <span class="info-label">Birth Date:</span>
+                  <span class="info-value">{{ selectedProfile.birthDate || selectedProfile.BirthDate || '-' }}</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="info-group">
+                  <span class="info-label">Graduation Year:</span>
+                  <span class="info-value">{{ selectedProfile.graduationYear || selectedProfile.GraduationYear }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Phones in one line -->
+            <div class="row g-3 mb-2">
+              <div class="col-md-4">
+                <div class="info-group">
+                  <span class="info-label">Primary Phone:</span>
+                  <span class="info-value">{{ selectedProfile.primaryPhone || selectedProfile.PrimaryPhone }}</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="info-group">
+                  <span class="info-label">Secondary Phone 1:</span>
+                  <span class="info-value">{{ selectedProfile.secondaryPhone1 || selectedProfile.SecondaryPhone1 || '-' }}</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="info-group">
+                  <span class="info-label">Secondary Phone 2:</span>
+                  <span class="info-value">{{ selectedProfile.secondaryPhone2 || selectedProfile.SecondaryPhone2 || '-' }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Address in one line -->
+            <div class="row g-3 mb-2">
+              <div class="col-12">
+                <div class="info-group">
+                  <span class="info-label">Address:</span>
+                  <span class="info-value">{{ selectedProfile.address || selectedProfile.Address || '-' }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- National ID images in one line -->
+            <div class="row mt-4 justify-content-center align-items-center">
+              <div class="col-md-6 col-12 text-center mb-3 mb-md-0">
+                <div class="info-label mb-2 fs-6">National ID Front</div>
+                <span *ngIf="selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath">
+                  <a [href]="environment.apiBaseUrl + (selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)" target="_blank">
+                    <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)" alt="National ID Front" class="profile-id-img me-2" />
+                  </a>
+                </span>
+                <span *ngIf="!(selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)">-</span>
+              </div>
+              <div class="col-md-6 col-12 text-center">
+                <div class="info-label mb-2 fs-6">National ID Back</div>
+                <span *ngIf="selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath">
+                  <a [href]="environment.apiBaseUrl + (selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)" target="_blank">
+                    <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)" alt="National ID Back" class="profile-id-img" />
+                  </a>
+                </span>
+                <span *ngIf="!(selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)">-</span>
+              </div>
+            </div>
+            <!-- Rejection Reason last line -->
+            <div class="row mt-4">
+              <div class="col-12">
+                <div class="info-group justify-content-center mb-3">
+                  <span class="info-label">Rejection Reason:</span>
+                  <span class="info-value text-danger">{{ selectedProfile.rejectionReason || selectedProfile.RejectionReason || '-' }}</span>
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                  <button class="btn btn-success px-4" [disabled]="actionLoading" (click)="acceptProfile(selectedProfile)"><i class="fas fa-check me-2"></i>Accept</button>
+                  <button class="btn btn-danger px-4" [disabled]="actionLoading" (click)="rejectProfile(selectedProfile)"><i class="fas fa-times me-2"></i>Reject</button>
+                </div>
+                <div *ngIf="actionError" class="alert alert-danger mt-3 text-center">{{ actionError }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejection Reason Modal -->
+  <div class="modal fade show rejection-modal-bg" tabindex="-1" [ngStyle]="{display: showRejectionModal ? 'block' : 'none'}" *ngIf="showRejectionModal">
+    <div class="modal-dialog modal-dialog-centered rejection-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reject Profile</h5>
+          <button type="button" class="btn-close" (click)="closeRejectionModal()"></button>
+        </div>
+        <div class="modal-body">
+          <label for="rejectionReasonInput" class="form-label">Rejection Reason</label>
+          <input id="rejectionReasonInput" class="form-control" [(ngModel)]="rejectionReasonInput" name="rejectionReasonInput" type="text" maxlength="200" placeholder="Enter reason for rejection..." autocomplete="off" />
+          <div *ngIf="actionError" class="text-danger mt-2">{{ actionError }}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeRejectionModal()" [disabled]="actionLoading">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="confirmRejectProfile()" [disabled]="actionLoading">Reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
