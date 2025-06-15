@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { UserService } from '../services/user.service';
+import { UsersProfilesService } from '../services/users-profiles.service';
 import { jwtDecode } from 'jwt-decode';
 import { Observable, of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  constructor(private router: Router, private authService: AuthService, private userService: UserService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private usersProfilesService: UsersProfilesService // Use UsersProfilesService instead of UserService
+  ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> {
     const token = this.authService.getToken();
@@ -44,7 +48,7 @@ export class AuthGuard implements CanActivate {
           // Only allow access if UserStatus is 'approved' (2 or 'approved')
           const userId = decoded.UserId || decoded.sub || decoded.userId || decoded.id;
           if (userId) {
-            return this.userService.getUserRequestStatus(userId).pipe(
+            return this.usersProfilesService.getUserRequestStatus(userId).pipe(
               map((resp: any) => {
                 let status = resp?.result?.status ?? resp?.result;
                 console.log('UserStatus from backend:', status); // Debug log

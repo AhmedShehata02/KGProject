@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { UserService } from '../../../core/services/user.service';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -8,6 +7,7 @@ import { RouterModule } from '@angular/router'; // <-- Add this import
 import { jwtDecode } from 'jwt-decode';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service'; // <-- Import AuthService
+import { UsersProfilesService } from '../../../core/services/users-profiles.service';
 
 @Component({
   selector: 'app-complete-user-profile',
@@ -32,7 +32,7 @@ export class CompleteUserProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService,
+    private usersProfilesService: UsersProfilesService,
     private fileUploadService: FileUploadService,
     public router: Router, // changed from private to public
     private http: HttpClient,
@@ -69,7 +69,7 @@ export class CompleteUserProfileComponent implements OnInit {
       nationalIdBackPath: ['', [
         Validators.required
       ]],
-      agreementAccepted: [false]
+      agreementAccepted: [false, [Validators.requiredTrue]]
     });
   }
 
@@ -97,14 +97,14 @@ export class CompleteUserProfileComponent implements OnInit {
     }
     this.userId = userId;
     // Check profile status
-    this.userService.getUserRequestStatus(userId).subscribe({
-      next: (res) => {
+    this.usersProfilesService.getUserRequestStatus(userId).subscribe({
+      next: (res: any) => {
         this.profileStatus = res?.result?.status || 'Draft';
         console.log('Profile status:', this.profileStatus); // Debug log
         if (this.profileStatus && (this.profileStatus.toLowerCase() === 'rejected')) {
           // Fetch and patch form with previous data
-          this.userService.getUserProfileByUserId(userId!).subscribe({
-            next: (profileRes) => {
+          this.usersProfilesService.getUserProfileByUserId(userId!).subscribe({
+            next: (profileRes: any) => {
               console.log('getUserProfileByUserId result:', profileRes);
               const data = profileRes?.result;
               if (data) {
@@ -142,7 +142,7 @@ export class CompleteUserProfileComponent implements OnInit {
           this.statusLoading = false;
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMsg = 'Failed to get profile status.';
         this.statusLoading = false;
       }
@@ -223,19 +223,19 @@ export class CompleteUserProfileComponent implements OnInit {
         AgreementAccepted: this.profileForm.value.agreementAccepted,
         SubmitterIp: submitterIp
       };
-      this.userService.completeBasicProfile(userId, dto).subscribe({
+      this.usersProfilesService.completeBasicProfile(userId, dto).subscribe({
         next: () => {
           this.successMsg = 'Profile submitted successfully!';
           this.loading = false;
           // Instead of navigating, refresh the profile status to update the UI
           this.statusLoading = true;
-          this.userService.getUserRequestStatus(userId!).subscribe({
-            next: (res) => {
+          this.usersProfilesService.getUserRequestStatus(userId!).subscribe({
+            next: (res: any) => {
               this.profileStatus = res?.result?.status || 'Draft';
               console.log('Profile status (after submit):', this.profileStatus);
               this.statusLoading = false;
             },
-            error: (err) => {
+            error: (err: any) => {
               this.errorMsg = 'Failed to get profile status.';
               this.statusLoading = false;
             }

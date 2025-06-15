@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../../core/services/user.service';
+import { UsersProfilesService } from '../../../core/services/users-profiles.service';
 import { environment } from '../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 
@@ -23,16 +23,15 @@ export class ReviewProfilesComponent implements OnInit {
   actionError = '';
   showProfileModal = false;
 
-  constructor(private userService: UserService) {}
+  constructor(private usersProfilesService: UsersProfilesService) {}
 
   ngOnInit() {
-    this.userService.getAllUserProfiles().subscribe({
+    this.usersProfilesService.getAllUserProfiles().subscribe({
       next: (res) => {
-        // Show all profiles (remove pendingApproval filter)
         this.profiles = res?.result || [];
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = 'Failed to load profiles.';
         this.loading = false;
       }
@@ -51,14 +50,13 @@ export class ReviewProfilesComponent implements OnInit {
   acceptProfile(profile: any) {
     this.actionLoading = true;
     this.actionError = '';
-    this.userService.profileReviewByAdmin({
+    this.usersProfilesService.profileReviewByAdmin({
       UserId: profile.userId || profile.UserId || profile.id || profile.Id,
       IsApproved: true,
       RejectionReason: null
     }).subscribe({
       next: (res) => {
         this.actionLoading = false;
-        // Remove the profile from the table after accepting
         const idx = this.profiles.findIndex(p => (p.userId || p.UserId || p.id || p.Id) === (profile.userId || profile.UserId || profile.id || profile.Id));
         if (idx > -1) {
           this.profiles.splice(idx, 1);
@@ -66,9 +64,8 @@ export class ReviewProfilesComponent implements OnInit {
         this.showProfileModal = false;
         this.actionError = '';
       },
-      error: (err) => {
+      error: (err: any) => {
         this.actionLoading = false;
-        // If the profile was actually accepted (removed from table), suppress the error
         const idx = this.profiles.findIndex(p => (p.userId || p.UserId || p.id || p.Id) === (profile.userId || profile.UserId || profile.id || profile.Id));
         if (idx === -1) {
           this.actionError = '';
@@ -92,14 +89,13 @@ export class ReviewProfilesComponent implements OnInit {
     }
     this.actionLoading = true;
     this.actionError = '';
-    this.userService.profileReviewByAdmin({
+    this.usersProfilesService.profileReviewByAdmin({
       UserId: this.selectedProfile.userId || this.selectedProfile.UserId || this.selectedProfile.id || this.selectedProfile.Id,
       IsApproved: false,
       RejectionReason: this.rejectionReasonInput
     }).subscribe({
       next: (res) => {
         this.actionLoading = false;
-        // Remove the profile from the table after rejection
         const idx = this.profiles.findIndex(p => (p.userId || p.UserId || p.id || p.Id) === (this.selectedProfile.userId || this.selectedProfile.UserId || this.selectedProfile.id || this.selectedProfile.Id));
         if (idx > -1) {
           this.profiles.splice(idx, 1);
@@ -107,7 +103,7 @@ export class ReviewProfilesComponent implements OnInit {
         this.showRejectionModal = false;
         this.actionError = '';
       },
-      error: (err) => {
+      error: (err: any) => {
         this.actionLoading = false;
         this.actionError = err?.error?.result || 'Failed to reject profile.';
       }

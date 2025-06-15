@@ -115,49 +115,10 @@ export class UserService {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/create-by-admin`, userData, { headers });
   }
 
-  /**
-   * Complete a user's basic profile (self, Admin, or SuperAdmin)
-   */
-  completeBasicProfile(userId: string, dto: any): Observable<ApiResponse<string>> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/${userId}/complete-profile`, dto, { headers });
-  }
-
-  /**
-   * Get all user profiles (Admin, Super Admin only)
-   */
-  getAllUserProfiles(): Observable<ApiResponse<any>> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profilesForAdmin`, { headers });
-  }
-
-  /**
-   * Get a user's profile status (self, Admin, or SuperAdmin)
-   */
-  getUserRequestStatus(userId: string): Observable<ApiResponse<any>> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${userId}/status`, { headers });
-  }
-
-  /**
-   * Admin reviews a user profile
-   */
-  profileReviewByAdmin(dto: any): Observable<ApiResponse<string>> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/ProfileReviewByAdmin`, dto, { headers });
-  }
-
-  /**
-   * Get a user's full profile by userId (self, Admin, or SuperAdmin)
-   */
-  getUserProfileByUserId(userId: string): Observable<ApiResponse<any>> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    // Corrected endpoint to /profiles/{userId}
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profiles/${userId}`, { headers });
-  }
+  // --- Profile-related methods moved to UsersProfilesService ---
+  // completeBasicProfile(userId: string, dto: any): Observable<ApiResponse<string>> { ... }
+  // getAllUserProfiles(): Observable<ApiResponse<any>> { ... }
+  // getUserRequestStatus(userId: string): Observable<ApiResponse<any>> { ... }
+  // profileReviewByAdmin(dto: any): Observable<ApiResponse<string>> { ... }
+  // getUserProfileByUserId(userId: string): Observable<ApiResponse<any>> { ... }
 }

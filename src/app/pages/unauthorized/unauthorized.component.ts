@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { UserService } from '../../core/services/user.service';
+import { UsersProfilesService } from '../../core/services/users-profiles.service';
 import { jwtDecode } from 'jwt-decode';
 
 @Component({
@@ -16,7 +16,7 @@ export class UnauthorizedComponent {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UserService
+    private usersProfilesService: UsersProfilesService
   ) {}
 
   async goToDashboard() {
@@ -33,7 +33,7 @@ export class UnauthorizedComponent {
       }
       const userId = decoded.UserId || decoded.sub || decoded.userId || decoded.id;
       if (userId) {
-        this.userService.getUserRequestStatus(userId).subscribe((resp: any) => {
+        this.usersProfilesService.getUserRequestStatus(userId).subscribe((resp: any) => {
           let status = resp?.result?.status ?? resp?.result;
           if (typeof status === 'string') status = status.toLowerCase();
           if (status === 'approved' || status === 2 || status === '2') {
