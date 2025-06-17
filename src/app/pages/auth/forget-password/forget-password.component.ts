@@ -16,6 +16,7 @@ export class ForgetPasswordComponent {
   loading = false;
   error: string | null = null;
   success: string | null = null;
+  emailInvalid = false;
 
   constructor(private authService: AuthService) {}
 
@@ -24,11 +25,16 @@ export class ForgetPasswordComponent {
     return window.location.origin + '/auth/login';
   }
 
+  onEmailInput() {
+    this.emailInvalid = !!this.email && !/^\S+@\S+\.\S+$/.test(this.email);
+  }
+
   onSubmit(event: Event) {
     event.preventDefault();
     this.error = null;
     this.success = null;
-    if (!this.email || !/^\S+@\S+\.\S+$/.test(this.email)) {
+    this.emailInvalid = !!this.email && !/^\S+@\S+\.\S+$/.test(this.email);
+    if (!this.email || this.emailInvalid) {
       this.error = 'Please enter a valid email address.';
       return;
     }
@@ -36,10 +42,10 @@ export class ForgetPasswordComponent {
     this.authService.forgotPassword({ email: this.email, loginUrl: this.getLoginUrl() }).subscribe({
       next: (res) => {
         this.loading = false;
-        if (res && res.code === 200) {
-          this.success = res.result || 'If the email is registered, a new password has been sent.';
+        if (res && res.code === 200 && res.status === 'Success') {
+          this.success = Array.isArray(res.result) ? res.result.join(' ') : (res.result || 'If the email is registered, a new password has been sent.');
         } else if (res && res.result) {
-          this.error = res.result;
+          this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
         } else {
           this.error = 'An error occurred. Please try again.';
         }

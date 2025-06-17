@@ -52,11 +52,23 @@ export class RegisterComponent {
       this.authService.register(this.registerForm.value).subscribe({
         next: (res: any) => {
           this.loading = false;
-          this.router.navigate(['/auth/login']);
+          if (res && res.code === 200 && res.status === 'Success') {
+            this.router.navigate(['/auth/login']);
+          } else if (res && res.result) {
+            this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
+          } else {
+            this.error = 'Registration failed.';
+          }
         },
         error: (err: any) => {
           this.loading = false;
-          this.error = err?.error?.message || 'Registration failed';
+          if (err?.error?.result) {
+            this.error = Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result;
+          } else if (err?.error?.message) {
+            this.error = err.error.message;
+          } else {
+            this.error = 'Registration failed.';
+          }
         }
       });
     }

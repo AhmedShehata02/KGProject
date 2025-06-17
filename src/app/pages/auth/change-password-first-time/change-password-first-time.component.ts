@@ -37,20 +37,25 @@ export class ChangePasswordFirstTimeComponent {
     const { oldPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
     this.authService.changePasswordFirstTime({ oldPassword, newPassword, confirmPassword }).subscribe({
       next: (res) => {
-        if (res?.token) {
-          localStorage.setItem('jwt_token', res.token);
+        this.loading = false;
+        if (res && res.code === 200 && res.status === 'Success') {
+          if (res.result) {
+            localStorage.setItem('jwt_token', res.result);
+          }
           this.success = 'Password changed successfully! Redirecting...';
           setTimeout(() => {
             this.router.navigate(['/dashboard']);
           }, 1200);
+        } else if (res && res.result) {
+          this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
         } else {
           this.error = 'Unexpected response from server.';
         }
-        this.loading = false;
       },
       error: (err) => {
-        if (err?.error?.errors) {
-          this.error = Object.values(err.error.errors).join(' ');
+        this.loading = false;
+        if (err?.error?.result) {
+          this.error = Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result;
         } else if (err?.error?.message) {
           this.error = err.error.message;
         } else if (err?.status === 401) {
@@ -58,7 +63,6 @@ export class ChangePasswordFirstTimeComponent {
         } else {
           this.error = err?.error?.title || err?.error || 'Failed to change password.';
         }
-        this.loading = false;
       }
     });
   }

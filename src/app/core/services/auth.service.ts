@@ -37,14 +37,15 @@ export class AuthService {
   /**
    * Login user and store JWT token
    */
-  login(data: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, data).pipe(
-      tap((res: any) => {
-        if (res && res.token) {
-          localStorage.setItem('jwt_token', res.token);
+  login(data: { email: string; password: string }): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/login`, data).pipe(
+      tap((res: ApiResponse<string>) => {
+        // Handle ApiResponse structure
+        if (res && res.code === 200 && res.status === 'Success' && res.result) {
+          localStorage.setItem('jwt_token', res.result);
           this.startAutoLogout(); // Start timer after login
           // Check IsFirstLogin claim in JWT
-          const decoded = decodeJwt(res.token);
+          const decoded = decodeJwt(res.result);
           console.log('IsFirstLogin claim:', decoded?.IsFirstLogin);
           if (decoded && (decoded.IsFirstLogin === true || decoded.IsFirstLogin === 'true' || decoded.IsFirstLogin === 1 || decoded.IsFirstLogin === '1')) {
             this.router.navigate(['/auth/change-password-first-time']);
@@ -63,8 +64,8 @@ export class AuthService {
     fullName: string;
     email: string;
     password: string;
-  }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, data);
+  }): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/register`, data);
   }
 
   /**
@@ -88,12 +89,12 @@ export class AuthService {
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;
-  }): Observable<any> {
+  }): Observable<ApiResponse<string | string[]>> {
     const token = this.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    return this.http.post(`${this.apiUrl}/changePassword`, data, { headers });
+    return this.http.post<ApiResponse<string | string[]>>(`${this.apiUrl}/changePassword`, data, { headers });
   }
 
   /**
@@ -105,19 +106,19 @@ export class AuthService {
     oldPassword: string;
     newPassword: string;
     confirmPassword: string;
-  }): Observable<{ token: string }> {
+  }): Observable<ApiResponse<string>> {
     const token = this.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    return this.http.post<{ token: string }>(`${this.apiUrl}/change-password-first-time`, data, { headers });
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/change-password-first-time`, data, { headers });
   }
 
   /**
    * Forgot password - send reset to backend
    */
-  forgotPassword(data: { email: string; loginUrl: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, data);
+  forgotPassword(data: { email: string; loginUrl: string }): Observable<ApiResponse<string | string[]>> {
+    return this.http.post<ApiResponse<string | string[]>>(`${this.apiUrl}/forgot-password`, data);
   }
   // #endregion
 
@@ -209,3 +210,10 @@ export class AuthService {
   }
 }
 // #endregion
+
+// ApiResponse interface for backend responses
+export interface ApiResponse<T = any> {
+  code: number;
+  status: string;
+  result: T;
+}

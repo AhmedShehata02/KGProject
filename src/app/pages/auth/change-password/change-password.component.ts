@@ -37,15 +37,20 @@ export class ChangePasswordComponent {
     const { currentPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
     this.authService.changePassword({ currentPassword, newPassword, confirmPassword }).subscribe({
       next: (res) => {
-        this.success = res?.message || 'Password changed successfully.';
         this.loading = false;
-        this.changePasswordForm.reset();
+        if (res && res.code === 200 && res.status === 'Success') {
+          this.success = Array.isArray(res.result) ? res.result.join(' ') : (res.result || 'Password changed successfully.');
+          this.changePasswordForm.reset();
+        } else if (res && res.result) {
+          this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
+        } else {
+          this.error = 'Failed to change password.';
+        }
       },
       error: (err) => {
-        // Try to show detailed backend validation errors if present
-        console.error('Change password error:', err);
-        if (err?.error?.errors) {
-          this.error = Object.values(err.error.errors).join(' ');
+        this.loading = false;
+        if (err?.error?.result) {
+          this.error = Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result;
         } else if (err?.error?.message) {
           this.error = err.error.message;
         } else if (err?.status === 401) {
@@ -53,7 +58,6 @@ export class ChangePasswordComponent {
         } else {
           this.error = err?.error?.title || err?.error || 'Failed to change password.';
         }
-        this.loading = false;
       }
     });
   }
