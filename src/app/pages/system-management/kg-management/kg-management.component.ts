@@ -37,6 +37,9 @@ export class KgManagementComponent implements OnInit {
   page = 1;
   pageSize = 10;
   pageSizes = [10, 50, 100];
+  totalCount = 0;
+  totalPages = 1;
+  validationErrors: string[] = [];
 
   constructor(private kgBranchService: KGBranchService) {}
 
@@ -46,14 +49,36 @@ export class KgManagementComponent implements OnInit {
 
   fetchKgBranches() {
     this.loading = true;
-    this.kgBranchService.getAll().subscribe({
+    this.error = null;
+    this.kgBranchService.getAllPaginated(this.page, this.pageSize).subscribe({
       next: (res) => {
-        // If backend wraps result in ApiResponse, extract .result
-        this.kgBranches = res.result || res;
+        if (res && res.code === 200 && res.status === 'Success') {
+          // Map KindergartenDTO[] to KGBranchDTO[]
+          this.kgBranches = (res.result.data || []).map((kg: any) => ({
+            kg: {
+              id: kg.id,
+              nameAr: kg.nameAr,
+              nameEn: kg.nameEn,
+              kgCode: kg.kgCode,
+              address: kg.address
+            },
+            branches: kg.branches || []
+          }));
+          this.totalCount = res.result.totalCount;
+          this.totalPages = res.result.totalPages;
+        } else {
+          if (typeof res.result === 'string') {
+            this.error = res.result;
+          } else if (Array.isArray(res.result)) {
+            this.error = res.result.join(' ');
+          } else {
+            this.error = 'Failed to load KG branches.';
+          }
+        }
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result || 'Failed to load KG branches.';
+        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || 'Failed to load KG branches.');
         this.loading = false;
       }
     });
@@ -219,15 +244,16 @@ export class KgManagementComponent implements OnInit {
   onPageSizeChange(size: number) {
     this.pageSize = size;
     this.page = 1;
+    this.fetchKgBranches();
   }
 
   onPageChange(page: number) {
     this.page = page;
+    this.fetchKgBranches();
   }
 
   getPageArray(): number[] {
-    const totalPages = Math.ceil(this.kgBranches.length / this.pageSize);
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   // Placeholder for future CRUD methods (add, edit, delete, etc.)
