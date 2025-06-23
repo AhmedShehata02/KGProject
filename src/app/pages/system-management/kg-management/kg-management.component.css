@@ -26,8 +26,8 @@
 .table th, .table td {
   vertical-align: middle;
   border: none;
-  padding: 1.1rem 1.5rem;
-  font-size: 1.08rem;
+  padding: 0.62rem 1.05rem !important;
+  font-size: 1.03rem !important;
   background: transparent;
   text-align: left;
 }
@@ -82,8 +82,8 @@
 }
 @media (max-width: 600px) {
   .table th, .table td {
-    padding: 0.6rem 0.5rem;
-    font-size: 0.98rem;
+    padding: 0.32rem 0.32rem !important;
+    font-size: 0.89rem !important;
   }
 }
 /* Make branch row fields appear in one line and handle overflow */
@@ -136,4 +136,214 @@
   color: #aaa;
   background: #f8f9fa;
   border-color: #eee;
+}
+
+/** Remove underline from sort header buttons and ensure white color **/
+.sort-header.btn-link {
+  text-decoration: none !important;
+  color: #fff !important;
+}
+.sort-header.btn-link:hover,
+.sort-header.btn-link:focus {
+  text-decoration: none !important;
+  color: #fff !important;
+  background: none;
+  box-shadow: none;
+}
+
+.sort-header,
+.sort-header:focus,
+.sort-header:active,
+.sort-header:hover {
+  text-decoration: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.sort-header span,
+.sort-header .sort-icons i {
+  text-decoration: none !important;
+}
+
+/* Ensure no underline for all .btn-link in table headers */
+th .btn-link {
+  text-decoration: none !important;
+  color: #fff !important;
+}
+th .btn-link:hover,
+th .btn-link:focus {
+  text-decoration: none !important;
+  color: #fff !important;
+  background: none;
+  box-shadow: none;
+}
+
+/* Responsive table header and controls */
+@media (max-width: 1200px) {
+  .table-responsive {
+    font-size: 0.95rem;
+  }
+  .sort-header span {
+    font-size: 0.95rem;
+  }
+}
+@media (max-width: 992px) {
+  .table-responsive {
+    font-size: 0.92rem;
+  }
+  .sort-header span {
+    font-size: 0.92rem;
+  }
+  .pagination-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+  .sort-header span {
+    font-size: 0.9rem;
+  }
+  .pagination-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .d-flex.flex-wrap.align-items-center.justify-content-between.mb-3.gap-2 {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+  }
+
+  /* Responsive top controls: stack vertically and center on small screens */
+  .top-controls-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    text-align: center;
+  }
+  .top-controls-group {
+    width: 100%;
+    justify-content: center !important;
+    text-align: center;
+  }
+  .top-controls-group label,
+  .top-controls-group select,
+  .top-controls-group span {
+    display: inline-block;
+    text-align: center;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .top-controls-group input.form-control {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+}
+@media (max-width: 576px) {
+  .table-responsive {
+    font-size: 0.85rem;
+  }
+  .sort-header span {
+    font-size: 0.85rem;
+  }
+  .pagination-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .d-flex.flex-wrap.align-items-center.justify-content-between.mb-3.gap-2 {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+  }
+  .table th, .table td {
+    padding: 0.32rem 0.32rem;
+  }
+}
+
+/* --- FINAL COMPACT TABLE ROWS: CONSISTENT ON ALL SCREEN SIZES --- */
+.table th, .table td {
+  padding: 0.62rem 1.05rem !important;
+  font-size: 1.03rem !important;
+}
+
+/* Remove mobile overrides for padding/font-size to keep compactness consistent */
+@media (max-width: 576px) {
+  .table th, .table td {
+    padding: 0.62rem 1.05rem !important;
+    font-size: 1.03rem !important;
+  }
+}
+
+.table td.text-center[style*="min-width: 80px"] {
+  min-width: 64px !important;
+  width: 64px !important;
+  padding-left: 0.13rem !important;
+  padding-right: 0.13rem !important;
+}
+
+.btn-group-xs .btn-xs {
+  min-width: 32px !important;
+  height: 32px !important;
+  font-size: 1.08rem !important;
+  padding: 0.18rem 0.32rem !important;
+}
+
+/* Ensure table scrolls horizontally on small screens */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Make modal dialogs responsive */
+.modal-dialog {
+  max-width: 98vw;
+  width: 98vw;
+}
+
+/* Remove underline and focus/hover/active styles for sort-header */
+.sort-header,
+.sort-header:focus,
+.sort-header:active,
+.sort-header:hover {
+  text-decoration: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.sort-header span,
+.sort-header .sort-icons i {
+  text-decoration: none !important;
+}
+
+/* Style icon-only action buttons for a modern look */
+.btn-group-xs .btn-xs i {
+  pointer-events: none;
+}
+.btn-group-xs .btn-xs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.4rem;
+  border-radius: 0.35rem;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-group-xs .btn-xs:hover, .btn-group-xs .btn-xs:focus {
+  background: #e9ecef;
+  color: #0d6efd;
+  border-color: #0d6efd;
+}
+.btn-group-xs .btn-xs:active {
+  background: #d0e2ff;
+  color: #0a58ca;
+}
+.btn-group-xs .btn-xs .bi-trash {
+  color: #dc3545;
+}
+.btn-group-xs .btn-xs:hover .bi-trash, .btn-group-xs .btn-xs:focus .bi-trash {
+  color: #a71d2a;
 }

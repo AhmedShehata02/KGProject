@@ -33,13 +33,19 @@ export class KgManagementComponent implements OnInit {
 
   detailsKgData: any = null;
 
-  // Pagination state
+  // Pagination and table state
   page = 1;
   pageSize = 10;
   pageSizes = [10, 50, 100];
   totalCount = 0;
   totalPages = 1;
   validationErrors: string[] = [];
+
+  // Server-side search and sort
+  searchText = '';
+  searchInput = '';
+  sortBy: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(private kgBranchService: KGBranchService) {}
 
@@ -50,10 +56,15 @@ export class KgManagementComponent implements OnInit {
   fetchKgBranches() {
     this.loading = true;
     this.error = null;
-    this.kgBranchService.getAllPaginated(this.page, this.pageSize).subscribe({
+    this.kgBranchService.getAllPaginated(
+      this.page,
+      this.pageSize,
+      this.searchText,
+      this.sortBy,
+      this.sortDirection
+    ).subscribe({
       next: (res) => {
         if (res && res.code === 200 && res.status === 'Success') {
-          // Map KindergartenDTO[] to KGBranchDTO[]
           this.kgBranches = (res.result.data || []).map((kg: any) => ({
             kg: {
               id: kg.id,
@@ -66,6 +77,7 @@ export class KgManagementComponent implements OnInit {
           }));
           this.totalCount = res.result.totalCount;
           this.totalPages = res.result.totalPages;
+          // console.log('KG Branches result:', this.kgBranches);
         } else {
           if (typeof res.result === 'string') {
             this.error = res.result;
@@ -121,14 +133,14 @@ export class KgManagementComponent implements OnInit {
 
   // Placeholder for create action
   onCreateKg() {
-    // Prepare DTO to match backend expectations (no id, no branchCode, but kindergartenId is required)
-    const dto = {
-      kg: {
-        nameAr: this.createKgData.kg.nameAr,
-        nameEn: this.createKgData.kg.nameEn,
-        address: this.createKgData.kg.address
-      },
+    // Prepare DTO to match backend expectations (id: 0, branches at root)
+    const kg = {
+      id: 0,
+      nameAr: this.createKgData.kg.nameAr,
+      nameEn: this.createKgData.kg.nameEn,
+      address: this.createKgData.kg.address,
       branches: this.createKgData.branches.map(b => ({
+        id: 0,
         nameAr: b.nameAr,
         nameEn: b.nameEn,
         address: b.address,
@@ -137,12 +149,15 @@ export class KgManagementComponent implements OnInit {
         kindergartenId: 0
       }))
     };
-    this.kgBranchService.create(dto).subscribe({
+    // console.log('Create KG DTO:', kg);
+    this.kgBranchService.create(kg).subscribe({
       next: (res) => {
+        // console.log('Create KG response:', res);
         this.fetchKgBranches();
         this.closeCreateKgModal();
       },
       error: (err) => {
+        // console.log('Create KG error:', err);
         this.error = err?.error?.result || err?.error?.message || 'Failed to create KG.';
       }
     });
@@ -192,19 +207,21 @@ export class KgManagementComponent implements OnInit {
   }
 
   onEditKg() {
-    const dto = {
-      kg: this.editKgData.kg,
-      branches: (this.editKgData.branches as any[]).map((b: any) => ({
-        ...b,
-        kindergartenId: this.editKgData.kg.id
-      }))
-    };
-    this.kgBranchService.update(dto).subscribe({
-      next: () => {
+    const kg = { ...this.editKgData.kg };
+    kg.branches = (this.editKgData.branches as any[]).map((b: any) => ({
+      ...b,
+      kindergartenId: kg.id,
+      id: b.id ?? 0 // 0 for new branches
+    }));
+    // console.log('Update KG DTO:', kg);
+    this.kgBranchService.update(kg).subscribe({
+      next: (res) => {
+        // console.log('Update KG response:', res);
         this.fetchKgBranches();
         this.closeEditKgModal();
       },
       error: (err) => {
+        // console.log('Update KG error:', err);
         this.error = err?.error?.result || err?.error?.message || 'Failed to update KG.';
       }
     });
@@ -236,11 +253,6 @@ export class KgManagementComponent implements OnInit {
   }
 
   // Pagination logic
-  get pagedKgBranches() {
-    const start = (this.page - 1) * this.pageSize;
-    return this.kgBranches.slice(start, start + this.pageSize);
-  }
-
   onPageSizeChange(size: number) {
     this.pageSize = size;
     this.page = 1;
@@ -252,8 +264,58 @@ export class KgManagementComponent implements OnInit {
     this.fetchKgBranches();
   }
 
-  getPageArray(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  onSearchClick() {
+    this.searchText = this.searchInput.trim();
+    this.page = 1;
+    this.fetchKgBranches();
+  }
+
+  onSortChange(column: string, direction: 'asc' | 'desc') {
+    this.sortBy = column;
+    this.sortDirection = direction;
+    this.page = 1;
+    this.fetchKgBranches();
+  }
+
+  onSortToggle(column: string) {
+    if (this.sortBy === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortDirection = 'asc';
+    }
+    this.page = 1;
+    this.fetchKgBranches();
+  }
+
+  getPageArray(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.page;
+    const delta = 2; // how many pages to show around current
+    const pages: (number | string)[] = [];
+
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (current <= 4) {
+        for (let i = 1; i <= 5; i++) pages.push(i);
+        pages.push('...');
+        pages.push(total);
+      } else if (current >= total - 3) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = total - 4; i <= total; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = current - 1; i <= current + 1; i++) pages.push(i);
+        pages.push('...');
+        pages.push(total);
+      }
+    }
+    return pages;
   }
 
   // Placeholder for future CRUD methods (add, edit, delete, etc.)
