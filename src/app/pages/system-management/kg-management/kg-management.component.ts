@@ -230,7 +230,6 @@ export class KgManagementComponent implements OnInit {
     this.showDetailsKgModal = true;
   }
   
-
   closeDetailsKgModal() {
     this.showDetailsKgModal = false;
     this.detailsKgData = null;
