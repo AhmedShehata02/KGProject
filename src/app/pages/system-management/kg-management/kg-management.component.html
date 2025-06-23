@@ -109,23 +109,27 @@
         </div>
         <div class="modal-body">
           <form #kgForm="ngForm" autocomplete="off">
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
-              <input type="text" name="kgNameAr" class="form-control" required minlength="3" maxlength="50"
-                [(ngModel)]="createKgData.kg.nameAr" #kgNameAr="ngModel">
-              <div *ngIf="kgNameAr.invalid && kgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
+                <input type="text" name="kgNameAr" class="form-control" required minlength="3" maxlength="50"
+                  [(ngModel)]="createKgData.kg.nameAr" #kgNameAr="ngModel">
+                <div *ngIf="kgNameAr.invalid && kgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
+                <input type="text" name="kgNameEn" class="form-control" required minlength="3" maxlength="50"
+                  [(ngModel)]="createKgData.kg.nameEn" #kgNameEn="ngModel">
+                <div *ngIf="kgNameEn.invalid && kgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
-              <input type="text" name="kgNameEn" class="form-control" required minlength="3" maxlength="50"
-                [(ngModel)]="createKgData.kg.nameEn" #kgNameEn="ngModel">
-              <div *ngIf="kgNameEn.invalid && kgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
-              <input type="text" name="kgAddress" class="form-control" required minlength="10" maxlength="100"
-                [(ngModel)]="createKgData.kg.address" #kgAddress="ngModel">
-              <div *ngIf="kgAddress.invalid && kgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
+                <input type="text" name="kgAddress" class="form-control" required minlength="10" maxlength="100"
+                  [(ngModel)]="createKgData.kg.address" #kgAddress="ngModel">
+                <div *ngIf="kgAddress.invalid && kgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">Branches <span class="text-danger">*</span></label>
@@ -216,27 +220,31 @@
         </div>
         <div class="modal-body">
           <form #editKgForm="ngForm" autocomplete="off">
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
-              <input type="text" name="editKgNameAr" class="form-control" required minlength="3" maxlength="50"
-                [(ngModel)]="editKgData.kg.nameAr" #editKgNameAr="ngModel">
-              <div *ngIf="editKgNameAr.invalid && editKgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
+                <input type="text" name="editKgNameAr" class="form-control" required minlength="3" maxlength="50"
+                  [(ngModel)]="editKgData.kg.nameAr" #editKgNameAr="ngModel">
+                <div *ngIf="editKgNameAr.invalid && editKgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
+                <input type="text" name="editKgNameEn" class="form-control" required minlength="3" maxlength="50"
+                  [(ngModel)]="editKgData.kg.nameEn" #editKgNameEn="ngModel">
+                <div *ngIf="editKgNameEn.invalid && editKgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
-              <input type="text" name="editKgNameEn" class="form-control" required minlength="3" maxlength="50"
-                [(ngModel)]="editKgData.kg.nameEn" #editKgNameEn="ngModel">
-              <div *ngIf="editKgNameEn.invalid && editKgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
-              <input type="text" name="editKgAddress" class="form-control" required minlength="10" maxlength="100"
-                [(ngModel)]="editKgData.kg.address" #editKgAddress="ngModel">
-              <div *ngIf="editKgAddress.invalid && editKgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Code</label>
-              <input type="text" class="form-control" [value]="editKgData.kg.kgCode || ''" disabled>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
+                <input type="text" name="editKgAddress" class="form-control" required minlength="10" maxlength="100"
+                  [(ngModel)]="editKgData.kg.address" #editKgAddress="ngModel">
+                <div *ngIf="editKgAddress.invalid && editKgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Code</label>
+                <input type="text" class="form-control" [value]="editKgData.kg.kgCode || ''" disabled>
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">Branches <span class="text-danger">*</span></label>
@@ -331,21 +339,25 @@
         </div>
         <div class="modal-body">
           <form autocomplete="off">
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Name (Arabic)</label>
-              <input type="text" class="form-control" [value]="detailsKgData.kg.nameAr" disabled>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Name (Arabic)</label>
+                <input type="text" class="form-control" [value]="detailsKgData.kg.nameAr" disabled>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Name (English)</label>
+                <input type="text" class="form-control" [value]="detailsKgData.kg.nameEn" disabled>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Name (English)</label>
-              <input type="text" class="form-control" [value]="detailsKgData.kg.nameEn" disabled>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Address</label>
-              <input type="text" class="form-control" [value]="detailsKgData.kg.address" disabled>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">KG Code</label>
-              <input type="text" class="form-control" [value]="detailsKgData.kg.kgCode || ''" disabled>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Address</label>
+                <input type="text" class="form-control" [value]="detailsKgData.kg.address" disabled>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label fw-semibold">KG Code</label>
+                <input type="text" class="form-control" [value]="detailsKgData.kg.kgCode || ''" disabled>
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">Branches</label>
