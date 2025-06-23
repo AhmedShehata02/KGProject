@@ -393,11 +393,11 @@
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
   <div *ngIf="!loading && !error && !kgBranches.length" class="alert alert-info">No KG branches found.</div>
   <!-- Pagination and page info row -->
-  <div *ngIf="kgBranches.length > 0 && totalPages > 1" class="pagination-container mt-2 d-flex justify-content-between align-items-center">
+  <div *ngIf="kgBranches.length > 0" class="pagination-container mt-2 d-flex justify-content-between align-items-center">
     <div class="text-muted small ms-2">
       Page {{ page }} of {{ totalPages }}. Total records: {{ totalCount }}
     </div>
-    <nav>
+    <nav *ngIf="totalPages > 1">
       <ul class="pagination pagination-sm mb-0">
         <li class="page-item" [class.disabled]="page === 1">
           <button class="page-link" (click)="onPageChange(page - 1)" [disabled]="page === 1">&laquo;</button>
