@@ -23,6 +23,7 @@
   background: transparent;
   text-shadow: 0 2px 8px rgba(44,182,125,0.10);
 }
+/* --- FINAL COMPACT TABLE ROWS: CONSISTENT ON ALL SCREEN SIZES --- */
 .table th, .table td {
   vertical-align: middle;
   border: none;
@@ -45,10 +46,7 @@
   box-shadow: 0 2px 12px rgba(44,182,125,0.10);
   transform: scale(1.01);
 }
-.table-bordered {
-  border: none;
-}
-.table-bordered th, .table-bordered td {
+.table-bordered, .table-bordered th, .table-bordered td {
   border: none;
 }
 .btn-outline-primary {
@@ -80,24 +78,16 @@
 .alert-danger {
   border-radius: 0.85rem;
 }
-@media (max-width: 600px) {
-  .table th, .table td {
-    padding: 0.32rem 0.32rem !important;
-    font-size: 0.89rem !important;
-  }
-}
 /* Make branch row fields appear in one line and handle overflow */
 .branch-row {
   flex-wrap: nowrap !important;
   overflow-x: auto;
   gap: 0.5rem;
 }
-
 .modal-dialog {
-  max-width: 80vw !important;
-  width: 80% !important;
+  max-width: 98vw !important;
+  width: 98vw !important;
 }
-
 /* Pagination controls styles */
 .pagination-container {
   display: flex;
@@ -137,34 +127,29 @@
   background: #f8f9fa;
   border-color: #eee;
 }
-
 /** Remove underline from sort header buttons and ensure white color **/
+.sort-header,
 .sort-header.btn-link {
   text-decoration: none !important;
   color: #fff !important;
+  background: none;
+  box-shadow: none !important;
+  outline: none !important;
 }
 .sort-header.btn-link:hover,
-.sort-header.btn-link:focus {
-  text-decoration: none !important;
-  color: #fff !important;
-  background: none;
-  box-shadow: none;
-}
-
-.sort-header,
+.sort-header.btn-link:focus,
 .sort-header:focus,
 .sort-header:active,
 .sort-header:hover {
   text-decoration: none !important;
+  color: #fff !important;
+  background: none;
   box-shadow: none !important;
-  outline: none !important;
 }
-
 .sort-header span,
 .sort-header .sort-icons i {
   text-decoration: none !important;
 }
-
 /* Ensure no underline for all .btn-link in table headers */
 th .btn-link {
   text-decoration: none !important;
@@ -177,7 +162,6 @@ th .btn-link:focus {
   background: none;
   box-shadow: none;
 }
-
 /* Responsive table header and controls */
 @media (max-width: 1200px) {
   .table-responsive {
@@ -262,75 +246,27 @@ th .btn-link:focus {
     align-items: stretch !important;
     gap: 0.5rem !important;
   }
-  .table th, .table td {
-    padding: 0.32rem 0.32rem;
-  }
 }
-
-/* --- FINAL COMPACT TABLE ROWS: CONSISTENT ON ALL SCREEN SIZES --- */
-.table th, .table td {
-  padding: 0.62rem 1.05rem !important;
-  font-size: 1.03rem !important;
-}
-
-/* Remove mobile overrides for padding/font-size to keep compactness consistent */
-@media (max-width: 576px) {
-  .table th, .table td {
-    padding: 0.62rem 1.05rem !important;
-    font-size: 1.03rem !important;
-  }
-}
-
+/* Compact actions column and icon buttons */
 .table td.text-center[style*="min-width: 80px"] {
   min-width: 64px !important;
   width: 64px !important;
   padding-left: 0.13rem !important;
   padding-right: 0.13rem !important;
 }
-
 .btn-group-xs .btn-xs {
   min-width: 32px !important;
   height: 32px !important;
   font-size: 1.08rem !important;
   padding: 0.18rem 0.32rem !important;
-}
-
-/* Ensure table scrolls horizontally on small screens */
-.table-responsive {
-  overflow-x: auto;
-}
-
-/* Make modal dialogs responsive */
-.modal-dialog {
-  max-width: 98vw;
-  width: 98vw;
-}
-
-/* Remove underline and focus/hover/active styles for sort-header */
-.sort-header,
-.sort-header:focus,
-.sort-header:active,
-.sort-header:hover {
-  text-decoration: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-.sort-header span,
-.sort-header .sort-icons i {
-  text-decoration: none !important;
-}
-
-/* Style icon-only action buttons for a modern look */
-.btn-group-xs .btn-xs i {
-  pointer-events: none;
-}
-.btn-group-xs .btn-xs {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem 0.4rem;
   border-radius: 0.35rem;
   transition: background 0.15s, color 0.15s;
+}
+.btn-group-xs .btn-xs i {
+  pointer-events: none;
 }
 .btn-group-xs .btn-xs:hover, .btn-group-xs .btn-xs:focus {
   background: #e9ecef;
@@ -346,4 +282,8 @@ th .btn-link:focus {
 }
 .btn-group-xs .btn-xs:hover .bi-trash, .btn-group-xs .btn-xs:focus .bi-trash {
   color: #a71d2a;
+}
+/* Ensure table scrolls horizontally on small screens */
+.table-responsive {
+  overflow-x: auto;
 }

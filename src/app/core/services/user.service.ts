@@ -3,15 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
-
- /**
- * Generic API response structure matching backend.
- */
-export interface ApiResponse<T> {
-  code: number;
-  status: string;
-  result: T;
-}
+import { ApiResponse } from '../interface/api-response.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

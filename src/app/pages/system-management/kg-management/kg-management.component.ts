@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KGBranchService, KGBranchDTO } from '../../../core/services/kg-branch.service';
+import { KGBranchService } from '../../../core/services/kg-branch.service';
+import { KGBranchDTO } from '../../../core/interface/kg-branch.interfaces';
 import { FormsModule } from '@angular/forms';
 
 @Component({

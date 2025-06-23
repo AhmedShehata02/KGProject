@@ -2,45 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-export interface KindergartenDTO {
-  id: number;
-  nameAr: string;
-  nameEn: string;
-  kgCode?: string;
-  address: string;
-  branches?: BranchDTO[]; // Add branches for mapping
-}
-
-export interface BranchDTO {
-  id: number;
-  nameAr: string;
-  nameEn: string;
-  address: string;
-  phone: string;
-  email: string;
-  branchCode?: string;
-  kindergartenId: number;
-}
-
-export interface KGBranchDTO {
-  kg: KindergartenDTO;
-  branches: BranchDTO[];
-}
-
-export interface ApiResponse<T = any> {
-  code: number;
-  status: string;
-  result: T;
-}
-
-export interface PagedResult<T> {
-  data: T[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
+import { KindergartenDTO, BranchDTO, KGBranchDTO } from '../interface/kg-branch.interfaces';
+import { ApiResponse, PagedResult } from '../interface/api-response.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class KGBranchService {

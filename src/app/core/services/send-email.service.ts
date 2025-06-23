@@ -2,12 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-export interface EmailDto {
-  to: string;
-  subject: string;
-  body: string;
-}
+import { EmailDto } from '../interface/email.interfaces';
 
 @Injectable({
   providedIn: 'root'

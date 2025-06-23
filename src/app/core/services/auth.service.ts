@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import { ApiResponse } from '../interface/api-response.interfaces';
 // #endregion
 
 // #region Helpers
@@ -210,10 +211,3 @@ export class AuthService {
   }
 }
 // #endregion
-
-// ApiResponse interface for backend responses
-export interface ApiResponse<T = any> {
-  code: number;
-  status: string;
-  result: T;
-}

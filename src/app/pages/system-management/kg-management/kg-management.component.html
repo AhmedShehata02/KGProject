@@ -99,7 +99,6 @@
       </tbody>
     </table>
   </div>
-  <div *ngIf="!loading && !error && !kgBranches.length" class="alert alert-info">No KG branches found.</div>
   <!-- Modal for Create New KG -->
   <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showCreateKgModal ? 'block' : 'none', background: showCreateKgModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showCreateKgModal">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
