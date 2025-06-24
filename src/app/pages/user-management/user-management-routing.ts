@@ -7,3 +7,4 @@ export const userManagementRoutes: Routes = [
   { path: '', component: UsersListComponent },
   { path: 'review-Profiles', component: ReviewProfilesComponent}
 ];
+
