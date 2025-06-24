@@ -23,12 +23,37 @@ export class ReviewProfilesComponent implements OnInit {
   actionError = '';
   showProfileModal = false;
 
+  // Pagination and table state
+  page = 1;
+  pageSize = 10;
+  pageSizes = [10, 50, 100];
+  totalCount = 0;
+  totalPages = 1;
+  // Server-side search and sort
+  searchText = '';
+  searchInput = '';
+  sortBy: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+
   constructor(private usersProfilesService: UsersProfilesService) {}
 
   ngOnInit() {
-    this.usersProfilesService.getAllUserProfiles().subscribe({
+    this.fetchProfiles();
+  }
+
+  fetchProfiles() {
+    this.loading = true;
+    this.usersProfilesService.getAllUserProfiles({
+      page: this.page,
+      pageSize: this.pageSize,
+      searchText: this.searchText,
+      sortBy: this.sortBy,
+      sortDirection: this.sortDirection
+    }).subscribe({
       next: (res) => {
-        this.profiles = res?.result || [];
+        this.profiles = res?.result?.data || [];
+        this.totalCount = res?.result?.totalCount || 0;
+        this.totalPages = res?.result?.totalPages || 1;
         this.loading = false;
       },
       error: (err: any) => {
@@ -36,6 +61,61 @@ export class ReviewProfilesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  onPageSizeChange(size: number) {
+    this.pageSize = size;
+    this.page = 1;
+    this.fetchProfiles();
+  }
+
+  onPageChange(page: number) {
+    this.page = page;
+    this.fetchProfiles();
+  }
+
+  onSearchClick() {
+    this.searchText = this.searchInput.trim();
+    this.page = 1;
+    this.fetchProfiles();
+  }
+
+  onSortToggle(column: string) {
+    if (this.sortBy === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortDirection = 'asc';
+    }
+    this.page = 1;
+    this.fetchProfiles();
+  }
+
+  getPageArray(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.page;
+    const delta = 2;
+    const pages: (number | string)[] = [];
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) pages.push(i);
+    } else {
+      if (current <= 4) {
+        for (let i = 1; i <= 5; i++) pages.push(i);
+        pages.push('...');
+        pages.push(total);
+      } else if (current >= total - 3) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = total - 4; i <= total; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = current - 1; i <= current + 1; i++) pages.push(i);
+        pages.push('...');
+        pages.push(total);
+      }
+    }
+    return pages;
   }
 
   openViewModal(profile: any) {

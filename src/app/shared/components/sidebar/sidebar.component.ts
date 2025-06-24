@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { SidebarService } from '../../../core/services/sidebar.service';
+import { SidebarItemDTO } from '../../../core/interface/sidebar.interfaces';
+import { take } from 'rxjs';
 
 interface SidebarItem {
   label: string;
@@ -17,85 +20,91 @@ interface SidebarItem {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   usersOpen = false;
   settingsOpen = false;
   dashboardOpen = false;
   systemOpen = false;
+  systemManagementOpen = false;
   rolesOpen = false;
 
-  allMenuItems: SidebarItem[] = [
-    {
-      label: 'Dashboard',
-      icon: 'bi-speedometer2',
-      route: '/dashboard',
-    },
-    {
-      label: 'User Management',
-      icon: 'bi-people',
-      route: '/users',
-      children: [
-        { label: 'Users List', icon: 'bi-list', route: '/users' },
-        { label: 'Profiles Review', icon: 'bi-person-check', route: '/users/review-Profiles'}
-      ]
-    },
-    {
-      label: 'Role Management',
-      icon: 'bi-shield-lock',
-      route: '/roles',
-      children: [
-        { label: 'Roles List', icon: 'bi-person-badge', route: '/roles' },
-        { label: 'Secured Routes', icon: 'bi-shield-check', route: '/roles/secured-routes' }
-      ]
-    },
-    {
-      label: 'System Management',
-      icon: 'bi-sliders',
-      route: '/systemManagement/kg-management',
-      children: [
-        { label: 'KG Management', icon: 'bi-building', route: '/systemManagement/kg-management' }
-      ]
-    }
-  ];
-
   allowedMenuItems: SidebarItem[] = [];
+  toggleState: { [label: string]: boolean } = {};
+  private allSidebarItems: SidebarItem[] = [];
 
-  constructor(public auth: AuthService) {
+  constructor(public auth: AuthService, private sidebarService: SidebarService) {
     this.auth.securedRoutes$.subscribe(() => {
       this.filterMenuItems();
     });
-    this.filterMenuItems();
+  }
+
+  ngOnInit() {
+    this.sidebarService.getAllPaginated({ page: 1, pageSize: 99999 }).pipe(take(1)).subscribe({
+      next: (res) => {
+        console.log('[Sidebar] Backend response:', res);
+        if (res && res.code === 200 && res.status === 'Success') {
+          const items = res.result.data.map(this.mapSidebarItemFromDTO.bind(this));
+          this.allSidebarItems = items;
+          this.setAllowedMenuItems(items);
+        } else {
+          this.allowedMenuItems = [];
+        }
+      },
+      error: () => {
+        this.allowedMenuItems = [];
+      }
+    });
+  }
+
+  mapSidebarItemFromDTO(dto: SidebarItemDTO): SidebarItem {
+    return {
+      label: dto.label,
+      icon: dto.icon,
+      route: dto.route,
+      children: dto.children && dto.children.length > 0
+        ? dto.children.map(this.mapSidebarItemFromDTO.bind(this))
+        : []
+    };
+  }
+
+  setAllowedMenuItems(items: SidebarItem[]) {
+    const securedRoutes = this.auth.getSecuredRoutes();
+    const userRoles = this.auth.getRoles();
+    const isSuperAdmin = userRoles.includes('Super Admin');
+    const isAllowed = (route?: string, label?: string) => {
+      if (label === 'Dashboard') return true;
+      if (isSuperAdmin) return true;
+      if (!route) return true;
+      if (!securedRoutes || securedRoutes.length === 0) return true; // fallback: show all if no securedRoutes
+      return securedRoutes.some(allowed =>
+        route === allowed || route.startsWith(allowed + '/') || allowed === '/'
+      );
+    };
+    this.allowedMenuItems = items
+      .map(item => {
+        const children = item.children?.filter(child => isAllowed(child.route, child.label));
+        if (children && children.length > 0) {
+          return { ...item, children };
+        } else if (!item.children && isAllowed(item.route, item.label)) {
+          return item;
+        } else if (children?.length === 0 && isAllowed(item.route, item.label)) {
+          return { ...item, children: [] };
+        }
+        return null;
+      })
+      .filter(Boolean) as SidebarItem[];
   }
 
   filterMenuItems() {
-  const securedRoutes = this.auth.getSecuredRoutes();
-  const userRoles = this.auth.getRoles();
-  const isSuperAdmin = userRoles.includes('Super Admin');
+    // Always filter from the full list, not the already filtered one
+    this.setAllowedMenuItems(this.allSidebarItems);
+  }
 
-  const isAllowed = (route?: string, label?: string) => {
-    if (label === 'Dashboard') return true;
-    if (isSuperAdmin) return true;
-    if (!route) return true;
-    return securedRoutes.some(allowed =>
-      route === allowed || route.startsWith(allowed + '/') || allowed === '/'
-    );
-  };
+  toggle(label: string): void {
+    this.toggleState[label] = !this.toggleState[label];
+  }
 
-  this.allowedMenuItems = this.allMenuItems
-    .map(item => {
-      const children = item.children?.filter(child => isAllowed(child.route, child.label));
-
-      if (children && children.length > 0) {
-        return { ...item, children };
-      } else if (!item.children && isAllowed(item.route, item.label)) {
-        return item;
-      } else if (children?.length === 0 && isAllowed(item.route, item.label)) {
-        return { ...item, children: [] };
-      }
-
-      return null;
-    })
-    .filter(Boolean) as SidebarItem[];
-}
-
+  isOpen(label: string): boolean {
+    return !!this.toggleState[label];
+  }
 }

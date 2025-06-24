@@ -11,12 +11,6 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<any[]> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<any[]>(`${this.apiUrl}`, { headers });
-  }
-
   getUserById(id: string): Observable<any> {
     const token = localStorage.getItem('jwt_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
@@ -105,6 +99,24 @@ export class UserService {
     console.log('JWT token used for createUserByAdmin:', token); // Debug: log token
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/create-by-admin`, userData, { headers });
+  }
+
+  /**
+   * Get all users (paginated, filtered, sorted)
+   * Calls /api/User/GetAllPaginated
+   * @param filter { page, pageSize, searchText?, sortBy?, sortDirection? }
+   * @returns Observable<ApiResponse<PagedResult<UserListDTO>>> (see backend)
+   */
+  getAllUsersPaginated(filter: {
+    page: number;
+    pageSize: number;
+    searchText?: string;
+    sortBy?: string;
+    sortDirection?: 'asc' | 'desc';
+  }): Observable<any> {
+    const token = localStorage.getItem('jwt_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    return this.http.get<any>(`${this.apiUrl}/GetAllPaginated`, { params: filter as any, headers });
   }
 
   // --- Profile-related methods moved to UsersProfilesService ---

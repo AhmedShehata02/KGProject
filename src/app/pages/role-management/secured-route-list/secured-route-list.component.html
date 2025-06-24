@@ -27,12 +27,43 @@
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('basePath')">
               <span>Base Path</span>
-              <span class="sort-icons ms-1"></span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'basePath'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'basePath' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'basePath' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
+              </span>
             </button>
           </th>
-          <th>Description</th>
-          <th>Created By</th>
-          <th>Created On</th>
+          <th>
+            <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('description')">
+              <span>Description</span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'description'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'description' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'description' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
+              </span>
+            </button>
+          </th>
+          <th>
+            <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('createdByName')">
+              <span>Created By</span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'createdByName'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'createdByName' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'createdByName' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
+              </span>
+            </button>
+          </th>
+          <th>
+            <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('createdOn')">
+              <span>Created On</span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'createdOn'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
+              </span>
+            </button>
+          </th>
           <th>Assigned Roles</th>
           <th class="text-center" style="width: 80px; min-width: 80px;">Actions</th>
         </tr>

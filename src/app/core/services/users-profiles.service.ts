@@ -22,10 +22,10 @@ export class UsersProfilesService {
   /**
    * Get all user profiles (Admin, Super Admin only)
    */
-  getAllUserProfiles(): Observable<ApiResponse<any>> {
+  getAllUserProfiles(filter: any): Observable<ApiResponse<any>> {
     const token = localStorage.getItem('jwt_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profilesForAdmin`, { headers });
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/profiles/pending`, { headers, params: filter });
   }
 
   /**

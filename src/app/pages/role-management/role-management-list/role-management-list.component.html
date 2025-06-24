@@ -27,12 +27,43 @@
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('name')">
               <span>Role Name</span>
-              <span class="sort-icons ms-1"></span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy === 'name' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'name' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'name'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
+              </span>
             </button>
           </th>
-          <th>Status</th>
-          <th>Is External</th>
-          <th>Created On</th>
+          <th>
+            <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('isActive')">
+              <span>Status</span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy === 'isActive' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'isActive' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'isActive'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
+              </span>
+            </button>
+          </th>
+          <th>
+            <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('isExternal')">
+              <span>Is External</span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy === 'isExternal' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'isExternal' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'isExternal'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
+              </span>
+            </button>
+          </th>
+          <th>
+            <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('createdOn')">
+              <span>Created On</span>
+              <span class="sort-icons ms-1">
+                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'createdOn'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
+              </span>
+            </button>
+          </th>
           <th class="text-center" style="width: 80px; min-width: 80px;">Actions</th>
         </tr>
       </thead>

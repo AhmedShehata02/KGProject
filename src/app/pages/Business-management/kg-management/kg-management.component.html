@@ -28,11 +28,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('nameAr')">
               <span>KG Name (Ar)</span>
               <span class="sort-icons ms-1">
-                <i class="bi text-white"
-                   [ngClass]="{
-                     'bi-arrow-up': sortBy === 'nameAr' && sortDirection === 'asc',
-                     'bi-arrow-down': (sortBy === 'nameAr' && sortDirection === 'desc') || sortBy !== 'nameAr'
-                   }"></i>
+                <i *ngIf="sortBy === 'nameAr' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'nameAr' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'nameAr'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>
@@ -40,11 +38,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('nameEn')">
               <span>KG Name (En)</span>
               <span class="sort-icons ms-1">
-                <i class="bi text-white"
-                   [ngClass]="{
-                     'bi-arrow-up': sortBy === 'nameEn' && sortDirection === 'asc',
-                     'bi-arrow-down': (sortBy === 'nameEn' && sortDirection === 'desc') || sortBy !== 'nameEn'
-                   }"></i>
+                <i *ngIf="sortBy === 'nameEn' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'nameEn' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'nameEn'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>
@@ -52,11 +48,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('kgCode')">
               <span>KG Code</span>
               <span class="sort-icons ms-1">
-                <i class="bi text-white"
-                   [ngClass]="{
-                     'bi-arrow-up': sortBy === 'kgCode' && sortDirection === 'asc',
-                     'bi-arrow-down': (sortBy === 'kgCode' && sortDirection === 'desc') || sortBy !== 'kgCode'
-                   }"></i>
+                <i *ngIf="sortBy === 'kgCode' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'kgCode' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'kgCode'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>
@@ -64,11 +58,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('address')">
               <span>KG Address</span>
               <span class="sort-icons ms-1">
-                <i class="bi text-white"
-                   [ngClass]="{
-                     'bi-arrow-up': sortBy === 'address' && sortDirection === 'asc',
-                     'bi-arrow-down': (sortBy === 'address' && sortDirection === 'desc') || sortBy !== 'address'
-                   }"></i>
+                <i *ngIf="sortBy === 'address' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy === 'address' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
+                <i *ngIf="sortBy !== 'address'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>

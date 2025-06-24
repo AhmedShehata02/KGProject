@@ -20,6 +20,7 @@ export class UsersListComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
   totalPages = 1;
+  totalCount = 0;
   editUserRoles: string[] = [];
   editUserClaims: string[] = [];
   editUserRolesLoading = false;
@@ -43,6 +44,10 @@ export class UsersListComponent implements OnInit {
   createUserSuccess = '';
   createUserAllRoles: string[] = [];
   createUserFormTouched = false;
+  searchInput: string = '';
+  pageSizes = [10, 50, 100];
+  sortBy: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(public userService: UserService) {}
 
@@ -61,10 +66,26 @@ export class UsersListComponent implements OnInit {
 
   fetchUsers() {
     this.loading = true;
-    this.userService.getUsers().subscribe({
-      next: (data) => {
-        this.users = data;
-        this.setPagination();
+    this.userService.getAllUsersPaginated({
+      page: this.currentPage,
+      pageSize: this.pageSize,
+      searchText: this.searchInput?.trim() || '',
+      sortBy: this.sortBy,
+      sortDirection: this.sortDirection
+    }).subscribe({
+      next: (res) => {
+        if (res && res.code === 200 && res.status === 'Success') {
+          this.users = res.result.data;
+          this.totalCount = res.result.totalCount;
+          this.totalPages = res.result.totalPages;
+          this.currentPage = res.result.page;
+          this.pagedUsers = this.users; // Already paged from backend
+        } else {
+          this.users = [];
+          this.pagedUsers = [];
+          this.totalCount = 0;
+          this.totalPages = 1;
+        }
         this.loading = false;
       },
       error: (err) => {
@@ -74,23 +95,45 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  setPagination() {
-    this.totalPages = Math.ceil(this.users.length / this.pageSize) || 1;
-    this.currentPage = Math.min(this.currentPage, this.totalPages);
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.pagedUsers = this.users.slice(start, end);
-  }
-
   goToPage(page: number) {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
-    this.setPagination();
+    this.fetchUsers();
   }
 
-  onPageSizeChange() {
+  // Update page size
+  onPageSizeChange(size?: number) {
+    this.pageSize = size || this.pageSize;
     this.currentPage = 1;
-    this.setPagination();
+    this.fetchUsers();
+  }
+
+  // Generate page array for pagination (with ellipsis if needed)
+  getPageArray(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    const delta = 2;
+    const pages: (number | string)[] = [];
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) pages.push(i);
+    } else {
+      if (current <= 4) {
+        for (let i = 1; i <= 5; i++) pages.push(i);
+        pages.push('...');
+        pages.push(total);
+      } else if (current >= total - 3) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = total - 4; i <= total; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = current - 1; i <= current + 1; i++) pages.push(i);
+        pages.push('...');
+        pages.push(total);
+      }
+    }
+    return pages;
   }
 
   openEditUser(user: any) {
@@ -329,6 +372,22 @@ export class UsersListComponent implements OnInit {
         this.createUserLoading = false;
       }
     });
+  }
+
+  onSearchClick() {
+    this.currentPage = 1;
+    this.fetchUsers();
+  }
+
+  onSortToggle(column: string) {
+    if (this.sortBy === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortDirection = 'asc';
+    }
+    this.currentPage = 1;
+    this.fetchUsers();
   }
 
   get createUserErrorList(): string[] {

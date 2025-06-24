@@ -4,13 +4,15 @@ import { authRoutes } from './pages/auth/auth-routing';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { userManagementRoutes } from './pages/user-management/user-management-routing';
-import { systemManagementRoutes } from './pages/system-management/system-management-routes';
 import { DashboardComponent } from './pages/dashboard/dashboard/dashboard.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { CompleteUserProfileComponent } from './pages/auth/complete-user-profile/complete-user-profile.component';
 import { roleManagementRoutes } from './pages/role-management/role-management-routing';
 import { SecuredRouteGuard } from './core/guards/secured-route.guard';
+import { systemManagementRoutes } from './pages/system-management/system-management-routings';
+import { businessManagementRoutes } from './pages/Business-management/business-management-routes';
+import { dashboardRoutes } from './pages/dashboard/dashboard-routes';
 
 export const routes: Routes = [
   {
@@ -25,26 +27,40 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        children: dashboardRoutes,
         canActivate: [AuthGuard], // Remove SecuredRouteGuard so dashboard is public for any authenticated user
       },
       {
         path: 'users',
-        children: userManagementRoutes.map(r => ({ ...r, canActivate: [AuthGuard, SecuredRouteGuard] })),
+        children: userManagementRoutes.map((r) => ({
+          ...r,
+          canActivate: [AuthGuard, SecuredRouteGuard],
+        })),
         canActivate: [AuthGuard],
-        data: { roles: ['Admin', 'Super Admin'] }, // Only allow Admin/Super Admin
+      },
+      {
+        path: 'businessManagement',
+        children: businessManagementRoutes.map((r) => ({
+          ...r,
+          canActivate: [AuthGuard, SecuredRouteGuard],
+        })),
+        canActivate: [AuthGuard],
       },
       {
         path: 'systemManagement',
-        children: systemManagementRoutes.map(r => ({ ...r, canActivate: [AuthGuard, SecuredRouteGuard] })),
+        children: systemManagementRoutes.map((r) => ({
+          ...r,
+          canActivate: [AuthGuard, SecuredRouteGuard],
+        })),
         canActivate: [AuthGuard],
-        data: { roles: ['Admin', 'Super Admin'] }, // Only allow Admin/Super Admin
       },
       {
         path: 'roles',
-        children: roleManagementRoutes.map(r => ({ ...r, canActivate: [AuthGuard, SecuredRouteGuard] })),
+        children: roleManagementRoutes.map((r) => ({
+          ...r,
+          canActivate: [AuthGuard, SecuredRouteGuard],
+        })),
         canActivate: [AuthGuard],
-        data: { roles: ['Admin', 'Super Admin'] },
       },
     ],
   },
@@ -63,9 +79,3 @@ export const routes: Routes = [
   },
   { path: '**', redirectTo: 'dashboard' },
 ];
-
-
-
-
-
-

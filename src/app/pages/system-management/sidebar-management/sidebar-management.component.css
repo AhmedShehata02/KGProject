@@ -1,4 +1,4 @@
-/* Modern, minimal, and elegant table style with glassmorphism and subtle hover */
+/* Use the same modern, minimal, and elegant table style as kg-management */
 .table {
   border-radius: 1.5rem;
   overflow: hidden;
@@ -77,7 +77,6 @@
 .alert-danger {
   border-radius: 0.85rem;
 }
-/* Pagination controls styles */
 .pagination-container {
   display: flex;
   align-items: center;
@@ -116,41 +115,9 @@
   background: #f8f9fa;
   border-color: #eee;
 }
-/* Remove underline from sort header buttons and ensure white color **/
-.sort-header,
-.sort-header.btn-link {
-  text-decoration: none !important;
-  color: #fff !important;
-  background: none;
-  box-shadow: none !important;
-  outline: none !important;
+.table-responsive {
+  overflow-x: auto;
 }
-.sort-header.btn-link:hover,
-.sort-header.btn-link:focus,
-.sort-header:focus,
-.sort-header:active,
-.sort-header:hover {
-  text-decoration: none !important;
-  color: #fff !important;
-  background: none;
-  box-shadow: none !important;
-}
-.sort-header span,
-.sort-header .sort-icons i {
-  text-decoration: none !important;
-}
-th .btn-link {
-  text-decoration: none !important;
-  color: #fff !important;
-}
-th .btn-link:hover,
-th .btn-link:focus {
-  text-decoration: none !important;
-  color: #fff !important;
-  background: none;
-  box-shadow: none;
-}
-/* Responsive table header and controls */
 @media (max-width: 1200px) {
   .table-responsive {
     font-size: 0.95rem;
@@ -185,4 +152,34 @@ th .btn-link:focus {
     align-items: stretch;
     gap: 0.5rem;
   }
+}
+/* Remove underline from sort header buttons and ensure white color */
+.sort-header,
+.sort-header.btn-link {
+  text-decoration: none !important;
+  color: #fff !important;
+  background: none;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.sort-header.btn-link:hover,
+.sort-header.btn-link:focus,
+.sort-header:focus,
+.sort-header:active,
+.sort-header:hover {
+  text-decoration: none !important;
+  color: #fff !important;
+  background: none;
+  box-shadow: none !important;
+}
+th .btn-link {
+  text-decoration: none !important;
+  color: #fff !important;
+}
+th .btn-link:hover,
+th .btn-link:focus {
+  text-decoration: none !important;
+  color: #fff !important;
+  background: none;
+  box-shadow: none;
 }
