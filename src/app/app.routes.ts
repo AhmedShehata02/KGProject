@@ -9,6 +9,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard/dashboard.compon
 import { AuthGuard } from './core/guards/auth.guard';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { CompleteUserProfileComponent } from './pages/auth/complete-user-profile/complete-user-profile.component';
+import { roleManagementRoutes } from './pages/role-management/role-management-routing';
+import { SecuredRouteGuard } from './core/guards/secured-route.guard';
 
 export const routes: Routes = [
   {
@@ -24,19 +26,25 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard], // Remove SecuredRouteGuard so dashboard is public for any authenticated user
       },
       {
         path: 'users',
-        children: userManagementRoutes,
+        children: userManagementRoutes.map(r => ({ ...r, canActivate: [AuthGuard, SecuredRouteGuard] })),
         canActivate: [AuthGuard],
         data: { roles: ['Admin', 'Super Admin'] }, // Only allow Admin/Super Admin
       },
       {
         path: 'systemManagement',
-        children: systemManagementRoutes,
+        children: systemManagementRoutes.map(r => ({ ...r, canActivate: [AuthGuard, SecuredRouteGuard] })),
         canActivate: [AuthGuard],
         data: { roles: ['Admin', 'Super Admin'] }, // Only allow Admin/Super Admin
+      },
+      {
+        path: 'roles',
+        children: roleManagementRoutes.map(r => ({ ...r, canActivate: [AuthGuard, SecuredRouteGuard] })),
+        canActivate: [AuthGuard],
+        data: { roles: ['Admin', 'Super Admin'] },
       },
     ],
   },

@@ -1,8 +1,5 @@
-<div class="unauthorized-container">
-  <div class="icon-wrapper">
-    <span class="material-icons">block</span>
-  </div>
-  <h1>Access Denied</h1>
-  <p class="lead">You do not have permission to view this page.</p>
-  <button class="btn btn-primary" (click)="goToDashboard()">Go to Dashboard</button>
+<div class="container text-center mt-5">
+  <h1 class="display-4 text-danger">403 - Access Denied</h1>
+  <p class="lead">You do not have permission to access this page.</p>
+  <a routerLink="/dashboard" class="btn btn-primary mt-3">Go to Dashboard</a>
 </div>

@@ -1,70 +1,53 @@
 <div class="sidebar-modern p-2 h-100">
-  <!-- <div class="sidebar-title mb-4 text-primary fw-bold fs-5">Menu</div> -->
   <ul class="nav flex-column sidebar-list">
-    <!-- Dashboard Dropdown Style -->
-    <li class="nav-item mb-2 sidebar-dropdown">
-      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="dashboardOpen = !dashboardOpen" [attr.aria-expanded]="dashboardOpen">
-        <span class="d-flex align-items-center">
-          <span class="me-2"><i class="bi bi-speedometer2"></i></span> Dashboard
-        </span>
-        <i class="bi" [ngClass]="{'bi-chevron-down': dashboardOpen, 'bi-chevron-right': !dashboardOpen, 'arrow-icon': true}"></i>
-      </button>
-      <div class="sidebar-dropdown-menu" [class.show]="dashboardOpen">
-        <a class="dropdown-item nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="bi bi-speedometer2 me-2"></i> Dashboard Home
-        </a>
-        <!-- Add more dashboard sub-items here if needed -->
-      </div>
-    </li>
-    <!-- Users Dropdown (Admin or Super Admin only) -->
-    <li class="nav-item mb-2 sidebar-dropdown" *ngIf="hasRole('Admin') || hasRole('Super Admin')">
-      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="usersOpen = !usersOpen" [attr.aria-expanded]="usersOpen">
-        <span class="d-flex align-items-center">
-          <span class="me-2"><i class="bi bi-people"></i></span> User Management
-        </span>
-        <i class="bi" [ngClass]="{'bi-chevron-down': usersOpen, 'bi-chevron-right': !usersOpen, 'arrow-icon': true}"></i>
-      </button>
-      <div class="sidebar-dropdown-menu" [class.show]="usersOpen">
-        <a class="dropdown-item nav-link" routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="bi bi-list me-2"></i> Users List
-        </a>
-        <a class="dropdown-item nav-link" routerLink="/users/review-Profiles" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="bi bi-person-check me-2"></i> Profiles Review
-        </a>
-      </div>
-    </li>
-        <!-- System Management Dropdown -->
-    <li class="nav-item mb-2 sidebar-dropdown" *ngIf="hasRole('Admin') || hasRole('Super Admin')">
-      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="systemOpen = !systemOpen" [attr.aria-expanded]="systemOpen">
-        <span class="d-flex align-items-center">
-          <span class="me-2"><i class="bi bi-sliders"></i></span> System Management
-        </span>
-        <i class="bi" [ngClass]="{'bi-chevron-down': systemOpen, 'bi-chevron-right': !systemOpen, 'arrow-icon': true}"></i>
-      </button>
-      <div class="sidebar-dropdown-menu" [class.show]="systemOpen">
-        <a class="dropdown-item nav-link" routerLink="/systemManagement/kg-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="bi bi-building me-2"></i> KG Management
-        </a>
-      </div>
-    </li>
-    <!-- Settings Dropdown -->
-    <li class="nav-item mb-2 sidebar-dropdown">
-      <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button" (click)="settingsOpen = !settingsOpen" [attr.aria-expanded]="settingsOpen">
-        <span class="d-flex align-items-center">
-          <span class="me-2"><i class="bi bi-gear"></i></span> Settings
-        </span>
-        <i class="bi" [ngClass]="{'bi-chevron-down': settingsOpen, 'bi-chevron-right': !settingsOpen, 'arrow-icon': true}"></i>
-      </button>
-      <div class="sidebar-dropdown-menu" [class.show]="settingsOpen">
-        <a class="dropdown-item nav-link" routerLink="/settings/profile" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="bi bi-person me-2"></i> Profile
-        </a>
-        <a class="dropdown-item nav-link" routerLink="/settings/security" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <i class="bi bi-shield-lock me-2"></i> Security
-        </a>
-      </div>
-    </li>
-
-    <!-- Add more main or sub items as needed -->
+    <ng-container *ngFor="let item of allowedMenuItems">
+      <li class="nav-item mb-2 sidebar-dropdown" *ngIf="item.children && item.children.length > 0; else singleItem">
+        <button class="btn sidebar-dropdown-toggle w-100 d-flex align-items-center justify-content-between" type="button"
+          (click)="item.label === 'Dashboard' ? dashboardOpen = !dashboardOpen :
+                   item.label === 'User Management' ? usersOpen = !usersOpen :
+                   item.label === 'Role Management' ? rolesOpen = !rolesOpen :
+                   item.label === 'System Management' ? systemOpen = !systemOpen :
+                   item.label === 'Settings' ? settingsOpen = !settingsOpen : null"
+          [attr.aria-expanded]="item.label === 'Dashboard' ? dashboardOpen :
+                                item.label === 'User Management' ? usersOpen :
+                                item.label === 'Role Management' ? rolesOpen :
+                                item.label === 'System Management' ? systemOpen :
+                                item.label === 'Settings' ? settingsOpen : false">
+          <span class="d-flex align-items-center">
+            <span class="me-2"><i class="bi" [ngClass]="item.icon"></i></span> {{ item.label }}
+          </span>
+          <i class="bi" [ngClass]="{
+            'bi-chevron-down': (item.label === 'Dashboard' && dashboardOpen) ||
+                              (item.label === 'User Management' && usersOpen) ||
+                              (item.label === 'Role Management' && rolesOpen) ||
+                              (item.label === 'System Management' && systemOpen) ||
+                              (item.label === 'Settings' && settingsOpen),
+            'bi-chevron-right': !( (item.label === 'Dashboard' && dashboardOpen) ||
+                                   (item.label === 'User Management' && usersOpen) ||
+                                   (item.label === 'Role Management' && rolesOpen) ||
+                                   (item.label === 'System Management' && systemOpen) ||
+                                   (item.label === 'Settings' && settingsOpen) ),
+            'arrow-icon': true
+          }"></i>
+        </button>
+        <div class="sidebar-dropdown-menu" [class.show]="
+          (item.label === 'Dashboard' && dashboardOpen) ||
+          (item.label === 'User Management' && usersOpen) ||
+          (item.label === 'Role Management' && rolesOpen) ||
+          (item.label === 'System Management' && systemOpen) ||
+          (item.label === 'Settings' && settingsOpen)">
+          <a *ngFor="let child of item.children" class="dropdown-item nav-link" [routerLink]="child.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="bi me-2" [ngClass]="child.icon"></i> {{ child.label }}
+          </a>
+        </div>
+      </li>
+      <ng-template #singleItem>
+        <li class="nav-item mb-2" *ngIf="!item.children">
+          <a class="nav-link d-flex align-items-center" [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="bi me-2" [ngClass]="item.icon"></i> {{ item.label }}
+          </a>
+        </li>
+      </ng-template>
+    </ng-container>
   </ul>
 </div>

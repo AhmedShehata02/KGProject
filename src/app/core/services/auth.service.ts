@@ -1,7 +1,7 @@
 // #region Imports
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { ApiResponse } from '../interface/api-response.interfaces';
@@ -26,6 +26,13 @@ export class AuthService {
   // #region Properties
   private apiUrl = environment.apiBaseUrl + '/api/Auth';
   private tokenExpirationTimer: any;
+  private rolesSubject = new BehaviorSubject<string[]>(this.getRoles());
+  private securedRoutesSubject = new BehaviorSubject<string[]>(this.getSecuredRoutes());
+  // #endregion
+
+  // #region Observables
+  roles$ = this.rolesSubject.asObservable();
+  securedRoutes$ = this.securedRoutesSubject.asObservable();
   // #endregion
 
   // #region Constructor
@@ -45,9 +52,14 @@ export class AuthService {
         if (res && res.code === 200 && res.status === 'Success' && res.result) {
           localStorage.setItem('jwt_token', res.result);
           this.startAutoLogout(); // Start timer after login
+          this.updateAuthSubjects();
           // Check IsFirstLogin claim in JWT
           const decoded = decodeJwt(res.result);
           console.log('IsFirstLogin claim:', decoded?.IsFirstLogin);
+          // --- Log roles and secured routes ---
+          console.log('Roles:', this.getRoles());
+          console.log('SecuredRoutes:', this.getSecuredRoutes());
+          // ---
           if (decoded && (decoded.IsFirstLogin === true || decoded.IsFirstLogin === 'true' || decoded.IsFirstLogin === 1 || decoded.IsFirstLogin === '1')) {
             this.router.navigate(['/auth/change-password-first-time']);
             return;
@@ -79,6 +91,7 @@ export class AuthService {
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
+    this.updateAuthSubjects();
     // Optionally redirect to login
     this.router.navigate(['/auth/login']);
   }
@@ -208,6 +221,33 @@ export class AuthService {
 
   hasRole(role: string): boolean {
     return this.getRoles().includes(role);
+  }
+
+  /**
+   * Get secured routes from JWT token claims
+   */
+  getSecuredRoutes(): string[] {
+    const decoded = this.getDecodedToken();
+    if (!decoded) return [];
+    // Handle both single and multiple claims
+    if (Array.isArray(decoded.SecuredRoute)) return decoded.SecuredRoute;
+    if (typeof decoded.SecuredRoute === 'string') return [decoded.SecuredRoute];
+    // Fallback: check for multiple claims with different casing
+    if (Array.isArray(decoded.securedRoute)) return decoded.securedRoute;
+    if (typeof decoded.securedRoute === 'string') return [decoded.securedRoute];
+    return [];
+  }
+
+  /**
+   * Check if user has access to a specific secured route
+   */
+  hasSecuredRoute(route: string): boolean {
+    return this.getSecuredRoutes().includes(route);
+  }
+
+  private updateAuthSubjects() {
+    this.rolesSubject.next(this.getRoles());
+    this.securedRoutesSubject.next(this.getSecuredRoutes());
   }
 }
 // #endregion
