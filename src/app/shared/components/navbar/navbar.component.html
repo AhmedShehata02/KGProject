@@ -1,61 +1,29 @@
 <nav
   class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm rounded-bottom glass-navbar"
 >
-  <div class="container-fluid">
-    <a
-      class="navbar-brand fw-bold d-flex align-items-center gap-2"
-      routerLink="/dashboard"
-    >
-      <i class="fa-solid fa-cube text-white fs-4"></i>
-      <span>KGProject</span>
-    </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav align-items-center ms-auto gap-3">
-        <!-- Notification Icon -->
+  <div class="container-fluid d-flex flex-row justify-content-between align-items-center navbar-row">
+    <div class="navbar-logo d-flex align-items-center">
+      <a
+        class="navbar-brand fw-bold d-flex align-items-center gap-2"
+        routerLink="/dashboard"
+      >
+        <i class="fa-solid fa-cube text-white fs-4"></i>
+        <span>KGProject</span>
+      </a>
+    </div>
+    <div class="navbar-icons d-flex align-items-center">
+      <ul class="navbar-nav align-items-center ms-auto gap-3 flex-row mb-0">
+        <!-- Language Dropdown -->
         <li class="nav-item">
-          <a
-            class="nav-link position-relative notification-btn"
-            href="#"
-            aria-label="Notifications"
+          <select
+            class="form-select form-select-sm w-auto ms-2"
+            [ngModel]="currentLang"
+            (ngModelChange)="onLangChange($event)"
+            style="min-width: 90px"
           >
-            <i class="fa-solid fa-bell fs-5"></i>
-            <span
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__bounceIn"
-              style="font-size: 0.7rem; min-width: 1.2em"
-              >3</span
-            >
-          </a>
-        </li>
-        <!-- Settings Icon -->
-        <li class="nav-item">
-          <a
-            class="nav-link position-relative settings-btn"
-            href="#"
-            aria-label="Settings"
-          >
-            <i class="fa-solid fa-gear fs-5"></i>
-          </a>
-        </li>
-        <!-- Theme Toggle Icon -->
-        <li class="nav-item">
-          <a
-            class="nav-link position-relative theme-btn"
-            href="#"
-            aria-label="Toggle Theme"
-          >
-            <i class="fa-solid fa-moon fs-5"></i>
-          </a>
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+          </select>
         </li>
         <!-- Profile Dropdown -->
         <li class="nav-item dropdown">
@@ -67,10 +35,12 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="fa-solid fa-bell fs-5"></i>
+            <i class="fa-solid fa-user-circle fs-5"></i>
           </a>
           <ul
-            class="dropdown-menu dropdown-menu-end glass-dropdown"
+            class="dropdown-menu glass-dropdown"
+            [class.dropdown-menu-end]="currentLang === 'en'"
+            [class.dropdown-menu-start]="currentLang === 'ar'"
             aria-labelledby="profileDropdown"
           >
             <li>
@@ -78,7 +48,7 @@
                 class="dropdown-item d-flex align-items-center"
                 routerLink="/auth/change-password"
               >
-                <i class="bi bi-key me-2"></i> Change Password
+                <i class="bi bi-key me-2"></i> {{ 'NAVBAR.CHANGE_PASSWORD' | translate }}
               </a>
             </li>
             <li><hr class="dropdown-divider" /></li>
@@ -87,7 +57,7 @@
                 class="dropdown-item d-flex align-items-center"
                 (click)="logout()"
               >
-                <i class="bi bi-box-arrow-right me-2"></i> Logout
+                <i class="bi bi-box-arrow-right me-2"></i> {{ 'NAVBAR.LOGOUT' | translate }}
               </a>
             </li>
           </ul>

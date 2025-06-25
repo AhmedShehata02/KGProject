@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { SidebarItemDTO } from '../../../core/interface/sidebar.interfaces';
 import { take } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface SidebarItem {
   label: string;
@@ -16,7 +17,7 @@ interface SidebarItem {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })

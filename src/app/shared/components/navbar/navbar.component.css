@@ -70,6 +70,95 @@
   color: #fff;
 }
 
+/* Direction-aware navbar layout */
+[dir="ltr"] .navbar .container-fluid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+[dir="rtl"] .navbar .container-fluid {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Brand alignment */
+[dir="ltr"] .navbar-brand {
+  margin-right: auto;
+  margin-left: 0;
+}
+[dir="rtl"] .navbar-brand {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Navbar nav alignment */
+[dir="ltr"] .navbar-nav {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+[dir="rtl"] .navbar-nav {
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+/* New flexbox and direction-aware rules */
+.navbar-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  order: 1;
+}
+
+.navbar-icons {
+  order: 2;
+}
+
+/* LTR: logo left, icons right */
+[dir="ltr"] .navbar-row {
+  flex-direction: row;
+}
+[dir="ltr"] .navbar-logo {
+  order: 1;
+}
+[dir="ltr"] .navbar-icons {
+  order: 2;
+}
+
+/* RTL: logo right, icons left */
+[dir="rtl"] .navbar-row {
+  flex-direction: row-reverse;
+}
+[dir="rtl"] .navbar-logo {
+  order: 2;
+}
+[dir="rtl"] .navbar-icons {
+  order: 1;
+}
+
+/* Profile dropdown always open to down right (RTL and LTR) */
+.dropdown-menu-end {
+  right: 0 !important;
+  left: auto !important;
+  text-align: left;
+  direction: ltr;
+}
+[dir="rtl"] .dropdown-menu-end {
+  right: 0 !important;
+  left: auto !important;
+  text-align: left;
+  direction: ltr;
+}
+[dir="rtl"] .dropdown-item {
+  text-align: right;
+}
+
 @media (max-width: 767.98px) {
   .glass-navbar {
     border-radius: 0 0 1rem 1rem;

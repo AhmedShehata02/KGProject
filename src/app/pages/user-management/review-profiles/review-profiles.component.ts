@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { UsersProfilesService } from '../../../core/services/users-profiles.service';
 import { environment } from '../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-review-profiles',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './review-profiles.component.html',
-  styleUrl: './review-profiles.component.css'
+  styleUrls: ['./review-profiles.component.css']
 })
 export class ReviewProfilesComponent implements OnInit {
   profiles: any[] = [];

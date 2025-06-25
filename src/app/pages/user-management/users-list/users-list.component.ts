@@ -1,16 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { RoleManagementService } from '../../../core/services/role-management.service';
+import { UserManagementTranslator } from '../user-management-translator';
+import { LanguageService } from '../../../shared/services/language.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './users-list.component.html',
-  styleUrl: './users-list.component.css'
+  styleUrls: ['./users-list.component.css']
 })
 export class UsersListComponent implements OnInit {
   users: any[] = [];
@@ -50,9 +52,19 @@ export class UsersListComponent implements OnInit {
   sortBy: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(public userService: UserService, private roleService: RoleManagementService) {}
+  constructor(
+    public userService: UserService,
+    private roleService: RoleManagementService,
+    private userManagementTranslator: UserManagementTranslator,
+    private languageService: LanguageService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
+    this.userManagementTranslator.loadTranslations();
+    this.languageService.translate.onLangChange.subscribe(() => {
+      this.userManagementTranslator.loadTranslations();
+    });
     this.fetchUsers();
     // Fetch all roles for create/edit user modals from RoleManagementService
     this.roleService.getAllRolesPaginated(1, 1000).subscribe({

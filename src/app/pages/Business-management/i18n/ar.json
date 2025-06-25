@@ -1,0 +1,35 @@
+{
+  "BUSINESS_LIST": {
+    "TITLE": "قائمة الأعمال"
+  },
+  "KG_MANAGEMENT": {
+    "CREATE_NEW_KG": "إنشاء حضانه جديد",
+    "SEARCH_PLACEHOLDER": "بحث...",
+    "SEARCH": "بحث",
+    "SHOW": "عرض",
+    "ENTRIES": "مدخلات",
+    "KG_NAME_AR": "اسم حضانه (عربي)",
+    "KG_NAME_EN": "اسم حضانه (إنجليزي)",
+    "KG_CODE": "كود حضانه",
+    "KG_ADDRESS": "عنوان حضانه",
+    "ACTIONS": "الإجراءات",
+    "DETAILS": "تفاصيل",
+    "EDIT": "تعديل",
+    "DELETE": "حذف",
+    "BRANCHES": "الفروع",
+    "ADD_BRANCH": "إضافة فرع",
+    "AT_LEAST_ONE_BRANCH": "يجب إضافة فرع واحد على الأقل.",
+    "CANCEL": "إلغاء",
+    "CREATE": "إنشاء",
+    "EDIT_KG": "تعديل حضانه",
+    "SAVE_CHANGES": "حفظ التغييرات",
+    "KG_DETAILS": "تفاصيل حضانه",
+    "CLOSE": "إغلاق",
+    "LOADING": "جاري التحميل...",
+    "NO_KG_BRANCHES_FOUND": "لا يوجد فروع حضانه.",
+    "PAGE_INFO": "الصفحة {{page}} من {{totalPages}}. إجمالي السجلات: {{totalCount}}",
+    "KG_NAME_AR_REQUIRED": "الاسم العربي مطلوب (3-50 حرف).",
+    "KG_NAME_EN_REQUIRED": "الاسم الإنجليزي مطلوب (3-50 حرف).",
+    "KG_ADDRESS_REQUIRED": "العنوان مطلوب (10-100 حرف)."
+  }
+}

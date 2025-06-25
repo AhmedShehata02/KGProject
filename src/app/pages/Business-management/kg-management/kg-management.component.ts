@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { KGBranchService } from '../../../core/services/kg-branch.service';
 import { KGBranchDTO } from '../../../core/interface/kg-branch.interfaces';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { BusinessManagementTranslator } from '../business-management-translator'; // ✅ import الترجمة
+
 
 @Component({
   selector: 'app-kg-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule , TranslateModule],
   templateUrl: './kg-management.component.html',
   styleUrl: './kg-management.component.css'
 })
@@ -48,9 +51,12 @@ export class KgManagementComponent implements OnInit {
   sortBy: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private kgBranchService: KGBranchService) {}
+  constructor(private kgBranchService: KGBranchService,
+    private kgTranslator : BusinessManagementTranslator // ✅ Inject الترجمة
+    ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.kgTranslator.loadTranslations();
     this.fetchKgBranches();
   }
 

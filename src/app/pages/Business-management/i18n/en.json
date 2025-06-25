@@ -1,0 +1,35 @@
+{
+  "BUSINESS_LIST": {
+    "TITLE": "Business List"
+  },
+  "KG_MANAGEMENT": {
+    "CREATE_NEW_KG": "Create New KG",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SEARCH": "Search",
+    "SHOW": "Show",
+    "ENTRIES": "entries",
+    "KG_NAME_AR": "KG Name (Ar)",
+    "KG_NAME_EN": "KG Name (En)",
+    "KG_CODE": "KG Code",
+    "KG_ADDRESS": "KG Address",
+    "ACTIONS": "Actions",
+    "DETAILS": "Details",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "BRANCHES": "Branches",
+    "ADD_BRANCH": "Add Branch",
+    "AT_LEAST_ONE_BRANCH": "At least one branch is required.",
+    "CANCEL": "Cancel",
+    "CREATE": "Create",
+    "EDIT_KG": "Edit KG",
+    "SAVE_CHANGES": "Save Changes",
+    "KG_DETAILS": "KG Details",
+    "CLOSE": "Close",
+    "LOADING": "Loading...",
+    "NO_KG_BRANCHES_FOUND": "No KG branches found.",
+    "PAGE_INFO": "Page {{page}} of {{totalPages}}. Total records: {{totalCount}}",
+    "KG_NAME_AR_REQUIRED": "Arabic name is required (3-50 chars).",
+    "KG_NAME_EN_REQUIRED": "English name is required (3-50 chars).",
+    "KG_ADDRESS_REQUIRED": "Address is required (10-100 chars)."
+  }
+}

@@ -3,19 +3,19 @@
   <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2 top-controls-row">
     <div class="d-flex align-items-center gap-2 top-controls-group">
       <button class="btn btn-outline-primary fw-bold" type="button" (click)="openCreateKgModal()">
-        <i class="bi bi-plus-circle me-1"></i> Create New KG
+        <i class="bi bi-plus-circle me-1"></i> {{ 'KG_MANAGEMENT.CREATE_NEW_KG' | translate }}
       </button>
     </div>
     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center top-controls-group">
-      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" placeholder="Search..." [(ngModel)]="searchInput">
-      <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">Search</button>
+      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" [placeholder]="'KG_MANAGEMENT.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchInput">
+      <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">{{ 'KG_MANAGEMENT.SEARCH' | translate }}</button>
     </div>
     <div class="d-flex align-items-center gap-2 top-controls-group">
-      <label for="pageSize" class="me-2 mb-0">Show</label>
+      <label for="pageSize" class="me-2 mb-0">{{ 'KG_MANAGEMENT.SHOW' | translate }}</label>
       <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)">
         <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
       </select>
-      <span class="ms-2">entries</span>
+      <span class="ms-2">{{ 'KG_MANAGEMENT.ENTRIES' | translate }}</span>
     </div>
   </div>
   <!-- Table -->
@@ -26,7 +26,7 @@
           <th class="text-center">#</th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('nameAr')">
-              <span>KG Name (Ar)</span>
+              <span>{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'nameAr' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'nameAr' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -36,7 +36,7 @@
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('nameEn')">
-              <span>KG Name (En)</span>
+              <span>{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'nameEn' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'nameEn' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -46,7 +46,7 @@
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('kgCode')">
-              <span>KG Code</span>
+              <span>{{ 'KG_MANAGEMENT.KG_CODE' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'kgCode' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'kgCode' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -56,7 +56,7 @@
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('address')">
-              <span>KG Address</span>
+              <span>{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'address' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'address' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -64,7 +64,7 @@
               </span>
             </button>
           </th>
-          <th class="text-center" style="width: 80px; min-width: 80px;">Actions</th>
+          <th class="text-center" style="width: 80px; min-width: 80px;">{{ 'KG_MANAGEMENT.ACTIONS' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -76,13 +76,13 @@
           <td>{{ kg.kg.address }}</td>
           <td class="text-center" style="width: 80px; min-width: 80px; padding: 0.15rem 0.2rem;">
             <div class="btn-group btn-group-xs px-2" role="group" style="gap:2px;">
-              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openDetailsKgModal(kg)" title="Details">
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openDetailsKgModal(kg)" [title]="'KG_MANAGEMENT.DETAILS' | translate">
                 <i class="bi bi-eye"></i>
               </button>
-              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openEditKgModal(kg, (page - 1) * pageSize + i)" title="Edit">
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openEditKgModal(kg, (page - 1) * pageSize + i)" [title]="'KG_MANAGEMENT.EDIT' | translate">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="deleteKgBranch(kg.kg.id)" title="Delete">
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="deleteKgBranch(kg.kg.id)" [title]="'KG_MANAGEMENT.DELETE' | translate">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
@@ -96,45 +96,45 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Create New KG</h5>
+          <h5 class="modal-title">{{ 'KG_MANAGEMENT.CREATE_NEW_KG' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeCreateKgModal()"></button>
         </div>
         <div class="modal-body">
           <form #kgForm="ngForm" autocomplete="off">
             <div class="row">
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="kgNameAr" class="form-control" required minlength="3" maxlength="50"
                   [(ngModel)]="createKgData.kg.nameAr" #kgNameAr="ngModel">
-                <div *ngIf="kgNameAr.invalid && kgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+                <div *ngIf="kgNameAr.invalid && kgNameAr.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</div>
               </div>
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="kgNameEn" class="form-control" required minlength="3" maxlength="50"
                   [(ngModel)]="createKgData.kg.nameEn" #kgNameEn="ngModel">
-                <div *ngIf="kgNameEn.invalid && kgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
+                <div *ngIf="kgNameEn.invalid && kgNameEn.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</div>
               </div>
             </div>
             <div class="row">
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="kgAddress" class="form-control" required minlength="10" maxlength="100"
                   [(ngModel)]="createKgData.kg.address" #kgAddress="ngModel">
-                <div *ngIf="kgAddress.invalid && kgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
+                <div *ngIf="kgAddress.invalid && kgAddress.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ADDRESS_REQUIRED' | translate }}</div>
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Branches <span class="text-danger">*</span></label>
+              <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.BRANCHES' | translate }} <span class="text-danger">*</span></label>
               <div class="table-responsive mb-2">
                 <table class="table table-bordered table-sm mb-0">
                   <thead class="table-light">
                     <tr>
                       <th>#</th>
-                      <th>Name (Ar)</th>
-                      <th>Name (En)</th>
-                      <th>Address</th>
-                      <th>Phone</th>
-                      <th>Email</th>
+                      <th>{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.PHONE' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.EMAIL' | translate }}</th>
                       <th style="width: 60px;"></th>
                     </tr>
                   </thead>
@@ -142,61 +142,61 @@
                     <tr *ngFor="let branch of createKgData.branches; let b = index">
                       <td>{{ b + 1 }}</td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Name (Ar)" required minlength="3" maxlength="50"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_AR' | translate }}" required minlength="3" maxlength="50"
                           [(ngModel)]="branch.nameAr" name="branchNameAr{{b}}" #branchNameAr="ngModel">
                         <div *ngIf="branchNameAr.invalid && branchNameAr.touched" class="text-danger small">
-                          Arabic name is required (3-50 chars).
+                          {{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Name (En)" required minlength="3" maxlength="50"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_EN' | translate }}" required minlength="3" maxlength="50"
                           [(ngModel)]="branch.nameEn" name="branchNameEn{{b}}" #branchNameEn="ngModel">
                         <div *ngIf="branchNameEn.invalid && branchNameEn.touched" class="text-danger small">
-                          English name is required (3-50 chars).
+                          {{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Address" required minlength="10" maxlength="100"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.ADDRESS' | translate }}" required minlength="10" maxlength="100"
                           [(ngModel)]="branch.address" name="branchAddress{{b}}" #branchAddress="ngModel">
                         <div *ngIf="branchAddress.invalid && branchAddress.touched" class="text-danger small">
-                          Address is required (10-100 chars).
+                          {{ 'KG_MANAGEMENT.ADDRESS_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Phone" required minlength="1"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.PHONE' | translate }}" required minlength="1"
                           [(ngModel)]="branch.phone" name="branchPhone{{b}}" #branchPhone="ngModel">
                         <div *ngIf="branchPhone.invalid && branchPhone.touched" class="text-danger small">
-                          Phone number is required.
+                          {{ 'KG_MANAGEMENT.PHONE_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="email" class="form-control form-control-sm" placeholder="Email" required minlength="1"
+                        <input type="email" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.EMAIL' | translate }}" required minlength="1"
                           [(ngModel)]="branch.email" name="branchEmail{{b}}" #branchEmail="ngModel">
                         <div *ngIf="branchEmail.invalid && branchEmail.touched" class="text-danger small">
-                          <ng-container *ngIf="branchEmail.errors?.['required']">Email is required.</ng-container>
-                          <ng-container *ngIf="branchEmail.errors?.['email']">Invalid email address format.</ng-container>
+                          <ng-container *ngIf="branchEmail.errors?.['required']">{{ 'KG_MANAGEMENT.EMAIL_REQUIRED' | translate }}</ng-container>
+                          <ng-container *ngIf="branchEmail.errors?.['email']">{{ 'KG_MANAGEMENT.INVALID_EMAIL_FORMAT' | translate }}</ng-container>
                         </div>
                       </td>
                       <td class="text-center align-middle">
-                        <button type="button" class="btn btn-sm btn-outline-danger px-2 py-0" (click)="removeBranch(b)" [disabled]="createKgData.branches.length === 1">Remove</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger px-2 py-0" (click)="removeBranch(b)" [disabled]="createKgData.branches.length === 1">{{ 'KG_MANAGEMENT.REMOVE' | translate }}</button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="addBranch()">Add Branch</button>
+              <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="addBranch()">{{ 'KG_MANAGEMENT.ADD_BRANCH' | translate }}</button>
               <div *ngIf="createKgData.branches.length === 0 && kgForm.submitted" class="text-danger small mt-2">
-                At least one branch is required.
+                {{ 'KG_MANAGEMENT.AT_LEAST_ONE_BRANCH_REQUIRED' | translate }}
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeCreateKgModal()">Cancel</button>
+          <button type="button" class="btn btn-secondary" (click)="closeCreateKgModal()">{{ 'KG_MANAGEMENT.CANCEL' | translate }}</button>
           <button type="button" class="btn btn-primary"
             [disabled]="!kgForm.valid || createKgData.branches.length < 1 || !allBranchesValid()"
             (click)="onCreateKg()">
-            Create
+            {{ 'KG_MANAGEMENT.CREATE' | translate }}
           </button>
         </div>
       </div>
@@ -207,50 +207,50 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Edit KG</h5>
+          <h5 class="modal-title">{{ 'KG_MANAGEMENT.EDIT_KG' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeEditKgModal()"></button>
         </div>
         <div class="modal-body">
           <form #editKgForm="ngForm" autocomplete="off">
             <div class="row">
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Name (Arabic) <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="editKgNameAr" class="form-control" required minlength="3" maxlength="50"
                   [(ngModel)]="editKgData.kg.nameAr" #editKgNameAr="ngModel">
-                <div *ngIf="editKgNameAr.invalid && editKgNameAr.touched" class="text-danger small">Arabic name is required (3-50 chars).</div>
+                <div *ngIf="editKgNameAr.invalid && editKgNameAr.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</div>
               </div>
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Name (English) <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="editKgNameEn" class="form-control" required minlength="3" maxlength="50"
                   [(ngModel)]="editKgData.kg.nameEn" #editKgNameEn="ngModel">
-                <div *ngIf="editKgNameEn.invalid && editKgNameEn.touched" class="text-danger small">English name is required (3-50 chars).</div>
+                <div *ngIf="editKgNameEn.invalid && editKgNameEn.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</div>
               </div>
             </div>
             <div class="row">
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Address <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="editKgAddress" class="form-control" required minlength="10" maxlength="100"
                   [(ngModel)]="editKgData.kg.address" #editKgAddress="ngModel">
-                <div *ngIf="editKgAddress.invalid && editKgAddress.touched" class="text-danger small">Address is required (10-100 chars).</div>
+                <div *ngIf="editKgAddress.invalid && editKgAddress.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ADDRESS_REQUIRED' | translate }}</div>
               </div>
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Code</label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_CODE' | translate }}</label>
                 <input type="text" class="form-control" [value]="editKgData.kg.kgCode || ''" disabled>
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Branches <span class="text-danger">*</span></label>
+              <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.BRANCHES' | translate }} <span class="text-danger">*</span></label>
               <div class="table-responsive mb-2">
                 <table class="table table-bordered table-sm mb-0">
                   <thead class="table-light">
                     <tr>
                       <th>#</th>
-                      <th>Name (Ar)</th>
-                      <th>Name (En)</th>
-                      <th>Address</th>
-                      <th>Phone</th>
-                      <th>Branch Code</th>
-                      <th>Email</th>
+                      <th>{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.PHONE' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.BRANCH_CODE' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.EMAIL' | translate }}</th>
                       <th style="width: 60px;"></th>
                     </tr>
                   </thead>
@@ -258,64 +258,64 @@
                     <tr *ngFor="let branch of editKgData.branches; let b = index">
                       <td>{{ b + 1 }}</td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Name (Ar)" required minlength="3" maxlength="50"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_AR' | translate }}" required minlength="3" maxlength="50"
                           [(ngModel)]="branch.nameAr" name="editBranchNameAr{{b}}" #editBranchNameAr="ngModel">
                         <div *ngIf="editBranchNameAr.invalid && editBranchNameAr.touched" class="text-danger small">
-                          Arabic name is required (3-50 chars).
+                          {{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Name (En)" required minlength="3" maxlength="50"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_EN' | translate }}" required minlength="3" maxlength="50"
                           [(ngModel)]="branch.nameEn" name="editBranchNameEn{{b}}" #editBranchNameEn="ngModel">
                         <div *ngIf="editBranchNameEn.invalid && editBranchNameEn.touched" class="text-danger small">
-                          English name is required (3-50 chars).
+                          {{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Address" required minlength="10" maxlength="100"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.ADDRESS' | translate }}" required minlength="10" maxlength="100"
                           [(ngModel)]="branch.address" name="editBranchAddress{{b}}" #editBranchAddress="ngModel">
                         <div *ngIf="editBranchAddress.invalid && editBranchAddress.touched" class="text-danger small">
-                          Address is required (10-100 chars).
+                          {{ 'KG_MANAGEMENT.ADDRESS_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Phone" required minlength="1"
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.PHONE' | translate }}" required minlength="1"
                           [(ngModel)]="branch.phone" name="editBranchPhone{{b}}" #editBranchPhone="ngModel">
                         <div *ngIf="editBranchPhone.invalid && editBranchPhone.touched" class="text-danger small">
-                          Phone number is required.
+                          {{ 'KG_MANAGEMENT.PHONE_REQUIRED' | translate }}
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm" placeholder="Branch Code" [value]="branch.branchCode || ''" disabled>
+                        <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.BRANCH_CODE' | translate }}" [value]="branch.branchCode || ''" disabled>
                       </td>
                       <td>
-                        <input type="email" class="form-control form-control-sm" placeholder="Email" required minlength="1"
+                        <input type="email" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.EMAIL' | translate }}" required minlength="1"
                           [(ngModel)]="branch.email" name="editBranchEmail{{b}}" #editBranchEmail="ngModel">
                         <div *ngIf="editBranchEmail.invalid && editBranchEmail.touched" class="text-danger small">
-                          <ng-container *ngIf="editBranchEmail.errors?.['required']">Email is required.</ng-container>
-                          <ng-container *ngIf="editBranchEmail.errors?.['email']">Invalid email address format.</ng-container>
+                          <ng-container *ngIf="editBranchEmail.errors?.['required']">{{ 'KG_MANAGEMENT.EMAIL_REQUIRED' | translate }}</ng-container>
+                          <ng-container *ngIf="editBranchEmail.errors?.['email']">{{ 'KG_MANAGEMENT.INVALID_EMAIL_FORMAT' | translate }}</ng-container>
                         </div>
                       </td>
                       <td class="text-center align-middle">
-                        <button type="button" class="btn btn-sm btn-outline-danger px-2 py-0" (click)="removeEditBranch(b)" [disabled]="editKgData.branches.length === 1">Remove</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger px-2 py-0" (click)="removeEditBranch(b)" [disabled]="editKgData.branches.length === 1">{{ 'KG_MANAGEMENT.REMOVE' | translate }}</button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="addEditBranch()">Add Branch</button>
+              <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="addEditBranch()">{{ 'KG_MANAGEMENT.ADD_BRANCH' | translate }}</button>
               <div *ngIf="editKgData.branches.length === 0 && editKgForm.submitted" class="text-danger small mt-2">
-                At least one branch is required.
+                {{ 'KG_MANAGEMENT.AT_LEAST_ONE_BRANCH_REQUIRED' | translate }}
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeEditKgModal()">Cancel</button>
+          <button type="button" class="btn btn-secondary" (click)="closeEditKgModal()">{{ 'KG_MANAGEMENT.CANCEL' | translate }}</button>
           <button type="button" class="btn btn-primary"
             [disabled]="!editKgForm.valid || editKgData.branches.length < 1 || !allEditBranchesValid()"
             (click)="onEditKg()">
-            Save Changes
+            {{ 'KG_MANAGEMENT.SAVE_CHANGES' | translate }}
           </button>
         </div>
       </div>
@@ -326,44 +326,44 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">KG Details</h5>
+          <h5 class="modal-title">{{ 'KG_MANAGEMENT.KG_DETAILS' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeDetailsKgModal()"></button>
         </div>
         <div class="modal-body">
           <form autocomplete="off">
             <div class="row">
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Name (Arabic)</label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }}</label>
                 <input type="text" class="form-control" [value]="detailsKgData.kg.nameAr" disabled>
               </div>
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Name (English)</label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }}</label>
                 <input type="text" class="form-control" [value]="detailsKgData.kg.nameEn" disabled>
               </div>
             </div>
             <div class="row">
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Address</label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }}</label>
                 <input type="text" class="form-control" [value]="detailsKgData.kg.address" disabled>
               </div>
               <div class="mb-3 col-md-6">
-                <label class="form-label fw-semibold">KG Code</label>
+                <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_CODE' | translate }}</label>
                 <input type="text" class="form-control" [value]="detailsKgData.kg.kgCode || ''" disabled>
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Branches</label>
+              <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.BRANCHES' | translate }}</label>
               <div class="table-responsive">
                 <table class="table table-bordered table-sm mb-0">
                   <thead class="table-light">
                     <tr>
                       <th>#</th>
-                      <th>Name (Ar)</th>
-                      <th>Name (En)</th>
-                      <th>Address</th>
-                      <th>Phone</th>
-                      <th>Branch Code</th>
-                      <th>Email</th>
+                      <th>{{ 'KG_MANAGEMENT.NAME_AR' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.NAME_EN' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.ADDRESS' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.PHONE' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.BRANCH_CODE' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.EMAIL' | translate }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -383,7 +383,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeDetailsKgModal()">Close</button>
+          <button type="button" class="btn btn-secondary" (click)="closeDetailsKgModal()">{{ 'KG_MANAGEMENT.CLOSE' | translate }}</button>
         </div>
       </div>
     </div>
@@ -394,11 +394,11 @@
     </div>
   </div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <div *ngIf="!loading && !error && !kgBranches.length" class="alert alert-info">No KG branches found.</div>
+  <div *ngIf="!loading && !error && !kgBranches.length" class="alert alert-info">{{ 'KG_MANAGEMENT.NO_KG_BRANCHES_FOUND' | translate }}</div>
   <!-- Pagination and page info row -->
   <div *ngIf="kgBranches.length > 0" class="pagination-container mt-2 d-flex justify-content-between align-items-center">
     <div class="text-muted small ms-2">
-      Page {{ page }} of {{ totalPages }}. Total records: {{ totalCount }}
+      {{ 'KG_MANAGEMENT.PAGE_INFO' | translate: { page: page, totalPages: totalPages, totalCount: totalCount } }}
     </div>
     <nav *ngIf="totalPages > 1">
       <ul class="pagination pagination-sm mb-0">

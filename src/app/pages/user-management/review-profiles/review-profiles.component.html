@@ -3,18 +3,18 @@
     <!-- Top controls: Search, Page Size -->
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2 top-controls-row">
       <div class="d-flex align-items-center gap-2 top-controls-group">
-        <span class="fw-bold">User Profiles Review</span>
+        <span class="fw-bold">{{ 'REVIEW_PROFILES.TITLE' | translate }}</span>
       </div>
       <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center top-controls-group">
-        <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" placeholder="Search..." [(ngModel)]="searchInput">
-        <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">Search</button>
+        <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" [(ngModel)]="searchInput">
+        <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">{{ 'REVIEW_PROFILES.SEARCH' | translate }}</button>
       </div>
       <div class="d-flex align-items-center gap-2 top-controls-group">
-        <label for="pageSize" class="me-2 mb-0">Show</label>
+        <label for="pageSize" class="me-2 mb-0">{{ 'REVIEW_PROFILES.SHOW' | translate }}</label>
         <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)">
           <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
         </select>
-        <span class="ms-2">entries</span>
+        <span class="ms-2">{{ 'REVIEW_PROFILES.ENTRIES' | translate }}</span>
       </div>
     </div>
     <!-- Table -->
@@ -25,7 +25,7 @@
             <th class="text-center">#</th>
             <th>
               <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('FullName')">
-                <span>Full Name</span>
+                <span>{{ 'REVIEW_PROFILES.FULL_NAME' | translate }}</span>
                 <span class="sort-icons ms-1">
                   <i *ngIf="sortBy !== 'FullName'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
                   <i *ngIf="sortBy === 'FullName' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
@@ -35,7 +35,7 @@
             </th>
             <th>
               <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('PrimaryPhone')">
-                <span>Phone</span>
+                <span>{{ 'REVIEW_PROFILES.PHONE' | translate }}</span>
                 <span class="sort-icons ms-1">
                   <i *ngIf="sortBy !== 'PrimaryPhone'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
                   <i *ngIf="sortBy === 'PrimaryPhone' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
@@ -43,10 +43,10 @@
                 </span>
               </button>
             </th>
-            <th>Personal Image</th>
+            <th>{{ 'REVIEW_PROFILES.PERSONAL_IMAGE' | translate }}</th>
             <th>
               <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('Status')">
-                <span>Status</span>
+                <span>{{ 'REVIEW_PROFILES.STATUS' | translate }}</span>
                 <span class="sort-icons ms-1">
                   <i *ngIf="sortBy !== 'Status'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
                   <i *ngIf="sortBy === 'Status' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
@@ -54,10 +54,10 @@
                 </span>
               </button>
             </th>
-            <th>Rejection Reason</th>
+            <th>{{ 'REVIEW_PROFILES.REJECTION_REASON' | translate }}</th>
             <th>
               <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('SubmittedAt')">
-                <span>Created At</span>
+                <span>{{ 'REVIEW_PROFILES.CREATED_AT' | translate }}</span>
                 <span class="sort-icons ms-1">
                   <i *ngIf="sortBy !== 'SubmittedAt'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
                   <i *ngIf="sortBy === 'SubmittedAt' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
@@ -65,7 +65,7 @@
                 </span>
               </button>
             </th>
-            <th>Actions</th>
+            <th>{{ 'REVIEW_PROFILES.ACTIONS' | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -78,7 +78,7 @@
                  [href]="environment.apiBaseUrl + (profile.personalPhotoPath || profile.PersonalPhotoPath)"
                  target="_blank">
                 <img [src]="environment.apiBaseUrl + (profile.personalPhotoPath || profile.PersonalPhotoPath)"
-                     alt="Personal Photo"
+                     [alt]="'REVIEW_PROFILES.PERSONAL_PHOTO' | translate"
                      style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 1.5px solid #2cb67d;" />
               </a>
               <span *ngIf="!(profile.personalPhotoPath || profile.PersonalPhotoPath)">-</span>
@@ -88,7 +88,7 @@
             <td>{{ (profile.submittedAt || profile.SubmittedAt) | date:'yyyy-MM-dd' }}</td>
             <td>
               <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-outline-primary px-2 py-0" (click)="openViewModal(profile)">
+                <button class="btn btn-outline-primary px-2 py-0" (click)="openViewModal(profile)" [title]="'REVIEW_PROFILES.VIEW' | translate">
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
@@ -99,15 +99,15 @@
     </div>
     <div *ngIf="loading" class="text-center my-5">
       <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">{{ 'REVIEW_PROFILES.LOADING' | translate }}</span>
       </div>
     </div>
     <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-    <div *ngIf="!loading && !error && !profiles.length" class="alert alert-info">No profiles found.</div>
+    <div *ngIf="!loading && !error && !profiles.length" class="alert alert-info">{{ 'REVIEW_PROFILES.NO_PROFILES_FOUND' | translate }}</div>
     <!-- Pagination and page info row -->
     <div *ngIf="profiles.length > 0" class="pagination-container mt-2 d-flex justify-content-between align-items-center">
       <div class="text-muted small ms-2">
-        Page {{ page }} of {{ totalPages }}. Total records: {{ totalCount }}
+        {{ 'REVIEW_PROFILES.PAGE_INFO' | translate:{ page: page, totalPages: totalPages, totalCount: totalCount } }}
       </div>
       <nav *ngIf="totalPages > 1">
         <ul class="pagination pagination-sm mb-0">
@@ -130,7 +130,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content glass-card shadow-lg border-0">
         <div class="modal-header border-0 pb-0" style="background: linear-gradient(90deg, #7f5af0 0%, #2cb67d 100%); border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;">
-          <h5 class="modal-title text-white fw-bold" id="viewProfileModalLabel">Profile Details</h5>
+          <h5 class="modal-title text-white fw-bold" id="viewProfileModalLabel">{{ 'REVIEW_PROFILES.PROFILE_DETAILS' | translate }}</h5>
           <button type="button" class="btn-close btn-close-white" (click)="closeProfileModal()" aria-label="Close"></button>
         </div>
         <div class="modal-body py-4 px-4" *ngIf="selectedProfile">
@@ -138,10 +138,10 @@
             <div class="row justify-content-center mb-4">
               <div class="col-12 text-center">
                 <a *ngIf="selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath" [href]="environment.apiBaseUrl + (selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath)" target="_blank">
-                  <img [src]="environment.apiBaseUrl + (selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath)" alt="Personal Photo" class="profile-avatar mb-2" />
+                  <img [src]="environment.apiBaseUrl + (selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath)" [alt]="'REVIEW_PROFILES.PERSONAL_PHOTO' | translate" class="profile-avatar mb-2" />
                 </a>
                 <span *ngIf="!(selectedProfile.personalPhotoPath || selectedProfile.PersonalPhotoPath)">
-                  <img src="/assets/img/DefaultProfile.svg" alt="No Photo" class="profile-avatar profile-avatar-default mb-2" />
+                  <img src="/assets/img/DefaultProfile.svg" [alt]="'REVIEW_PROFILES.NO_PHOTO' | translate" class="profile-avatar profile-avatar-default mb-2" />
                 </span>
                 <div class="fw-bold fs-4 mt-2 text-dark">{{ selectedProfile.fullName || selectedProfile.FullName }}</div>
                 <div class="badge bg-gradient fs-6 px-3 py-2 mt-2" [ngClass]="{
@@ -157,19 +157,19 @@
             <div class="row g-3 mb-2">
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">Full Name:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.FULL_NAME' | translate }}:</span>
                   <span class="info-value">{{ selectedProfile.fullName || selectedProfile.FullName }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">Birth Date:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.BIRTH_DATE' | translate }}:</span>
                   <span class="info-value">{{ selectedProfile.birthDate || selectedProfile.BirthDate || '-' }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">Graduation Year:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.GRADUATION_YEAR' | translate }}:</span>
                   <span class="info-value">{{ selectedProfile.graduationYear || selectedProfile.GraduationYear }}</span>
                 </div>
               </div>
@@ -178,19 +178,19 @@
             <div class="row g-3 mb-2">
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">Primary Phone:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.PRIMARY_PHONE' | translate }}:</span>
                   <span class="info-value">{{ selectedProfile.primaryPhone || selectedProfile.PrimaryPhone }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">Secondary Phone 1:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.SECONDARY_PHONE1' | translate }}:</span>
                   <span class="info-value">{{ selectedProfile.secondaryPhone1 || selectedProfile.SecondaryPhone1 || '-' }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">Secondary Phone 2:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.SECONDARY_PHONE2' | translate }}:</span>
                   <span class="info-value">{{ selectedProfile.secondaryPhone2 || selectedProfile.SecondaryPhone2 || '-' }}</span>
                 </div>
               </div>
@@ -199,7 +199,7 @@
             <div class="row g-3 mb-2">
               <div class="col-12">
                 <div class="info-group">
-                  <span class="info-label">Address:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.ADDRESS' | translate }}:</span>
                   <span class="info-value">{{ selectedProfile.address || selectedProfile.Address || '-' }}</span>
                 </div>
               </div>
@@ -207,19 +207,19 @@
             <!-- National ID images in one line -->
             <div class="row mt-4 justify-content-center align-items-center">
               <div class="col-md-6 col-12 text-center mb-3 mb-md-0">
-                <div class="info-label mb-2 fs-6">National ID Front</div>
+                <div class="info-label mb-2 fs-6">{{ 'REVIEW_PROFILES.NATIONAL_ID_FRONT' | translate }}</div>
                 <span *ngIf="selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath">
                   <a [href]="environment.apiBaseUrl + (selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)" target="_blank">
-                    <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)" alt="National ID Front" class="profile-id-img me-2" />
+                    <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)" [alt]="'REVIEW_PROFILES.NATIONAL_ID_FRONT' | translate" class="profile-id-img me-2" />
                   </a>
                 </span>
                 <span *ngIf="!(selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)">-</span>
               </div>
               <div class="col-md-6 col-12 text-center">
-                <div class="info-label mb-2 fs-6">National ID Back</div>
+                <div class="info-label mb-2 fs-6">{{ 'REVIEW_PROFILES.NATIONAL_ID_BACK' | translate }}</div>
                 <span *ngIf="selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath">
                   <a [href]="environment.apiBaseUrl + (selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)" target="_blank">
-                    <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)" alt="National ID Back" class="profile-id-img" />
+                    <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)" [alt]="'REVIEW_PROFILES.NATIONAL_ID_BACK' | translate" class="profile-id-img" />
                   </a>
                 </span>
                 <span *ngIf="!(selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)">-</span>
@@ -229,12 +229,12 @@
             <div class="row mt-4">
               <div class="col-12">
                 <div class="info-group justify-content-center mb-3">
-                  <span class="info-label">Rejection Reason:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.REJECTION_REASON' | translate }}:</span>
                   <span class="info-value text-danger">{{ selectedProfile.rejectionReason || selectedProfile.RejectionReason || '-' }}</span>
                 </div>
                 <div class="d-flex justify-content-center gap-3 mt-4">
-                  <button class="btn btn-success px-4" [disabled]="actionLoading" (click)="acceptProfile(selectedProfile)"><i class="fas fa-check me-2"></i>Accept</button>
-                  <button class="btn btn-danger px-4" [disabled]="actionLoading" (click)="rejectProfile(selectedProfile)"><i class="fas fa-times me-2"></i>Reject</button>
+                  <button class="btn btn-success px-4" [disabled]="actionLoading" (click)="acceptProfile(selectedProfile)"><i class="fas fa-check me-2"></i>{{ 'REVIEW_PROFILES.ACCEPT' | translate }}</button>
+                  <button class="btn btn-danger px-4" [disabled]="actionLoading" (click)="rejectProfile(selectedProfile)"><i class="fas fa-times me-2"></i>{{ 'REVIEW_PROFILES.REJECT' | translate }}</button>
                 </div>
                 <div *ngIf="actionError" class="alert alert-danger mt-3 text-center">{{ actionError }}</div>
               </div>
@@ -250,17 +250,17 @@
     <div class="modal-dialog modal-dialog-centered rejection-modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Reject Profile</h5>
+          <h5 class="modal-title">{{ 'REVIEW_PROFILES.REJECT_PROFILE' | translate }}</h5>
           <button type="button" class="btn-close" (click)="closeRejectionModal()"></button>
         </div>
         <div class="modal-body">
-          <label for="rejectionReasonInput" class="form-label">Rejection Reason</label>
-          <input id="rejectionReasonInput" class="form-control" [(ngModel)]="rejectionReasonInput" name="rejectionReasonInput" type="text" maxlength="200" placeholder="Enter reason for rejection..." autocomplete="off" />
+          <label for="rejectionReasonInput" class="form-label">{{ 'REVIEW_PROFILES.REJECTION_REASON' | translate }}</label>
+          <input id="rejectionReasonInput" class="form-control" [(ngModel)]="rejectionReasonInput" name="rejectionReasonInput" type="text" maxlength="200" autocomplete="off" />
           <div *ngIf="actionError" class="text-danger mt-2">{{ actionError }}</div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeRejectionModal()" [disabled]="actionLoading">Cancel</button>
-          <button type="button" class="btn btn-danger" (click)="confirmRejectProfile()" [disabled]="actionLoading">Reject</button>
+          <button type="button" class="btn btn-secondary" (click)="closeRejectionModal()" [disabled]="actionLoading">{{ 'REVIEW_PROFILES.CANCEL' | translate }}</button>
+          <button type="button" class="btn btn-danger" (click)="confirmRejectProfile()" [disabled]="actionLoading">{{ 'REVIEW_PROFILES.REJECT' | translate }}</button>
         </div>
       </div>
     </div>
