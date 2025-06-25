@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
+import { RoleManagementService } from '../../../core/services/role-management.service';
 
 @Component({
   selector: 'app-users-list',
@@ -49,17 +50,24 @@ export class UsersListComponent implements OnInit {
   sortBy: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(public userService: UserService) {}
+  constructor(public userService: UserService, private roleService: RoleManagementService) {}
 
   ngOnInit() {
     this.fetchUsers();
-    // Fetch all roles for create user modal
-    this.userService.getAllRoles().subscribe({
-      next: (roles) => {
-        this.createUserAllRoles = roles || [];
+    // Fetch all roles for create/edit user modals from RoleManagementService
+    this.roleService.getAllRolesPaginated(1, 1000).subscribe({
+      next: (res) => {
+        if (res && res.code === 200 && res.status === 'Success') {
+          this.createUserAllRoles = res.result.data.map((r: any) => r.name || r.Name || r.roleName || r.RoleName);
+          this.allRoles = this.createUserAllRoles;
+        } else {
+          this.createUserAllRoles = [];
+          this.allRoles = [];
+        }
       },
       error: () => {
         this.createUserAllRoles = [];
+        this.allRoles = [];
       }
     });
   }
@@ -142,24 +150,15 @@ export class UsersListComponent implements OnInit {
     this.editUserClaimsLoading = true;
     this.selectedUserRoles = [];
     this.selectedUserClaims = [];
-    // Fetch all roles from backend
-    this.userService.getAllRoles().subscribe({
-      next: (roles) => {
-        this.allRoles = roles || [];
-        // Fetch user's roles after allRoles loaded
-        this.userService.getUserRoles(user.id).subscribe({
-          next: (userRoles) => {
-            this.selectedUserRoles = userRoles || [];
-            this.editUserRolesLoading = false;
-          },
-          error: () => {
-            this.selectedUserRoles = [];
-            this.editUserRolesLoading = false;
-          }
-        });
+    // Use allRoles already fetched from RoleManagementService
+    // Fetch user's roles after allRoles loaded
+    this.userService.getUserRoles(user.id).subscribe({
+      next: (userRoles) => {
+        this.selectedUserRoles = userRoles || [];
+        this.editUserRolesLoading = false;
       },
       error: () => {
-        this.allRoles = [];
+        this.selectedUserRoles = [];
         this.editUserRolesLoading = false;
       }
     });

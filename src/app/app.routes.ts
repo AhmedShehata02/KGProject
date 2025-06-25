@@ -4,7 +4,6 @@ import { authRoutes } from './pages/auth/auth-routing';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { userManagementRoutes } from './pages/user-management/user-management-routing';
-import { DashboardComponent } from './pages/dashboard/dashboard/dashboard.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { CompleteUserProfileComponent } from './pages/auth/complete-user-profile/complete-user-profile.component';
@@ -39,7 +38,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'businessManagement',
+        path: 'business-management',
         children: businessManagementRoutes.map((r) => ({
           ...r,
           canActivate: [AuthGuard, SecuredRouteGuard],
@@ -47,7 +46,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'systemManagement',
+        path: 'system-management',
         children: systemManagementRoutes.map((r) => ({
           ...r,
           canActivate: [AuthGuard, SecuredRouteGuard],

@@ -5,6 +5,6 @@ import { ReviewProfilesComponent } from './review-profiles/review-profiles.compo
 
 export const userManagementRoutes: Routes = [
   { path: '', component: UsersListComponent },
-  { path: 'review-Profiles', component: ReviewProfilesComponent}
+  { path: 'review-profiles', component: ReviewProfilesComponent}
 ];
 
