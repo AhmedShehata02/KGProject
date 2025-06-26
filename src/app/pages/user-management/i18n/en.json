@@ -39,7 +39,8 @@
     "LAST_NAME_MAXLENGTH": "Last name is too long.",
     "EMAIL_REQUIRED": "Email is required.",
     "EMAIL_INVALID": "Invalid email address.",
-    "CREATE": "Create"
+    "CREATE": "Create",
+    "NOT_AVAILABLE": "Not Available"
   },
   "REVIEW_PROFILES": {
     "TITLE": "Review Profiles",
@@ -71,6 +72,14 @@
     "LOADING": "Loading...",
     "VIEW": "View",
     "NATIONAL_ID_FRONT": "National ID (Front)",
-    "NATIONAL_ID_BACK": "National ID (Back)"
+    "NATIONAL_ID_BACK": "National ID (Back)",
+    "GRADUATION_YEAR": "Graduation Year",
+    "BIRTH_DATE": "Birth Date",
+    "SECONDARY_PHONE2": "Secondary Phone 2",
+    "SECONDARY_PHONE1": "Secondary Phone 1",
+    "PRIMARY_PHONE": "Primary Phone",
+    "ADDRESS": "Address",
+    "NOT_AVAILABLE": "Not Available",
+    "ACCEPT": "Accept"
   }
 }

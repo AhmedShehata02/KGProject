@@ -119,8 +119,8 @@
   <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showCreateRoleModal ? 'block' : 'none', background: showCreateRoleModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showCreateRoleModal">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{ 'ROLE_MANAGEMENT.CREATE_NEW_ROLE' | translate }}</h5>
+        <div class="modal-header d-flex justify-content-between align-items-center">
+          <h5 class="modal-title mb-0">{{ 'ROLE_MANAGEMENT.CREATE_NEW_ROLE' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeCreateRoleModal()"></button>
         </div>
         <div class="modal-body">
@@ -146,8 +146,8 @@
   <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showEditRoleModal ? 'block' : 'none', background: showEditRoleModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showEditRoleModal">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{ 'ROLE_MANAGEMENT.EDIT_ROLE' | translate }}</h5>
+        <div class="modal-header d-flex justify-content-between align-items-center">
+          <h5 class="modal-title mb-0">{{ 'ROLE_MANAGEMENT.EDIT_ROLE' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeEditRoleModal()"></button>
         </div>
         <div class="modal-body">
@@ -157,9 +157,19 @@
               <input type="text" id="editRoleName" class="form-control" name="name" [(ngModel)]="selectedRole.name" required minlength="3" maxlength="50">
             </div>
             <div class="mb-3">
+              <label class="form-label">{{ 'ROLE_MANAGEMENT.STATUS' | translate }}</label>
+              <select class="form-select" [(ngModel)]="selectedRole.isActive" name="isActive">
+                <option [ngValue]="true">{{ 'ROLE_MANAGEMENT.ACTIVE' | translate }}</option>
+                <option [ngValue]="false">{{ 'ROLE_MANAGEMENT.INACTIVE' | translate }}</option>
+              </select>
             </div>
             <div *ngIf="editRoleError" class="alert alert-danger">{{ editRoleError }}</div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeEditRoleModal()">{{ 'ROLE_MANAGEMENT.CANCEL' | translate }}</button>
+              <button type="button" class="btn btn-primary" [disabled]="!editRoleForm.form.valid || editingRole" (click)="onEditRole()">
+                <span *ngIf="editingRole" class="spinner-border spinner-border-sm me-1"></span>
+                {{ 'ROLE_MANAGEMENT.SAVE' | translate }}
+              </button>
             </div>
           </form>
         </div>

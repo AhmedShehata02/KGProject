@@ -20,10 +20,16 @@
 }
 .rejection-modal .modal-header {
   border-bottom: 1px solid #eee;
-  background: linear-gradient(90deg, #7f5af0 0%, #2cb67d 100%);
   color: #fff;
   border-top-left-radius: 1.2rem;
   border-top-right-radius: 1.2rem;
+}
+.profile-modal-header {
+  background: linear-gradient(90deg, #7f5af0 0%, #2cb67d 100%);
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 .rejection-modal .modal-title {
   color: #fff;
@@ -87,4 +93,36 @@
   box-shadow: 0 2px 8px rgba(127,90,240,0.10);
   margin-right: 1.2rem;
   background: #fff;
+}
+
+/* Modal header direction-aware alignment for details modal */
+:host ::ng-deep .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+}
+:host-context([dir="rtl"]) ::ng-deep .modal-header {
+  flex-direction: row-reverse !important;
+}
+:host-context([dir="ltr"]) ::ng-deep .modal-header {
+  flex-direction: row !important;
+}
+:host-context([dir="ltr"]) ::ng-deep .modal-title {
+  text-align: left;
+  margin-right: auto;
+  margin-left: 0;
+}
+:host-context([dir="rtl"]) ::ng-deep .modal-title {
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+}
+:host ::ng-deep .modal-header .btn-close {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+[dir="rtl"] .modal-header .btn-close {
+  margin-left: 0;
+  margin-right: 0.5rem;
 }

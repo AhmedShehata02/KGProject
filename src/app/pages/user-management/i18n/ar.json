@@ -7,6 +7,7 @@
     "ACTIONS": "الإجراءات",
     "ADD_USER": "إضافة مستخدم جديد",
     "SEARCH": "بحث",
+    "SEARCH_PLACEHOLDER": "بحث...",
     "SHOW": "عرض",
     "ENTRIES": "مدخلات",
     "NO_USERS": "لا يوجد مستخدمون.",
@@ -19,7 +20,16 @@
     "CLAIMS": "الصلاحيات",
     "CANCEL": "إلغاء",
     "SAVE": "حفظ",
-    "CREATE_USER": "إنشاء مستخدم جديد"
+    "CREATE_USER": "إنشاء مستخدم جديد",
+    "BIRTH_DATE": "تاريخ الميلاد",
+    "GRADUATION_YEAR": "سنة التخرج",
+    "PRIMARY_PHONE": "رقم الهاتف الأساسي",
+    "SECONDARY_PHONE1": "رقم الهاتف الثانوي 1",
+    "SECONDARY_PHONE2": "رقم الهاتف الثانوي 2",
+    "ADDRESS": "العنوان",
+    "PENDING_APPROVAL": "قيد الموافقة",
+    "NOT_AVAILABLE": "غير متوفر",
+    "CREATE": "إنشاء"
   },
   "REVIEW_PROFILES": {
     "TITLE": "مراجعة الملفات الشخصية",
@@ -27,9 +37,11 @@
     "REJECT": "رفض",
     "PENDING": "قيد الموافقة",
     "SEARCH": "بحث",
+    "SEARCH_PLACEHOLDER": "بحث...",
     "SHOW": "عرض",
     "ENTRIES": "مدخلات",
     "NO_PROFILES": "لا توجد ملفات شخصية.",
+    "NO_PROFILES_FOUND": "لا توجد ملفات شخصية.",
     "PAGE_INFO": "الصفحة {{page}} من {{totalPages}}. إجمالي السجلات: {{totalCount}}",
     "PROFILE_DETAILS": "تفاصيل الملف الشخصي",
     "PROFILE_IMAGE": "صورة شخصية",
@@ -43,7 +55,19 @@
     "FULL_NAME": "الاسم الكامل",
     "PHONE": "رقم الهاتف",
     "PERSONAL_IMAGE": "صورة شخصية",
+    "PERSONAL_PHOTO": "الصورة الشخصية",
     "STATUS": "الحالة",
-    "CREATED_AT": "تاريخ الإنشاء"
+    "CREATED_AT": "تاريخ الإنشاء",
+    "NATIONAL_ID_FRONT": "الرقم القومي (الوجه الأمامي)",
+    "NATIONAL_ID_BACK": "الرقم القومي (الوجه الخلفي)",
+    "LOADING": "جاري التحميل...",
+    "GRADUATION_YEAR": "سنة التخرج",
+    "BIRTH_DATE": "تاريخ الميلاد",
+    "SECONDARY_PHONE2": "رقم الهاتف الثانوي 2",
+    "SECONDARY_PHONE1": "رقم الهاتف الثانوي 1",
+    "PRIMARY_PHONE": "رقم الهاتف الأساسي",
+    "ADDRESS": "العنوان",
+    "NOT_AVAILABLE": "غير متوفر",
+    "ACCEPT": "موافقة"
   }
 }

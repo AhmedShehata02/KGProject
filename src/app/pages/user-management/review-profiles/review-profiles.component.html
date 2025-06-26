@@ -6,7 +6,7 @@
         <span class="fw-bold">{{ 'REVIEW_PROFILES.TITLE' | translate }}</span>
       </div>
       <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center top-controls-group">
-        <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" [(ngModel)]="searchInput">
+        <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" [(ngModel)]="searchInput" [placeholder]="'REVIEW_PROFILES.SEARCH_PLACEHOLDER' | translate">
         <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">{{ 'REVIEW_PROFILES.SEARCH' | translate }}</button>
       </div>
       <div class="d-flex align-items-center gap-2 top-controls-group">
@@ -71,8 +71,8 @@
         <tbody>
           <tr *ngFor="let profile of profiles; let i = index">
             <td class="text-center fw-bold">{{ (page - 1) * pageSize + i + 1 }}</td>
-            <td>{{ profile.fullName || profile.FullName }}</td>
-            <td>{{ profile.primaryPhone || profile.PrimaryPhone }}</td>
+            <td>{{ profile.fullName || profile.FullName || ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</td>
+            <td>{{ profile.primaryPhone || profile.PrimaryPhone || ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</td>
             <td>
               <a *ngIf="profile.personalPhotoPath || profile.PersonalPhotoPath"
                  [href]="environment.apiBaseUrl + (profile.personalPhotoPath || profile.PersonalPhotoPath)"
@@ -81,11 +81,11 @@
                      [alt]="'REVIEW_PROFILES.PERSONAL_PHOTO' | translate"
                      style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 1.5px solid #2cb67d;" />
               </a>
-              <span *ngIf="!(profile.personalPhotoPath || profile.PersonalPhotoPath)">-</span>
+              <span *ngIf="!(profile.personalPhotoPath || profile.PersonalPhotoPath)">{{ 'REVIEW_PROFILES.NOT_AVAILABLE' | translate }}</span>
             </td>
-            <td>{{ profile.statusText || profile.StatusText || profile.status || profile.Status }}</td>
-            <td>{{ profile.rejectionReason || profile.RejectionReason || '-' }}</td>
-            <td>{{ (profile.submittedAt || profile.SubmittedAt) | date:'yyyy-MM-dd' }}</td>
+            <td>{{ profile.statusText || profile.StatusText || profile.status || profile.Status || ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</td>
+            <td>{{ profile.rejectionReason || profile.RejectionReason || ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</td>
+            <td>{{ (profile.submittedAt || profile.SubmittedAt) ? ((profile.submittedAt || profile.SubmittedAt) | date:'yyyy-MM-dd') : ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</td>
             <td>
               <div class="btn-group btn-group-sm" role="group">
                 <button class="btn btn-outline-primary px-2 py-0" (click)="openViewModal(profile)" [title]="'REVIEW_PROFILES.VIEW' | translate">
@@ -129,7 +129,7 @@
   <div class="modal fade" id="viewProfileModal" tabindex="-1" aria-labelledby="viewProfileModalLabel" aria-hidden="true" [ngClass]="{ 'show': showProfileModal }" [ngStyle]="{ display: showProfileModal ? 'block' : 'none' }">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content glass-card shadow-lg border-0">
-        <div class="modal-header border-0 pb-0" style="background: linear-gradient(90deg, #7f5af0 0%, #2cb67d 100%); border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;">
+        <div class="modal-header d-flex justify-content-between align-items-center profile-modal-header">
           <h5 class="modal-title text-white fw-bold" id="viewProfileModalLabel">{{ 'REVIEW_PROFILES.PROFILE_DETAILS' | translate }}</h5>
           <button type="button" class="btn-close btn-close-white" (click)="closeProfileModal()" aria-label="Close"></button>
         </div>
@@ -157,20 +157,20 @@
             <div class="row g-3 mb-2">
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">{{ 'REVIEW_PROFILES.FULL_NAME' | translate }}:</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.FULL_NAME' | translate }} : </span>
                   <span class="info-value">{{ selectedProfile.fullName || selectedProfile.FullName }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">{{ 'REVIEW_PROFILES.BIRTH_DATE' | translate }}:</span>
-                  <span class="info-value">{{ selectedProfile.birthDate || selectedProfile.BirthDate || '-' }}</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.BIRTH_DATE' | translate }} : </span>
+                  <span class="info-value">{{ (selectedProfile.birthDate || selectedProfile.BirthDate) ? (selectedProfile.birthDate || selectedProfile.BirthDate | date:'yyyy-MM-dd') : ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">{{ 'REVIEW_PROFILES.GRADUATION_YEAR' | translate }}:</span>
-                  <span class="info-value">{{ selectedProfile.graduationYear || selectedProfile.GraduationYear }}</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.GRADUATION_YEAR' | translate }} : </span>
+                  <span class="info-value">{{ selectedProfile.graduationYear || selectedProfile.GraduationYear || ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</span>
                 </div>
               </div>
             </div>
@@ -178,20 +178,20 @@
             <div class="row g-3 mb-2">
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">{{ 'REVIEW_PROFILES.PRIMARY_PHONE' | translate }}:</span>
-                  <span class="info-value">{{ selectedProfile.primaryPhone || selectedProfile.PrimaryPhone }}</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.PRIMARY_PHONE' | translate }} : </span>
+                  <span class="info-value">{{ selectedProfile.primaryPhone || selectedProfile.PrimaryPhone || ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">{{ 'REVIEW_PROFILES.SECONDARY_PHONE1' | translate }}:</span>
-                  <span class="info-value">{{ selectedProfile.secondaryPhone1 || selectedProfile.SecondaryPhone1 || '-' }}</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.SECONDARY_PHONE1' | translate }} : </span>
+                  <span class="info-value">{{ (selectedProfile.secondaryPhone1 || selectedProfile.SecondaryPhone1) ? (selectedProfile.secondaryPhone1 || selectedProfile.SecondaryPhone1) : ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="info-group">
-                  <span class="info-label">{{ 'REVIEW_PROFILES.SECONDARY_PHONE2' | translate }}:</span>
-                  <span class="info-value">{{ selectedProfile.secondaryPhone2 || selectedProfile.SecondaryPhone2 || '-' }}</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.SECONDARY_PHONE2' | translate }} : </span>
+                  <span class="info-value">{{ (selectedProfile.secondaryPhone2 || selectedProfile.SecondaryPhone2) ? (selectedProfile.secondaryPhone2 || selectedProfile.SecondaryPhone2) : ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</span>
                 </div>
               </div>
             </div>
@@ -199,8 +199,8 @@
             <div class="row g-3 mb-2">
               <div class="col-12">
                 <div class="info-group">
-                  <span class="info-label">{{ 'REVIEW_PROFILES.ADDRESS' | translate }}:</span>
-                  <span class="info-value">{{ selectedProfile.address || selectedProfile.Address || '-' }}</span>
+                  <span class="info-label">{{ 'REVIEW_PROFILES.ADDRESS' | translate }} : </span>
+                  <span class="info-value">{{ (selectedProfile.address || selectedProfile.Address) ? (selectedProfile.address || selectedProfile.Address) : ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</span>
                 </div>
               </div>
             </div>
@@ -213,7 +213,7 @@
                     <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)" [alt]="'REVIEW_PROFILES.NATIONAL_ID_FRONT' | translate" class="profile-id-img me-2" />
                   </a>
                 </span>
-                <span *ngIf="!(selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)">-</span>
+                <span *ngIf="!(selectedProfile.nationalIdFrontPath || selectedProfile.NationalIdFrontPath)">{{ 'REVIEW_PROFILES.NOT_AVAILABLE' | translate }}</span>
               </div>
               <div class="col-md-6 col-12 text-center">
                 <div class="info-label mb-2 fs-6">{{ 'REVIEW_PROFILES.NATIONAL_ID_BACK' | translate }}</div>
@@ -222,7 +222,7 @@
                     <img [src]="environment.apiBaseUrl + (selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)" [alt]="'REVIEW_PROFILES.NATIONAL_ID_BACK' | translate" class="profile-id-img" />
                   </a>
                 </span>
-                <span *ngIf="!(selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)">-</span>
+                <span *ngIf="!(selectedProfile.nationalIdBackPath || selectedProfile.NationalIdBackPath)">{{ 'REVIEW_PROFILES.NOT_AVAILABLE' | translate }}</span>
               </div>
             </div>
             <!-- Rejection Reason last line -->
@@ -230,7 +230,7 @@
               <div class="col-12">
                 <div class="info-group justify-content-center mb-3">
                   <span class="info-label">{{ 'REVIEW_PROFILES.REJECTION_REASON' | translate }}:</span>
-                  <span class="info-value text-danger">{{ selectedProfile.rejectionReason || selectedProfile.RejectionReason || '-' }}</span>
+                  <span class="info-value text-danger">{{ selectedProfile.rejectionReason || selectedProfile.RejectionReason || ('REVIEW_PROFILES.NOT_AVAILABLE' | translate) }}</span>
                 </div>
                 <div class="d-flex justify-content-center gap-3 mt-4">
                   <button class="btn btn-success px-4" [disabled]="actionLoading" (click)="acceptProfile(selectedProfile)"><i class="fas fa-check me-2"></i>{{ 'REVIEW_PROFILES.ACCEPT' | translate }}</button>

@@ -24,7 +24,8 @@
     "CREATE": "Create",
     "EDIT_ROLE": "Edit Role",
     "ROLE_DETAILS": "Role Details",
-    "CLOSE": "Close"
+    "CLOSE": "Close",
+    "SAVE": "Save"
   },
   "SECURED_ROUTE": {
     "CREATE_NEW": "Create New Secured Route",

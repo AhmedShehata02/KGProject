@@ -129,8 +129,8 @@
 <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showCreateModal ? 'block' : 'none', background: showCreateModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showCreateModal">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ 'SECURED_ROUTE.CREATE_NEW' | translate }}</h5>
+      <div class="modal-header d-flex justify-content-between align-items-center">
+        <h5 class="modal-title mb-0">{{ 'SECURED_ROUTE.CREATE_NEW' | translate }}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeCreateModal()"></button>
       </div>
       <div class="modal-body">
@@ -176,8 +176,8 @@
 <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showEditModal ? 'block' : 'none', background: showEditModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showEditModal">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ 'SECURED_ROUTE.EDIT_ROUTE' | translate }}</h5>
+      <div class="modal-header d-flex justify-content-between align-items-center">
+        <h5 class="modal-title mb-0">{{ 'SECURED_ROUTE.EDIT_ROUTE' | translate }}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeEditModal()"></button>
       </div>
       <div class="modal-body">

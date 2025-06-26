@@ -24,7 +24,8 @@
     "CREATE": "إنشاء",
     "EDIT_ROLE": "تعديل الدور",
     "ROLE_DETAILS": "تفاصيل الدور",
-    "CLOSE": "إغلاق"
+    "CLOSE": "إغلاق",
+    "SAVE": "حفظ"
   },
   "SECURED_ROUTE": {
     "CREATE_NEW": "إنشاء مسار محمي جديد",

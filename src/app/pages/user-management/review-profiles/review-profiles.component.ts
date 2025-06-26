@@ -4,13 +4,14 @@ import { UsersProfilesService } from '../../../core/services/users-profiles.serv
 import { environment } from '../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { UserManagementTranslator } from '../user-management-translator';
 
 @Component({
   selector: 'app-review-profiles',
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './review-profiles.component.html',
-  styleUrls: ['./review-profiles.component.css']
+  styleUrls: ['./review-profiles.component.css'],
 })
 export class ReviewProfilesComponent implements OnInit {
   profiles: any[] = [];
@@ -36,32 +37,38 @@ export class ReviewProfilesComponent implements OnInit {
   sortBy: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private usersProfilesService: UsersProfilesService) {}
+  constructor(
+    private usersProfilesService: UsersProfilesService,
+    private roleTranslator: UserManagementTranslator
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.roleTranslator.loadTranslations();
     this.fetchProfiles();
   }
 
   fetchProfiles() {
     this.loading = true;
-    this.usersProfilesService.getAllUserProfiles({
-      page: this.page,
-      pageSize: this.pageSize,
-      searchText: this.searchText,
-      sortBy: this.sortBy,
-      sortDirection: this.sortDirection
-    }).subscribe({
-      next: (res) => {
-        this.profiles = res?.result?.data || [];
-        this.totalCount = res?.result?.totalCount || 0;
-        this.totalPages = res?.result?.totalPages || 1;
-        this.loading = false;
-      },
-      error: (err: any) => {
-        this.error = 'Failed to load profiles.';
-        this.loading = false;
-      }
-    });
+    this.usersProfilesService
+      .getAllUserProfiles({
+        page: this.page,
+        pageSize: this.pageSize,
+        searchText: this.searchText,
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
+      })
+      .subscribe({
+        next: (res) => {
+          this.profiles = res?.result?.data || [];
+          this.totalCount = res?.result?.totalCount || 0;
+          this.totalPages = res?.result?.totalPages || 1;
+          this.loading = false;
+        },
+        error: (err: any) => {
+          this.error = 'Failed to load profiles.';
+          this.loading = false;
+        },
+      });
   }
 
   onPageSizeChange(size: number) {
@@ -131,30 +138,41 @@ export class ReviewProfilesComponent implements OnInit {
   acceptProfile(profile: any) {
     this.actionLoading = true;
     this.actionError = '';
-    this.usersProfilesService.profileReviewByAdmin({
-      UserId: profile.userId || profile.UserId || profile.id || profile.Id,
-      IsApproved: true,
-      RejectionReason: null
-    }).subscribe({
-      next: (res) => {
-        this.actionLoading = false;
-        const idx = this.profiles.findIndex(p => (p.userId || p.UserId || p.id || p.Id) === (profile.userId || profile.UserId || profile.id || profile.Id));
-        if (idx > -1) {
-          this.profiles.splice(idx, 1);
-        }
-        this.showProfileModal = false;
-        this.actionError = '';
-      },
-      error: (err: any) => {
-        this.actionLoading = false;
-        const idx = this.profiles.findIndex(p => (p.userId || p.UserId || p.id || p.Id) === (profile.userId || profile.UserId || profile.id || profile.Id));
-        if (idx === -1) {
+    this.usersProfilesService
+      .profileReviewByAdmin({
+        UserId: profile.userId || profile.UserId || profile.id || profile.Id,
+        IsApproved: true,
+        RejectionReason: null,
+      })
+      .subscribe({
+        next: (res) => {
+          this.actionLoading = false;
+          const idx = this.profiles.findIndex(
+            (p) =>
+              (p.userId || p.UserId || p.id || p.Id) ===
+              (profile.userId || profile.UserId || profile.id || profile.Id)
+          );
+          if (idx > -1) {
+            this.profiles.splice(idx, 1);
+          }
+          this.showProfileModal = false;
           this.actionError = '';
-        } else {
-          this.actionError = err?.error?.result || 'Failed to approve profile.';
-        }
-      }
-    });
+        },
+        error: (err: any) => {
+          this.actionLoading = false;
+          const idx = this.profiles.findIndex(
+            (p) =>
+              (p.userId || p.UserId || p.id || p.Id) ===
+              (profile.userId || profile.UserId || profile.id || profile.Id)
+          );
+          if (idx === -1) {
+            this.actionError = '';
+          } else {
+            this.actionError =
+              err?.error?.result || 'Failed to approve profile.';
+          }
+        },
+      });
   }
 
   openRejectModal() {
@@ -170,25 +188,38 @@ export class ReviewProfilesComponent implements OnInit {
     }
     this.actionLoading = true;
     this.actionError = '';
-    this.usersProfilesService.profileReviewByAdmin({
-      UserId: this.selectedProfile.userId || this.selectedProfile.UserId || this.selectedProfile.id || this.selectedProfile.Id,
-      IsApproved: false,
-      RejectionReason: this.rejectionReasonInput
-    }).subscribe({
-      next: (res) => {
-        this.actionLoading = false;
-        const idx = this.profiles.findIndex(p => (p.userId || p.UserId || p.id || p.Id) === (this.selectedProfile.userId || this.selectedProfile.UserId || this.selectedProfile.id || this.selectedProfile.Id));
-        if (idx > -1) {
-          this.profiles.splice(idx, 1);
-        }
-        this.showRejectionModal = false;
-        this.actionError = '';
-      },
-      error: (err: any) => {
-        this.actionLoading = false;
-        this.actionError = err?.error?.result || 'Failed to reject profile.';
-      }
-    });
+    this.usersProfilesService
+      .profileReviewByAdmin({
+        UserId:
+          this.selectedProfile.userId ||
+          this.selectedProfile.UserId ||
+          this.selectedProfile.id ||
+          this.selectedProfile.Id,
+        IsApproved: false,
+        RejectionReason: this.rejectionReasonInput,
+      })
+      .subscribe({
+        next: (res) => {
+          this.actionLoading = false;
+          const idx = this.profiles.findIndex(
+            (p) =>
+              (p.userId || p.UserId || p.id || p.Id) ===
+              (this.selectedProfile.userId ||
+                this.selectedProfile.UserId ||
+                this.selectedProfile.id ||
+                this.selectedProfile.Id)
+          );
+          if (idx > -1) {
+            this.profiles.splice(idx, 1);
+          }
+          this.showRejectionModal = false;
+          this.actionError = '';
+        },
+        error: (err: any) => {
+          this.actionLoading = false;
+          this.actionError = err?.error?.result || 'Failed to reject profile.';
+        },
+      });
   }
 
   rejectProfile(profile: any) {

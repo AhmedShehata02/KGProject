@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center top-controls-group">
-      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" autocomplete="off" [(ngModel)]="searchInput">
+      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" autocomplete="off" [(ngModel)]="searchInput" [placeholder]="'USER_LIST.SEARCH_PLACEHOLDER' | translate">
       <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">{{ 'USER_LIST.SEARCH' | translate }}</button>
     </div>
     <div class="d-flex align-items-center gap-2 top-controls-group">
@@ -166,7 +166,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="createUserModalLabel">{{ 'USER_LIST.CREATE_NEW_USER' | translate }}</h5>
+          <h5 class="modal-title" id="createUserModalLabel">{{ 'USER_LIST.CREATE_USER' | translate }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form #createUserNgForm="ngForm" (ngSubmit)="submitCreateUser()">
