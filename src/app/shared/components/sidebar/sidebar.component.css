@@ -118,3 +118,7 @@
   transition: transform 0.2s;
   font-size: 1.1em;
 }
+.sidebar-list .nav-link i,
+.sidebar-dropdown .dropdown-item i {
+  margin-inline-end: 0.5rem;
+}

@@ -3,14 +3,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/services/language.service';
 
 @Injectable({ providedIn: 'root' })
-export class BusinessManagementTranslator {
+export class SystemManagementTranslator {
   constructor(
     private translate: TranslateService,
     private languageService: LanguageService
   ) {}
 
   /**
-   * Dynamically loads Business Management module translations
+   * Dynamically loads Secured Route module translations
    * based on the current saved language, and merges them
    * into the global translation context.
    */
@@ -20,7 +20,7 @@ export class BusinessManagementTranslator {
       const translations = await import(`./i18n/${lang}.json`);
       this.translate.setTranslation(lang, translations.default ?? translations, true);
     } catch (err) {
-      console.error(`[BusinessManagementTranslator] Failed to load ${lang} translations`, err);
+      console.error(`[SecuredRouteTranslator] Failed to load ${lang} translations`, err);
     }
   }
 }

@@ -3,19 +3,19 @@
   <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2 top-controls-row">
     <div class="d-flex align-items-center gap-2 top-controls-group">
       <button class="btn btn-outline-primary fw-bold" type="button" (click)="openCreateRoleModal()">
-        <i class="bi bi-plus-circle me-1"></i> Create New Role
+        <i class="bi bi-plus-circle me-1"></i> {{ 'ROLE_MANAGEMENT.CREATE_NEW_ROLE' | translate }}
       </button>
     </div>
     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center top-controls-group">
-      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" placeholder="Search..." [(ngModel)]="searchInput">
-      <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">Search</button>
+      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" [placeholder]="'ROLE_MANAGEMENT.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchInput">
+      <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">{{ 'ROLE_MANAGEMENT.SEARCH' | translate }}</button>
     </div>
     <div class="d-flex align-items-center gap-2 top-controls-group">
-      <label for="pageSize" class="me-2 mb-0">Show</label>
+      <label for="pageSize" class="me-2 mb-0">{{ 'ROLE_MANAGEMENT.SHOW' | translate }}</label>
       <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)">
         <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
       </select>
-      <span class="ms-2">entries</span>
+      <span class="ms-2">{{ 'ROLE_MANAGEMENT.ENTRIES' | translate }}</span>
     </div>
   </div>
   <!-- Table -->
@@ -26,45 +26,33 @@
           <th class="text-center">#</th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('name')">
-              <span>Role Name</span>
+              <span>{{ 'ROLE_MANAGEMENT.ROLE_NAME' | translate }}</span>
               <span class="sort-icons ms-1">
-                <i *ngIf="sortBy === 'name' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy === 'name' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy !== 'name'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('isActive')">
-              <span>Status</span>
+              <span>{{ 'ROLE_MANAGEMENT.STATUS' | translate }}</span>
               <span class="sort-icons ms-1">
-                <i *ngIf="sortBy === 'isActive' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy === 'isActive' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy !== 'isActive'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('isExternal')">
-              <span>Is External</span>
+              <span>{{ 'ROLE_MANAGEMENT.IS_EXTERNAL' | translate }}</span>
               <span class="sort-icons ms-1">
-                <i *ngIf="sortBy === 'isExternal' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy === 'isExternal' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy !== 'isExternal'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('createdOn')">
-              <span>Created On</span>
+              <span>{{ 'ROLE_MANAGEMENT.CREATED_ON' | translate }}</span>
               <span class="sort-icons ms-1">
-                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
-                <i *ngIf="sortBy !== 'createdOn'" class="bi bi-caret-down-fill text-secondary opacity-50" style="font-size:0.95em;"></i>
               </span>
             </button>
           </th>
-          <th class="text-center" style="width: 80px; min-width: 80px;">Actions</th>
+          <th class="text-center" style="width: 80px; min-width: 80px;">{{ 'ROLE_MANAGEMENT.ACTIONS' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -73,24 +61,24 @@
           <td>{{ role.name }}</td>
           <td>
             <span class="badge" [ngClass]="role.isActive ? 'bg-success' : 'bg-secondary'">
-              {{ role.isActive ? 'Active' : 'Inactive' }}
+              {{ role.isActive ? ('ROLE_MANAGEMENT.ACTIVE' | translate) : ('ROLE_MANAGEMENT.INACTIVE' | translate) }}
             </span>
           </td>
           <td>
             <span class="badge" [ngClass]="role.isExternal ? 'bg-info text-dark' : 'bg-light text-dark'">
-              {{ role.isExternal ? 'External' : 'Internal' }}
+              {{ role.isExternal ? ('ROLE_MANAGEMENT.EXTERNAL' | translate) : ('ROLE_MANAGEMENT.INTERNAL' | translate) }}
             </span>
           </td>
           <td>{{ role.createdOn | date:'short' }}</td>
           <td class="text-center" style="width: 80px; min-width: 80px; padding: 0.15rem 0.2rem;">
             <div class="btn-group btn-group-xs px-2" role="group" style="gap:2px;">
-              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openDetailsRoleModal(role)" title="Details">
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openDetailsRoleModal(role)" [title]="'ROLE_MANAGEMENT.DETAILS' | translate">
                 <i class="bi bi-eye"></i>
               </button>
-              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openEditRoleModal(role, i)" title="Edit">
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openEditRoleModal(role, i)" [title]="'ROLE_MANAGEMENT.EDIT' | translate">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="deleteRole(role, i)" title="Delete">
+              <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="deleteRole(role, i)" [title]="'ROLE_MANAGEMENT.DELETE' | translate">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
@@ -101,15 +89,15 @@
   </div>
   <div *ngIf="loading" class="text-center my-5">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'ROLE_MANAGEMENT.LOADING' | translate }}</span>
     </div>
   </div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <div *ngIf="!loading && !error && !roles.length" class="alert alert-info">No roles found.</div>
+  <div *ngIf="!loading && !error && !roles.length" class="alert alert-info">{{ 'ROLE_MANAGEMENT.NO_ROLES_FOUND' | translate }}</div>
   <!-- Pagination and page info row -->
   <div *ngIf="roles.length > 0" class="pagination-container mt-2 d-flex justify-content-between align-items-center">
     <div class="text-muted small ms-2">
-      Page {{ page }} of {{ totalPages }}. Total records: {{ totalCount }}
+      {{ 'ROLE_MANAGEMENT.PAGE_INFO' | translate: { page: page, totalPages: totalPages, totalCount: totalCount } }}
     </div>
     <nav *ngIf="totalPages > 1">
       <ul class="pagination pagination-sm mb-0">
@@ -132,23 +120,23 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Create New Role</h5>
+          <h5 class="modal-title">{{ 'ROLE_MANAGEMENT.CREATE_NEW_ROLE' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeCreateRoleModal()"></button>
         </div>
         <div class="modal-body">
           <form #createRoleForm="ngForm" autocomplete="off">
             <div class="mb-3">
-              <label for="roleName" class="form-label">Role Name</label>
+              <label for="roleName" class="form-label">{{ 'ROLE_MANAGEMENT.ROLE_NAME' | translate }}</label>
               <input type="text" id="roleName" class="form-control" name="name" [(ngModel)]="createRoleData.name" required minlength="3" maxlength="50">
             </div>
             <div *ngIf="createRoleError" class="alert alert-danger">{{ createRoleError }}</div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeCreateRoleModal()">Cancel</button>
+          <button type="button" class="btn btn-secondary" (click)="closeCreateRoleModal()">{{ 'ROLE_MANAGEMENT.CANCEL' | translate }}</button>
           <button type="button" class="btn btn-primary" [disabled]="!createRoleForm.form.valid || creatingRole" (click)="onCreateRole()">
             <span *ngIf="creatingRole" class="spinner-border spinner-border-sm me-1"></span>
-            Create
+            {{ 'ROLE_MANAGEMENT.CREATE' | translate }}
           </button>
         </div>
       </div>
@@ -159,29 +147,19 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Edit Role</h5>
+          <h5 class="modal-title">{{ 'ROLE_MANAGEMENT.EDIT_ROLE' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeEditRoleModal()"></button>
         </div>
         <div class="modal-body">
           <form *ngIf="selectedRole" #editRoleForm="ngForm" autocomplete="off">
             <div class="mb-3">
-              <label for="editRoleName" class="form-label">Role Name</label>
+              <label for="editRoleName" class="form-label">{{ 'ROLE_MANAGEMENT.ROLE_NAME' | translate }}</label>
               <input type="text" id="editRoleName" class="form-control" name="name" [(ngModel)]="selectedRole.name" required minlength="3" maxlength="50">
             </div>
             <div class="mb-3">
-              <label class="form-label">Status</label>
-              <select class="form-select" name="isActive" [(ngModel)]="selectedRole.isActive" required>
-                <option [ngValue]="true">Active</option>
-                <option [ngValue]="false">Inactive</option>
-              </select>
             </div>
             <div *ngIf="editRoleError" class="alert alert-danger">{{ editRoleError }}</div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="closeEditRoleModal()">Cancel</button>
-              <button type="button" class="btn btn-primary" [disabled]="!editRoleForm.form.valid || editingRole" (click)="onEditRole()">
-                <span *ngIf="editingRole" class="spinner-border spinner-border-sm me-1"></span>
-                Save
-              </button>
             </div>
           </form>
         </div>
@@ -193,17 +171,17 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Role Details</h5>
+          <h5 class="modal-title">{{ 'ROLE_MANAGEMENT.ROLE_DETAILS' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeDetailsRoleModal()"></button>
         </div>
         <div class="modal-body">
           <div *ngIf="selectedRole">
-            <div class="mb-2"><strong>Role Name:</strong> {{ selectedRole.name }}</div>
-            <div class="mb-2"><strong>Status:</strong> <span class="badge" [ngClass]="selectedRole.isActive ? 'bg-success' : 'bg-secondary'">{{ selectedRole.isActive ? 'Active' : 'Inactive' }}</span></div>
+            <div class="mb-2"><strong>{{ 'ROLE_MANAGEMENT.ROLE_NAME' | translate }}:</strong> {{ selectedRole.name }}</div>
+            <div class="mb-2"><strong>{{ 'ROLE_MANAGEMENT.STATUS' | translate }}:</strong> <span class="badge" [ngClass]="selectedRole.isActive ? 'bg-success' : 'bg-secondary'">{{ selectedRole.isActive ? ('ROLE_MANAGEMENT.ACTIVE' | translate) : ('ROLE_MANAGEMENT.INACTIVE' | translate) }}</span></div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeDetailsRoleModal()">Close</button>
+          <button type="button" class="btn btn-secondary" (click)="closeDetailsRoleModal()">{{ 'ROLE_MANAGEMENT.CLOSE' | translate }}</button>
         </div>
       </div>
     </div>

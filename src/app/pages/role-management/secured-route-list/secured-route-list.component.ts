@@ -5,11 +5,14 @@ import { SecuredRouteService } from '../../../core/services/secured-route.servic
 import { RoleManagementService } from '../../../core/services/role-management.service';
 import { SecuredRouteDTO, PagedResult } from '../../../core/interface/secured-route.interfaces';
 import { ApplicationRoleDTO } from '../../../core/interface/role-management.interfaces';
+import { TranslateModule } from '@ngx-translate/core';
+import { RoleManagementTranslator } from '../role-management-translator';
+
 
 @Component({
   selector: 'app-secured-route-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './secured-route-list.component.html',
   styleUrl: './secured-route-list.component.css'
 })
@@ -47,9 +50,14 @@ export class SecuredRouteListComponent implements OnInit {
   creating = false;
   editing = false;
 
-  constructor(private securedRouteService: SecuredRouteService, private roleService: RoleManagementService) {}
+  constructor(
+    private securedRouteService: SecuredRouteService,
+    private roleService: RoleManagementService,
+    private roleTranslator: RoleManagementTranslator
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.roleTranslator.loadTranslations();
     this.fetchRoutes();
     this.fetchAllRoles();
   }

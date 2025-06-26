@@ -30,4 +30,32 @@ html, body {
 [dir="rtl"] .gap-2 { gap: 0.5rem 0 !important; }
 [dir="ltr"] .gap-2 { gap: 0 0.5rem !important; }
 
+[dir="rtl"] .sidebar-list {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+[dir="rtl"] .sidebar-list .nav-link,
+[dir="rtl"] .sidebar-list .dropdown-item {
+  justify-content: flex-end;
+  text-align: end;
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  padding-right: 0.5rem !important;
+  padding-left: 0 !important;
+}
+[dir="rtl"] .sidebar-dropdown-menu {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
 

@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoleManagementService } from '../../../core/services/role-management.service';
 import { ApplicationRoleDTO, PagedResult } from '../../../core/interface/role-management.interfaces';
+import { TranslateModule } from '@ngx-translate/core';
+import { RoleManagementTranslator } from '../role-management-translator';
 
 @Component({
   selector: 'app-role-management-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './role-management-list.component.html',
   styleUrl: './role-management-list.component.css'
 })
@@ -45,9 +47,13 @@ export class RoleManagementListComponent implements OnInit {
   editRoleError: string | null = null;
   editingRole = false;
 
-  constructor(private roleService: RoleManagementService) {}
+  constructor(
+    private roleService: RoleManagementService,
+    private roleTranslator: RoleManagementTranslator
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.roleTranslator.loadTranslations();
     this.fetchRoles();
   }
 

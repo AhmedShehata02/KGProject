@@ -3,19 +3,19 @@
   <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2 top-controls-row">
     <div class="d-flex align-items-center gap-2 top-controls-group">
       <button class="btn btn-outline-primary fw-bold" type="button" (click)="openCreateSidebarModal()">
-        <i class="bi bi-plus-circle me-1"></i> Create New Sidebar Item
+        <i class="bi bi-plus-circle me-1"></i> {{ 'SIDEBAR_MANAGEMENT.CREATE_NEW' | translate }}
       </button>
     </div>
     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center top-controls-group">
-      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" placeholder="Search..." [(ngModel)]="searchInput">
-      <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">Search</button>
+      <input type="text" class="form-control w-auto" style="min-width:220px;max-width:320px;" [placeholder]="'SIDEBAR_MANAGEMENT.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchInput">
+      <button class="btn btn-outline-primary btn-sm" type="button" (click)="onSearchClick()">{{ 'SIDEBAR_MANAGEMENT.SEARCH' | translate }}</button>
     </div>
     <div class="d-flex align-items-center gap-2 top-controls-group">
-      <label for="pageSize" class="me-2 mb-0">Show</label>
+      <label for="pageSize" class="me-2 mb-0">{{ 'SIDEBAR_MANAGEMENT.SHOW' | translate }}</label>
       <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)">
         <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
       </select>
-      <span class="ms-2">entries</span>
+      <span class="ms-2">{{ 'SIDEBAR_MANAGEMENT.ENTRIES' | translate }}</span>
     </div>
   </div>
   <!-- Table -->
@@ -26,7 +26,7 @@
           <th class="text-center">#</th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('label')">
-              <span>Label</span>
+              <span>{{ 'SIDEBAR_MANAGEMENT.LABEL' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'label' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'label' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -36,7 +36,7 @@
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('icon')">
-              <span>Icon</span>
+              <span>{{ 'SIDEBAR_MANAGEMENT.ICON' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'icon' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'icon' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -46,7 +46,7 @@
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('route')">
-              <span>Route</span>
+              <span>{{ 'SIDEBAR_MANAGEMENT.ROUTE' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'route' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'route' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -56,7 +56,7 @@
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('order')">
-              <span>Order</span>
+              <span>{{ 'SIDEBAR_MANAGEMENT.ORDER' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'order' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'order' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -66,7 +66,7 @@
           </th>
           <th>
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('noSub')">
-              <span>No.Sub</span>
+              <span>{{ 'SIDEBAR_MANAGEMENT.NO_SUB' | translate }}</span>
               <span class="sort-icons ms-1">
                 <i *ngIf="sortBy === 'noSub' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="font-size:0.95em;"></i>
                 <i *ngIf="sortBy === 'noSub' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="font-size:0.95em;"></i>
@@ -74,7 +74,7 @@
               </span>
             </button>
           </th>
-          <th class="text-center" style="width: 80px; min-width: 80px;">Actions</th>
+          <th class="text-center" style="width: 80px; min-width: 80px;">{{ 'SIDEBAR_MANAGEMENT.ACTIONS' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -100,48 +100,48 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Create New Sidebar Item</h5>
+          <h5 class="modal-title">{{ 'SIDEBAR_MANAGEMENT.CREATE_NEW' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeCreateSidebarModal()"></button>
         </div>
         <div class="modal-body">
           <form #sidebarForm="ngForm" autocomplete="off">
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label>Label</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.LABEL' | translate }}</label>
                 <input type="text" class="form-control" [(ngModel)]="createSidebarData.label" name="label" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label>Icon</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.ICON' | translate }}</label>
                 <input type="text" class="form-control" [(ngModel)]="createSidebarData.icon" name="icon" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label>Route</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.ROUTE' | translate }}</label>
                 <input type="text" class="form-control" [(ngModel)]="createSidebarData.route" name="route" required>
               </div>
               <div class="col-md-3 mb-3">
-                <label>Order</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.ORDER' | translate }}</label>
                 <input type="number" class="form-control" [(ngModel)]="createSidebarData.order" name="order" required>
               </div>
               <div class="col-md-3 mb-3 d-flex align-items-center">
                 <input type="checkbox" class="form-check-input me-2" id="hasSubItem" [(ngModel)]="createHasSubItem" name="hasSubItem">
-                <label for="hasSubItem" class="form-check-label">Has Sub Item</label>
+                <label for="hasSubItem" class="form-check-label">{{ 'SIDEBAR_MANAGEMENT.HAS_SUB_ITEM' | translate }}</label>
               </div>
             </div>
             <div *ngIf="createHasSubItem">
               <div class="border rounded p-2 mb-2 bg-light">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="fw-bold">Sub Items</span>
-                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSubItem()"><i class="bi bi-plus"></i> Add Sub Item</button>
+                  <span class="fw-bold">{{ 'SIDEBAR_MANAGEMENT.SUB_ITEMS' | translate }}</span>
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSubItem()"><i class="bi bi-plus"></i> {{ 'SIDEBAR_MANAGEMENT.ADD_SUB_ITEM' | translate }}</button>
                 </div>
                 <div class="table-responsive">
                   <table class="table table-sm table-bordered mb-0">
                     <thead class="table-light">
                       <tr>
-                        <th>Label</th>
-                        <th>Icon</th>
-                        <th>Route</th>
-                        <th>Order</th>
-                        <th style="width: 48px;">Actions</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.LABEL' | translate }}</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.ICON' | translate }}</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.ROUTE' | translate }}</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.ORDER' | translate }}</th>
+                        <th style="width: 48px;">{{ 'SIDEBAR_MANAGEMENT.ACTIONS' | translate }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -162,8 +162,8 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeCreateSidebarModal()">Cancel</button>
-          <button type="button" class="btn btn-primary" (click)="onCreateSidebar()" [disabled]="!createSidebarData.label || !createSidebarData.icon || !createSidebarData.route">Create</button>
+          <button type="button" class="btn btn-secondary" (click)="closeCreateSidebarModal()">{{ 'SIDEBAR_MANAGEMENT.CANCEL' | translate }}</button>
+          <button type="button" class="btn btn-primary" (click)="onCreateSidebar()" [disabled]="!createSidebarData.label || !createSidebarData.icon || !createSidebarData.route">{{ 'SIDEBAR_MANAGEMENT.CREATE' | translate }}</button>
         </div>
       </div>
     </div>
@@ -173,48 +173,48 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Edit Sidebar Item</h5>
+          <h5 class="modal-title">{{ 'SIDEBAR_MANAGEMENT.EDIT' | translate }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeEditSidebarModal()"></button>
         </div>
         <div class="modal-body">
           <form #editSidebarForm="ngForm" autocomplete="off">
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label>Label</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.LABEL' | translate }}</label>
                 <input type="text" class="form-control" [(ngModel)]="editSidebarData.label" name="editLabel" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label>Icon</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.ICON' | translate }}</label>
                 <input type="text" class="form-control" [(ngModel)]="editSidebarData.icon" name="editIcon" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label>Route</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.ROUTE' | translate }}</label>
                 <input type="text" class="form-control" [(ngModel)]="editSidebarData.route" name="editRoute" required>
               </div>
               <div class="col-md-3 mb-3">
-                <label>Order</label>
+                <label>{{ 'SIDEBAR_MANAGEMENT.ORDER' | translate }}</label>
                 <input type="number" class="form-control" [(ngModel)]="editSidebarData.order" name="editOrder" required>
               </div>
               <div class="col-md-3 mb-3 d-flex align-items-center">
                 <input type="checkbox" class="form-check-input me-2" id="editHasSubItem" [(ngModel)]="editHasSubItem" name="editHasSubItem">
-                <label for="editHasSubItem" class="form-check-label">Has Sub Item</label>
+                <label for="editHasSubItem" class="form-check-label">{{ 'SIDEBAR_MANAGEMENT.HAS_SUB_ITEM' | translate }}</label>
               </div>
             </div>
             <div *ngIf="editHasSubItem">
               <div class="border rounded p-2 mb-2 bg-light">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="fw-bold">Sub Items</span>
-                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="addEditSubItem()"><i class="bi bi-plus"></i> Add Sub Item</button>
+                  <span class="fw-bold">{{ 'SIDEBAR_MANAGEMENT.SUB_ITEMS' | translate }}</span>
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="addEditSubItem()"><i class="bi bi-plus"></i> {{ 'SIDEBAR_MANAGEMENT.ADD_SUB_ITEM' | translate }}</button>
                 </div>
                 <div class="table-responsive">
                   <table class="table table-sm table-bordered mb-0">
                     <thead class="table-light">
                       <tr>
-                        <th>Label</th>
-                        <th>Icon</th>
-                        <th>Route</th>
-                        <th>Order</th>
-                        <th style="width: 48px;">Actions</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.LABEL' | translate }}</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.ICON' | translate }}</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.ROUTE' | translate }}</th>
+                        <th>{{ 'SIDEBAR_MANAGEMENT.ORDER' | translate }}</th>
+                        <th style="width: 48px;">{{ 'SIDEBAR_MANAGEMENT.ACTIONS' | translate }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -235,23 +235,23 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeEditSidebarModal()">Cancel</button>
-          <button type="button" class="btn btn-primary" (click)="onEditSidebar()" [disabled]="!editSidebarData.label || !editSidebarData.icon || !editSidebarData.route">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closeEditSidebarModal()">{{ 'SIDEBAR_MANAGEMENT.CANCEL' | translate }}</button>
+          <button type="button" class="btn btn-primary" (click)="onEditSidebar()" [disabled]="!editSidebarData.label || !editSidebarData.icon || !editSidebarData.route">{{ 'SIDEBAR_MANAGEMENT.SAVE' | translate }}</button>
         </div>
       </div>
     </div>
   </div>
   <div *ngIf="loading" class="text-center my-5">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'SIDEBAR_MANAGEMENT.LOADING' | translate }}</span>
     </div>
   </div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <div *ngIf="!loading && !error && !sidebarItems.length" class="alert alert-info">No sidebar items found.</div>
+  <div *ngIf="!loading && !error && !sidebarItems.length" class="alert alert-info">{{ 'SIDEBAR_MANAGEMENT.NO_ITEMS_FOUND' | translate }}</div>
   <!-- Pagination and page info row -->
   <div *ngIf="sidebarItems.length > 0" class="pagination-container mt-2 d-flex justify-content-between align-items-center">
     <div class="text-muted small ms-2">
-      Page {{ page }} of {{ totalPages }}. Total records: {{ totalCount }}
+      {{ 'SIDEBAR_MANAGEMENT.PAGE_INFO' | translate: { page: page, totalPages: totalPages, totalCount: totalCount } }}
     </div>
     <nav *ngIf="totalPages > 1">
       <ul class="pagination pagination-sm mb-0">

@@ -30,6 +30,20 @@
     "PAGE_INFO": "الصفحة {{page}} من {{totalPages}}. إجمالي السجلات: {{totalCount}}",
     "KG_NAME_AR_REQUIRED": "الاسم العربي مطلوب (3-50 حرف).",
     "KG_NAME_EN_REQUIRED": "الاسم الإنجليزي مطلوب (3-50 حرف).",
-    "KG_ADDRESS_REQUIRED": "العنوان مطلوب (10-100 حرف)."
+    "KG_ADDRESS_REQUIRED": "العنوان مطلوب (10-100 حرف).",
+    "NAME_AR": "الاسم (عربي)",
+    "NAME_EN": "الاسم (إنجليزي)",
+    "ADDRESS": "العنوان",
+    "PHONE": "الهاتف",
+    "BRANCH_CODE": "كود الفرع",
+    "EMAIL": "البريد الإلكتروني",
+    "ARABIC_NAME_REQUIRED": "الاسم العربي مطلوب (3-50 حرف).",
+    "ENGLISH_NAME_REQUIRED": "الاسم الإنجليزي مطلوب (3-50 حرف).",
+    "ADDRESS_REQUIRED": "العنوان مطلوب (10-100 حرف).",
+    "PHONE_REQUIRED": "رقم الهاتف مطلوب.",
+    "EMAIL_REQUIRED": "البريد الإلكتروني مطلوب.",
+    "INVALID_EMAIL_FORMAT": "تنسيق البريد الإلكتروني غير صحيح.",
+    "REMOVE": "حذف",
+    "AT_LEAST_ONE_BRANCH_REQUIRED": "يجب إضافة فرع واحد على الأقل."
   }
 }

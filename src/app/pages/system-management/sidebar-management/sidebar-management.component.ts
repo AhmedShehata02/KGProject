@@ -3,11 +3,14 @@ import { SidebarService } from '../../../core/services/sidebar.service';
 import { SidebarItemDTO, CreateSidebarItemDTO, UpdateSidebarItemDTO, PaginationFilter } from '../../../core/interface/sidebar.interfaces';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SystemManagementTranslator } from '../system-management-translator';
+import { TranslateModule } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-sidebar-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule , TranslateModule],
   templateUrl: './sidebar-management.component.html',
   styleUrl: './sidebar-management.component.css'
 })
@@ -54,9 +57,12 @@ export class SidebarManagementComponent implements OnInit {
   sortBy: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private sidebarService: SidebarService) {}
+  constructor(private sidebarService: SidebarService ,
+              private systemManagementTranslator: SystemManagementTranslator
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.systemManagementTranslator.loadTranslations();
     this.fetchSidebarItems();
   }
 

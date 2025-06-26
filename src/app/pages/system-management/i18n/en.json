@@ -1,0 +1,25 @@
+{
+  "SIDEBAR_MANAGEMENT": {
+    "CREATE_NEW": "Create New Sidebar Item",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SEARCH": "Search",
+    "SHOW": "Show",
+    "ENTRIES": "entries",
+    "LABEL": "Label",
+    "ICON": "Icon",
+    "ROUTE": "Route",
+    "ORDER": "Order",
+    "NO_SUB": "No.Sub",
+    "ACTIONS": "Actions",
+    "EDIT": "Edit Sidebar Item",
+    "DELETE": "Delete",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "ADD_SUB_ITEM": "Add Sub Item",
+    "SUB_ITEMS": "Sub Items",
+    "HAS_SUB_ITEM": "Has Sub Item",
+    "LOADING": "Loading...",
+    "NO_ITEMS_FOUND": "No sidebar items found.",
+    "PAGE_INFO": "Page {{page}} of {{totalPages}}. Total records: {{totalCount}}"
+  }
+}
