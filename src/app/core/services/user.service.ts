@@ -4,79 +4,62 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ApiResponse } from '../interface/api-response.interfaces';
+import { BaseService } from './base.service';
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class UserService extends BaseService {
   private apiUrl = environment.apiBaseUrl + '/api/User';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { super(); }
 
   getUserById(id: string): Observable<any> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<any>(`${this.apiUrl}/${id}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/${id}`, this.getAuthHeaders());
   }
 
   updateUser(id: string, user: any): Observable<any> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
     // Ensure property names match backend ApplicationUser model (Id, UserName, Email)
     const payload = {
       Id: user.id || user.Id,
       UserName: user.userName || user.UserName,
       Email: user.email || user.Email
     };
-    return this.http.put<any>(`${this.apiUrl}/${id}`, payload, { headers });
+    return this.http.put<any>(`${this.apiUrl}/${id}`, payload, this.getAuthHeaders());
   }
 
   deleteUser(id: string): Observable<any> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers });
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, this.getAuthHeaders());
   }
 
   // Get all roles in the system
   getAllRoles(): Observable<string[]> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<string[]>(`${this.apiUrl}/allroles`, { headers });
+    return this.http.get<string[]>(`${this.apiUrl}/allroles`, this.getAuthHeaders());
   }
 
   // Get all claims in the system (returns array of {type, value})
   getAllClaims(): Observable<string[]> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<any[]>(`${this.apiUrl}/allclaims`, { headers }).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/allclaims`, this.getAuthHeaders()).pipe(
       map((claims: any[]) => claims.map(c => c.type || c.value || (typeof c === 'string' ? c : JSON.stringify(c))))
     );
   }
 
   // Get user roles by user id
   getUserRoles(id: string): Observable<string[]> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<string[]>(`${this.apiUrl}/${id}/roles`, { headers });
+    return this.http.get<string[]>(`${this.apiUrl}/${id}/roles`, this.getAuthHeaders());
   }
 
   // Update user roles by user id
   updateUserRoles(id: string, roles: string[]): Observable<string[]> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.post<string[]>(`${this.apiUrl}/${id}/roles`, roles, { headers });
+    return this.http.post<string[]>(`${this.apiUrl}/${id}/roles`, roles, this.getAuthHeaders());
   }
 
   // Get user claims by user id (returns array of claim types)
   getUserClaims(id: string): Observable<string[]> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<string[]>(`${this.apiUrl}/${id}/claims`, { headers });
+    return this.http.get<string[]>(`${this.apiUrl}/${id}/claims`, this.getAuthHeaders());
   }
 
   // Update user claims by user id (send array of claim types)
   updateUserClaims(id: string, claims: string[]): Observable<string[]> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.post<string[]>(`${this.apiUrl}/${id}/claims`, claims, { headers });
+    return this.http.post<string[]>(`${this.apiUrl}/${id}/claims`, claims, this.getAuthHeaders());
   }
 
   /**
@@ -95,10 +78,7 @@ export class UserService {
     roles: string[];
     redirectUrlAfterResetPassword: string;
   }): Observable<ApiResponse<any>> {
-    const token = localStorage.getItem('jwt_token');
-    console.log('JWT token used for createUserByAdmin:', token); // Debug: log token
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/create-by-admin`, userData, { headers });
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/create-by-admin`, userData, this.getAuthHeaders());
   }
 
   /**
@@ -114,9 +94,7 @@ export class UserService {
     sortBy?: string;
     sortDirection?: 'asc' | 'desc';
   }): Observable<any> {
-    const token = localStorage.getItem('jwt_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-    return this.http.get<any>(`${this.apiUrl}/GetAllPaginated`, { params: filter as any, headers });
+    return this.http.get<any>(`${this.apiUrl}/GetAllPaginated`, { params: filter as any, ...this.getAuthHeaders() });
   }
 
   // --- Profile-related methods moved to UsersProfilesService ---

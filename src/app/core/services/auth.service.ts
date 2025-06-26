@@ -5,6 +5,7 @@ import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { ApiResponse } from '../interface/api-response.interfaces';
+import { BaseService } from './base.service';
 // #endregion
 
 // #region Helpers
@@ -22,7 +23,7 @@ function decodeJwt(token: string): any {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService extends BaseService {
   // #region Properties
   private apiUrl = environment.apiBaseUrl + '/api/Auth';
   private tokenExpirationTimer: any;
@@ -37,6 +38,7 @@ export class AuthService {
 
   // #region Constructor
   constructor(private http: HttpClient, private router: Router) {
+    super();
     this.startAutoLogout(); // Start auto logout timer on service load
   }
   // #endregion
@@ -104,11 +106,11 @@ export class AuthService {
     newPassword: string;
     confirmPassword: string;
   }): Observable<ApiResponse<string | string[]>> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    return this.http.post<ApiResponse<string | string[]>>(`${this.apiUrl}/changePassword`, data, { headers });
+    return this.http.post<ApiResponse<string | string[]>>(
+      `${this.apiUrl}/changePassword`,
+      data,
+      this.getAuthHeaders()
+    );
   }
 
   /**
@@ -121,11 +123,11 @@ export class AuthService {
     newPassword: string;
     confirmPassword: string;
   }): Observable<ApiResponse<string>> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/change-password-first-time`, data, { headers });
+    return this.http.post<ApiResponse<string>>(
+      `${this.apiUrl}/change-password-first-time`,
+      data,
+      this.getAuthHeaders()
+    );
   }
 
   /**
@@ -140,11 +142,8 @@ export class AuthService {
   /**
    * Get JWT token from localStorage
    */
-  getToken(): string | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem('jwt_token');
-    }
-    return null;
+  override getToken(): string | null {
+    return super.getToken();
   }
 
   /**
