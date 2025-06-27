@@ -27,7 +27,6 @@ export class AuthGuard implements CanActivate {
         }
         const isFirstLogin = decoded.IsFirstLogin === 'true';
         const isAgree = decoded.IsAgree === 'true';
-        console.log('IsFirstLogin:', isFirstLogin, 'IsAgree:', isAgree); // Debug log
 
         // 1. If IsFirstLogin is true, only allow /auth/change-password-first-time
         if (isFirstLogin) {
@@ -51,7 +50,6 @@ export class AuthGuard implements CanActivate {
             return this.usersProfilesService.getUserRequestStatus(userId).pipe(
               map((resp: any) => {
                 let status = resp?.result?.status ?? resp?.result;
-                console.log('UserStatus from backend:', status); // Debug log
                 if (typeof status === 'string') status = status.toLowerCase();
                 if (status === 'approved' || status === 2 || status === '2') {
                   return true;

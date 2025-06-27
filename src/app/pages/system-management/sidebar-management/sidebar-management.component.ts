@@ -18,12 +18,14 @@ export class SidebarManagementComponent implements OnInit {
   sidebarItems: SidebarItemDTO[] = [];
   loading = false;
   error: string | null = null;
+  currentLang: string = 'ar';
 
   showCreateSidebarModal = false;
   showEditSidebarModal = false;
 
   createSidebarData: CreateSidebarItemDTO = {
-    label: '',
+    labelAr: '',
+    labelEn: '',
     icon: '',
     route: '',
     order: 1,
@@ -34,7 +36,8 @@ export class SidebarManagementComponent implements OnInit {
 
   editSidebarData: UpdateSidebarItemDTO = {
     id: 0,
-    label: '',
+    labelAr: '',
+    labelEn: '',
     icon: '',
     route: '',
     order: 1,
@@ -59,7 +62,18 @@ export class SidebarManagementComponent implements OnInit {
 
   constructor(private sidebarService: SidebarService ,
               private systemManagementTranslator: SystemManagementTranslator
-  ) {}
+  ) {
+    // محاولة جلب اللغة الحالية من الترجمة
+    if ((this.systemManagementTranslator as any).translate?.currentLang) {
+      this.currentLang = (this.systemManagementTranslator as any).translate.currentLang;
+    }
+    // استمع لتغيير اللغة إذا كان متاحًا
+    if ((this.systemManagementTranslator as any).translate?.onLangChange) {
+      (this.systemManagementTranslator as any).translate.onLangChange.subscribe((event: any) => {
+        this.currentLang = event.lang;
+      });
+    }
+  }
 
   async ngOnInit() {
     this.systemManagementTranslator.loadTranslations();
@@ -98,7 +112,7 @@ export class SidebarManagementComponent implements OnInit {
   }
 
   openCreateSidebarModal() {
-    this.createSidebarData = { label: '', icon: '', route: '', order: 1, parentId: undefined };
+    this.createSidebarData = { labelAr: '', labelEn: '', icon: '', route: '', order: 1, parentId: undefined };
     this.createHasSubItem = false;
     this.createSubItems = [];
     this.showCreateSidebarModal = true;
@@ -109,7 +123,7 @@ export class SidebarManagementComponent implements OnInit {
   }
 
   addSubItem() {
-    this.createSubItems.push({ label: '', icon: '', route: '', order: 1, parentId: undefined });
+    this.createSubItems.push({ labelAr: '', labelEn: '', icon: '', route: '', order: 1, parentId: undefined });
   }
 
   removeSubItem(index: number) {
@@ -155,7 +169,8 @@ export class SidebarManagementComponent implements OnInit {
   openEditSidebarModal(item: SidebarItemDTO, index: number) {
     this.editSidebarData = {
       id: item.id,
-      label: item.label,
+      labelAr: item.labelAr,
+      labelEn: item.labelEn,
       icon: item.icon,
       route: item.route,
       order: item.order,
@@ -167,7 +182,8 @@ export class SidebarManagementComponent implements OnInit {
       this.editHasSubItem = true;
       this.editSubItems = item.children.map(child => ({
         id: child.id,
-        label: child.label,
+        labelAr: child.labelAr,
+        labelEn: child.labelEn,
         icon: child.icon,
         route: child.route,
         order: child.order,
@@ -182,12 +198,12 @@ export class SidebarManagementComponent implements OnInit {
 
   closeEditSidebarModal() {
     this.showEditSidebarModal = false;
-    this.editSidebarData = { id: 0, label: '', icon: '', route: '', order: 1, parentId: undefined };
+    this.editSidebarData = { id: 0, labelAr: '', labelEn: '', icon: '', route: '', order: 1, parentId: undefined };
     this.editSidebarIndex = null;
   }
 
   addEditSubItem() {
-    this.editSubItems.push({ id: 0, label: '', icon: '', route: '', order: 1, parentId: this.editSidebarData.id });
+    this.editSubItems.push({ id: 0, labelAr: '', labelEn: '', icon: '', route: '', order: 1, parentId: this.editSidebarData.id });
   }
 
   removeEditSubItem(index: number) {
@@ -218,7 +234,8 @@ export class SidebarManagementComponent implements OnInit {
               return this.sidebarService.update(sub);
             } else {
               return this.sidebarService.create({
-                label: sub.label,
+                labelAr: sub.labelAr,
+                labelEn: sub.labelEn,
                 icon: sub.icon,
                 route: sub.route,
                 order: sub.order,

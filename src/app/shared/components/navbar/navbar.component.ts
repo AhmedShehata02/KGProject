@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private langSub?: Subscription;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     public languageService: LanguageService,
     private sharedComponentsTranslator: SharedComponentsTranslator,
@@ -69,5 +69,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout();
+  }
+
+  getDisplayName(): string {
+    const user = this.authService.getCurrentUser();
+    if (user?.userName && user.userName.trim() !== '') {
+      return user.userName;
+    }
+    return user?.email || 'User';
   }
 }

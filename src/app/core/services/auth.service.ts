@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { ApiResponse } from '../interface/api-response.interfaces';
 import { BaseService } from './base.service';
+import { jwtDecode } from 'jwt-decode';
 // #endregion
 
 // #region Helpers
@@ -57,10 +58,7 @@ export class AuthService extends BaseService {
           this.updateAuthSubjects();
           // Check IsFirstLogin claim in JWT
           const decoded = decodeJwt(res.result);
-          console.log('IsFirstLogin claim:', decoded?.IsFirstLogin);
           // --- Log roles and secured routes ---
-          console.log('Roles:', this.getRoles());
-          console.log('SecuredRoutes:', this.getSecuredRoutes());
           // ---
           if (decoded && (decoded.IsFirstLogin === true || decoded.IsFirstLogin === 'true' || decoded.IsFirstLogin === 1 || decoded.IsFirstLogin === '1')) {
             this.router.navigate(['/auth/change-password-first-time']);
@@ -242,6 +240,23 @@ export class AuthService extends BaseService {
    */
   hasSecuredRoute(route: string): boolean {
     return this.getSecuredRoutes().includes(route);
+  }
+
+  /**
+   * Returns the current user info (userName/email) from JWT token if available
+   */
+  getCurrentUser(): { userName?: string, email?: string } | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const decoded: any = jwtDecode(token);
+      return {
+        userName: decoded?.userName || decoded?.UserName || decoded?.name || decoded?.unique_name,
+        email: decoded?.email || decoded?.Email
+      };
+    } catch {
+      return null;
+    }
   }
 
   private updateAuthSubjects() {

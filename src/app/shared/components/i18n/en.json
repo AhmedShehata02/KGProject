@@ -9,5 +9,9 @@
   "HEADER": {
     "TITLE": "Welcome",
     "SUBTITLE": "Your dashboard overview"
+  },
+  "SIDEBAR_MANAGEMENT": {
+    "LABEL_AR": "Arabic Name",
+    "LABEL_EN": "English Name"
   }
 }

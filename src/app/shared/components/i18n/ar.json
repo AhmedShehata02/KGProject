@@ -9,5 +9,9 @@
   "HEADER": {
     "TITLE": "مرحبا",
     "SUBTITLE": "نظرة عامة على لوحة التحكم"
+  },
+  "SIDEBAR_MANAGEMENT": {
+    "LABEL_AR": "الاسم بالعربية",
+    "LABEL_EN": "الاسم بالإنجليزية"
   }
 }

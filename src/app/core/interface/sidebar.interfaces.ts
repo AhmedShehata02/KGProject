@@ -1,6 +1,7 @@
 export interface SidebarItemDTO {
   id: number;
-  label: string;
+  labelAr: string;
+  labelEn: string;
   icon: string;
   route: string;
   parentId?: number;
@@ -9,7 +10,8 @@ export interface SidebarItemDTO {
 }
 
 export interface CreateSidebarItemDTO {
-  label: string;
+  labelAr: string;
+  labelEn: string;
   icon: string;
   route: string;
   parentId?: number;
@@ -18,7 +20,8 @@ export interface CreateSidebarItemDTO {
 
 export interface UpdateSidebarItemDTO {
   id: number;
-  label: string;
+  labelAr: string;
+  labelEn: string;
   icon: string;
   route: string;
   parentId?: number;
