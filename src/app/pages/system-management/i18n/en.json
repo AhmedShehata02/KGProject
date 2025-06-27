@@ -20,6 +20,13 @@
     "HAS_SUB_ITEM": "Has Sub Item",
     "LOADING": "Loading...",
     "NO_ITEMS_FOUND": "No sidebar items found.",
-    "PAGE_INFO": "Page {{page}} of {{totalPages}}. Total records: {{totalCount}}"
+    "PAGE_INFO": "Page {{page}} of {{totalPages}}. Total records: {{totalCount}}",
+    "FAILED_LOAD": "Failed to load sidebar items.",
+    "FAILED_CREATE": "Failed to create sidebar item.",
+    "FAILED_UPDATE": "Failed to update sidebar item.",
+    "FAILED_DELETE": "Failed to delete sidebar item.",
+    "CONFIRM_DELETE": "Are you sure you want to delete this sidebar item?",
+    "FAILED_DELETE_SUB": "Failed to delete sub item.",
+    "CONFIRM_DELETE_SUB": "Are you sure you want to delete this sub item?"
   }
 }

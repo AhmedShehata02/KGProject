@@ -192,7 +192,6 @@ export class SecuredRouteListComponent implements OnInit {
       roleIds: this.createRouteData.assignedRoles
     }).subscribe({
       next: (res) => {
-        console.log('Create Route Response:', res); // ✅ Log response
         if (res && (res.code === 200 || res.code === 201) && (res.status === 'Success' || res.status === 'Created')) {
           this.fetchRoutes();
           this.closeCreateModal();
@@ -203,7 +202,6 @@ export class SecuredRouteListComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log('Create Route Error:', err); // ✅ Log error
         this.createError = err?.error?.result || err?.error?.message || 'Failed to create route.';
         this.creating = false;
       }

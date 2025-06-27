@@ -109,7 +109,7 @@ export class UsersListComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load users.';
+        this.error = this.userManagementTranslator.instant('USER_LIST.FAILED_LOAD');
         this.loading = false;
       }
     });
@@ -257,7 +257,7 @@ export class UsersListComponent implements OnInit {
   }
 
   deleteUser(user: any) {
-    if (confirm(`Are you sure you want to delete user '${user.userName || user.email}'?`)) {
+    if (confirm(this.userManagementTranslator.instant('USER_LIST.CONFIRM_DELETE'))) {
       this.loading = true;
       this.userService.deleteUser(user.id).subscribe({
         next: () => {
@@ -265,7 +265,7 @@ export class UsersListComponent implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          this.error = 'Failed to delete user.';
+          this.error = this.userManagementTranslator.instant('USER_LIST.FAILED_DELETE');
           this.loading = false;
         }
       });
@@ -305,7 +305,7 @@ export class UsersListComponent implements OnInit {
         (this.createUserForm.phoneNumber && !/^\+?[0-9]{7,15}$/.test(this.createUserForm.phoneNumber)) ||
         !this.createUserForm.roles || !this.createUserForm.roles.length ||
         !this.createUserForm.redirectUrlAfterResetPassword) {
-      this.createUserError = 'Please fill all required fields correctly.';
+      this.createUserError = this.userManagementTranslator.instant('USER_LIST.CREATE_USER_VALIDATION');
       this.createUserLoading = false;
       return;
     }
@@ -316,7 +316,7 @@ export class UsersListComponent implements OnInit {
     this.userService.createUserByAdmin(this.createUserForm).subscribe({
       next: (res) => {
         if (res && res.code === 200) {
-          this.createUserSuccess = res.result?.Message || res.result?.message || 'User created successfully.';
+          this.createUserSuccess = res.result?.Message || res.result?.message || this.userManagementTranslator.instant('USER_LIST.CREATED_SUCCESS');
           // Reset the create user form model after successful creation
           this.createUserForm = {
             firstName: '',
@@ -349,10 +349,10 @@ export class UsersListComponent implements OnInit {
           } else if (res.result.Message || res.result.message) {
             this.createUserError = res.result.Message || res.result.message;
           } else {
-            this.createUserError = 'Failed to create user.';
+            this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
           }
         } else {
-          this.createUserError = 'Failed to create user.';
+          this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
         }
         this.createUserLoading = false;
         // Only close modal and refresh if success
@@ -373,12 +373,12 @@ export class UsersListComponent implements OnInit {
           } else if (err.error.result.Message || err.error.result.message) {
             this.createUserError = err.error.result.Message || err.error.result.message;
           } else {
-            this.createUserError = 'Failed to create user.';
+            this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
           }
         } else if (err?.error?.Message || err?.error?.message) {
           this.createUserError = err.error.Message || err.error.message;
         } else {
-          this.createUserError = 'Failed to create user.';
+          this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
         }
         this.createUserLoading = false;
       }

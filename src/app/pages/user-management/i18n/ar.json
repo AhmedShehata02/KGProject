@@ -29,7 +29,12 @@
     "ADDRESS": "العنوان",
     "PENDING_APPROVAL": "قيد الموافقة",
     "NOT_AVAILABLE": "غير متوفر",
-    "CREATE": "إنشاء"
+    "CREATE": "إنشاء",
+    "FAILED_LOAD": "فشل في تحميل المستخدمين.",
+    "FAILED_CREATE": "فشل في إنشاء المستخدم.",
+    "FAILED_UPDATE": "فشل في تعديل المستخدم.",
+    "FAILED_DELETE": "فشل في حذف المستخدم.",
+    "CONFIRM_DELETE": "هل أنت متأكد أنك تريد حذف هذا المستخدم؟"
   },
   "REVIEW_PROFILES": {
     "TITLE": "مراجعة الملفات الشخصية",
@@ -68,6 +73,11 @@
     "PRIMARY_PHONE": "رقم الهاتف الأساسي",
     "ADDRESS": "العنوان",
     "NOT_AVAILABLE": "غير متوفر",
-    "ACCEPT": "موافقة"
+    "ACCEPT": "موافقة",
+    "FAILED_LOAD": "فشل في تحميل الملفات الشخصية.",
+    "FAILED_APPROVE": "فشل في الموافقة على الملف الشخصي.",
+    "FAILED_REJECT": "فشل في رفض الملف الشخصي.",
+    "CONFIRM_REJECT_MESSAGE": "هل أنت متأكد أنك تريد رفض هذا الملف الشخصي؟",
+    "REJECTION_REASON_REQUIRED": "سبب الرفض مطلوب."
   }
 }

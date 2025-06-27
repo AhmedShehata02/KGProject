@@ -44,6 +44,11 @@
     "EMAIL_REQUIRED": "البريد الإلكتروني مطلوب.",
     "INVALID_EMAIL_FORMAT": "تنسيق البريد الإلكتروني غير صحيح.",
     "REMOVE": "حذف",
-    "AT_LEAST_ONE_BRANCH_REQUIRED": "يجب إضافة فرع واحد على الأقل."
+    "AT_LEAST_ONE_BRANCH_REQUIRED": "يجب إضافة فرع واحد على الأقل.",
+    "FAILED_LOAD": "فشل في تحميل فروع الحضانة.",
+    "FAILED_CREATE": "فشل في إنشاء الحضانة.",
+    "FAILED_UPDATE": "فشل في تعديل الحضانة.",
+    "FAILED_DELETE": "فشل في حذف الحضانة.",
+    "CONFIRM_DELETE": "هل أنت متأكد أنك تريد حذف هذه الحضانة وجميع فروعها؟"
   }
 }

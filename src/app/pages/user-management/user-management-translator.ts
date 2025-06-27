@@ -24,4 +24,11 @@ export class UserManagementTranslator {
       console.error(`[UserManagementTranslator] Failed to load ${lang} translations`, err);
     }
   }
+
+  /**
+   * Synchronously translates a key using ngx-translate's instant method.
+   */
+  instant(key: string, interpolateParams?: Object): string {
+    return this.translate.instant(key, interpolateParams);
+  }
 }

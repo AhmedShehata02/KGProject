@@ -86,12 +86,12 @@ export class SidebarManagementComponent implements OnInit {
           this.totalPages = res.result.totalPages;
         } else {
           this.sidebarItems = [];
-          this.error = 'Failed to load sidebar items.';
+          this.error = this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_LOAD');
         }
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || 'Failed to load sidebar items.';
+        this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_LOAD');
         this.loading = false;
       }
     });
@@ -124,7 +124,7 @@ export class SidebarManagementComponent implements OnInit {
           this.closeCreateSidebarModal();
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || 'Failed to create sidebar item.';
+          this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_CREATE');
         }
       });
     } else {
@@ -136,7 +136,6 @@ export class SidebarManagementComponent implements OnInit {
             return this.sidebarService.create({ ...sub, parentId });
           });
           if (subCreates.length) {
-            // Wait for all sub items to be created
             Promise.all(subCreates.map(obs => obs.toPromise())).then(() => {
               this.fetchSidebarItems();
               this.closeCreateSidebarModal();
@@ -147,7 +146,7 @@ export class SidebarManagementComponent implements OnInit {
           }
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || 'Failed to create sidebar item.';
+          this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_CREATE');
         }
       });
     }
@@ -194,13 +193,13 @@ export class SidebarManagementComponent implements OnInit {
   removeEditSubItem(index: number) {
     const sub = this.editSubItems[index];
     if (sub.id && sub.id !== 0) {
-      if (!confirm('Are you sure you want to delete this sub item?')) return;
+      if (!confirm(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.CONFIRM_DELETE_SUB'))) return;
       this.sidebarService.delete(sub.id).subscribe({
         next: () => {
           this.editSubItems.splice(index, 1);
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || 'Failed to delete sub item.';
+          this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_DELETE_SUB');
         }
       });
     } else {
@@ -242,19 +241,19 @@ export class SidebarManagementComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || 'Failed to update sidebar item.';
+        this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_UPDATE');
       }
     });
   }
 
   deleteSidebarItem(id: number) {
-    if (!confirm('Are you sure you want to delete this sidebar item?')) return;
+    if (!confirm(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.CONFIRM_DELETE'))) return;
     this.sidebarService.delete(id).subscribe({
       next: () => {
         this.fetchSidebarItems();
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || 'Failed to delete sidebar item.';
+        this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_DELETE');
       }
     });
   }

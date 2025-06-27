@@ -68,7 +68,6 @@ export class RoleManagementListComponent implements OnInit {
       this.sortDirection
     ).subscribe({
       next: (res) => {
-        console.log('Roles API response:', res); // Debug log
         if (res && res.code === 200 && res.status === 'Success') {
           this.roles = res.result.data || [];
           this.totalCount = res.result.totalCount;
@@ -79,14 +78,13 @@ export class RoleManagementListComponent implements OnInit {
           } else if (Array.isArray(res.result)) {
             this.error = res.result.join(' ');
           } else {
-            this.error = 'Failed to load roles.';
+            this.error = this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD');
           }
         }
         this.loading = false;
       },
       error: (err) => {
-        console.log('Roles API error:', err); // Debug log
-        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || 'Failed to load roles.');
+        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD'));
         this.loading = false;
       }
     });
@@ -151,14 +149,14 @@ export class RoleManagementListComponent implements OnInit {
   }
 
   deleteRole(role: ApplicationRoleDTO, index: number) {
-    if (confirm('Are you sure you want to delete this role?')) {
+    if (confirm(this.roleTranslator.instant('ROLE_MANAGEMENT.CONFIRM_DELETE'))) {
       this.loading = true;
       this.roleService.deleteRole(role.id).subscribe({
         next: () => {
           this.fetchRoles();
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || 'Failed to delete role.';
+          this.error = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_DELETE');
           this.loading = false;
         }
       });
@@ -167,7 +165,7 @@ export class RoleManagementListComponent implements OnInit {
 
   onCreateRole() {
     if (!this.createRoleData.name || this.createRoleData.name.length < 3) {
-      this.createRoleError = 'Role name is required and must be at least 3 characters.';
+      this.createRoleError = this.roleTranslator.instant('ROLE_MANAGEMENT.ROLE_NAME_REQUIRED');
       return;
     }
     this.creatingRole = true;
@@ -176,14 +174,13 @@ export class RoleManagementListComponent implements OnInit {
       name: this.createRoleData.name
     }).subscribe({
       next: (res) => {
-        // Always treat as success if no error thrown
         this.closeCreateRoleModal();
         this.createRoleData = { name: '' };
         this.fetchRoles();
         this.creatingRole = false;
       },
       error: (err) => {
-        this.createRoleError = err?.error?.result || err?.error?.message || 'Failed to create role.';
+        this.createRoleError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_CREATE');
         this.creatingRole = false;
       }
     });
@@ -191,7 +188,7 @@ export class RoleManagementListComponent implements OnInit {
 
   onEditRole() {
     if (!this.selectedRole || !this.selectedRole.name || this.selectedRole.name.length < 3) {
-      this.editRoleError = 'Role name is required and must be at least 3 characters.';
+      this.editRoleError = this.roleTranslator.instant('ROLE_MANAGEMENT.ROLE_NAME_REQUIRED');
       return;
     }
     this.editingRole = true;
@@ -207,7 +204,7 @@ export class RoleManagementListComponent implements OnInit {
         this.editingRole = false;
       },
       error: (err) => {
-        this.editRoleError = err?.error?.result || err?.error?.message || 'Failed to update role.';
+        this.editRoleError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_UPDATE');
         this.editingRole = false;
       }
     });

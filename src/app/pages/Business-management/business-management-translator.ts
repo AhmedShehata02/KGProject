@@ -23,4 +23,11 @@ export class BusinessManagementTranslator {
       console.error(`[BusinessManagementTranslator] Failed to load ${lang} translations`, err);
     }
   }
+
+  /**
+   * Synchronously get translation for a key (for use in TS code)
+   */
+  instant(key: string, interpolateParams?: Object): string {
+    return this.translate.instant(key, interpolateParams);
+  }
 }

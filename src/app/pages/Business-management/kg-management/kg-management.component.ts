@@ -84,20 +84,19 @@ export class KgManagementComponent implements OnInit {
           }));
           this.totalCount = res.result.totalCount;
           this.totalPages = res.result.totalPages;
-          // console.log('KG Branches result:', this.kgBranches);
         } else {
           if (typeof res.result === 'string') {
             this.error = res.result;
           } else if (Array.isArray(res.result)) {
             this.error = res.result.join(' ');
           } else {
-            this.error = 'Failed to load KG branches.';
+            this.error = this.kgTranslator.instant('KG_MANAGEMENT.FAILED_LOAD');
           }
         }
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || 'Failed to load KG branches.');
+        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_LOAD'));
         this.loading = false;
       }
     });
@@ -165,7 +164,7 @@ export class KgManagementComponent implements OnInit {
       },
       error: (err) => {
         // console.log('Create KG error:', err);
-        this.error = err?.error?.result || err?.error?.message || 'Failed to create KG.';
+        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_CREATE');
       }
     });
   }
@@ -229,19 +228,19 @@ export class KgManagementComponent implements OnInit {
       },
       error: (err) => {
         // console.log('Update KG error:', err);
-        this.error = err?.error?.result || err?.error?.message || 'Failed to update KG.';
+        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_UPDATE');
       }
     });
   }
 
   deleteKgBranch(kgId: number) {
-    if (!confirm('Are you sure you want to delete this KG and all its branches?')) return;
+    if (!confirm(this.kgTranslator.instant('KG_MANAGEMENT.CONFIRM_DELETE'))) return;
     this.kgBranchService.softDelete(kgId).subscribe({
       next: () => {
         this.fetchKgBranches();
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || 'Failed to delete KG.';
+        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_DELETE');
       }
     });
   }

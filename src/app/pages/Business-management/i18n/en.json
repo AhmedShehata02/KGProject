@@ -30,6 +30,11 @@
     "PAGE_INFO": "Page {{page}} of {{totalPages}}. Total records: {{totalCount}}",
     "KG_NAME_AR_REQUIRED": "Arabic name is required (3-50 chars).",
     "KG_NAME_EN_REQUIRED": "English name is required (3-50 chars).",
-    "KG_ADDRESS_REQUIRED": "Address is required (10-100 chars)."
+    "KG_ADDRESS_REQUIRED": "Address is required (10-100 chars).",
+    "FAILED_LOAD": "Failed to load KG branches.",
+    "FAILED_CREATE": "Failed to create KG.",
+    "FAILED_UPDATE": "Failed to update KG.",
+    "FAILED_DELETE": "Failed to delete KG.",
+    "CONFIRM_DELETE": "Are you sure you want to delete this KG and all its branches?"
   }
 }

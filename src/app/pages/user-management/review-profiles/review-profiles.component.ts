@@ -65,7 +65,7 @@ export class ReviewProfilesComponent implements OnInit {
           this.loading = false;
         },
         error: (err: any) => {
-          this.error = 'Failed to load profiles.';
+          this.error = this.roleTranslator.instant('REVIEW_PROFILES.FAILED_LOAD');
           this.loading = false;
         },
       });
@@ -169,7 +169,7 @@ export class ReviewProfilesComponent implements OnInit {
             this.actionError = '';
           } else {
             this.actionError =
-              err?.error?.result || 'Failed to approve profile.';
+              err?.error?.result || this.roleTranslator.instant('REVIEW_PROFILES.FAILED_APPROVE');
           }
         },
       });
@@ -183,7 +183,7 @@ export class ReviewProfilesComponent implements OnInit {
 
   confirmRejectProfile() {
     if (!this.rejectionReasonInput.trim()) {
-      this.actionError = 'Rejection reason is required.';
+      this.actionError = this.roleTranslator.instant('REVIEW_PROFILES.REJECTION_REASON_REQUIRED');
       return;
     }
     this.actionLoading = true;
@@ -217,7 +217,7 @@ export class ReviewProfilesComponent implements OnInit {
         },
         error: (err: any) => {
           this.actionLoading = false;
-          this.actionError = err?.error?.result || 'Failed to reject profile.';
+          this.actionError = err?.error?.result || this.roleTranslator.instant('REVIEW_PROFILES.FAILED_REJECT');
         },
       });
   }

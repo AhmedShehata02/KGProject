@@ -42,7 +42,6 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.sidebarService.getAllPaginated({ page: 1, pageSize: 99999 }).pipe(take(1)).subscribe({
       next: (res) => {
-        console.log('[Sidebar] Backend response:', res);
         if (res && res.code === 200 && res.status === 'Success') {
           const items = res.result.data.map(this.mapSidebarItemFromDTO.bind(this));
           this.allSidebarItems = items;
