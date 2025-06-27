@@ -104,7 +104,11 @@ export class SidebarComponent implements OnInit {
     const userRoles = this.auth.getRoles();
     const isSuperAdmin = userRoles.includes('Super Admin');
     const isAllowed = (route?: string, label?: string) => {
-      if (label === 'Dashboard') return true;
+      const dashboardLabels = [
+        'dashboard', 'لوحة القيادة', 'لوحه القياده', 'لوحة تحكم', 'لوحة التحكم', 'لوحه التحكم'
+      ];
+      const normalizedLabel = (label || '').replace(/\s/g, '').toLowerCase();
+      if (dashboardLabels.map(l => l.replace(/\s/g, '').toLowerCase()).includes(normalizedLabel)) return true;
       if (isSuperAdmin) return true;
       if (!route) return true;
       if (!securedRoutes || securedRoutes.length === 0) return true; // fallback: show all if no securedRoutes
