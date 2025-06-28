@@ -85,6 +85,9 @@
               <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="deleteKgBranch(kg.kg.id)" [title]="'KG_MANAGEMENT.DELETE' | translate">
                 <i class="bi bi-trash"></i>
               </button>
+              <button class="btn btn-xs btn-outline-secondary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="showKgHistory(kg.kg.id)" [title]="'KG_MANAGEMENT.HISTORY' | translate">
+                <i class="bi bi-clock-history"></i>
+              </button>
             </div>
           </td>
         </tr>
@@ -105,14 +108,24 @@
               <div class="mb-3 col-md-6">
                 <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="kgNameAr" class="form-control" required minlength="3" maxlength="50"
-                  [(ngModel)]="createKgData.kg.nameAr" #kgNameAr="ngModel">
-                <div *ngIf="kgNameAr.invalid && kgNameAr.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</div>
+                  [(ngModel)]="createKgData.kg.nameAr" #kgNameAr="ngModel"
+                  pattern="^[\u0600-\u06FF\s]+$">
+                <div *ngIf="kgNameAr.invalid && kgNameAr.touched" class="text-danger small">
+                  <ng-container *ngIf="kgNameAr.errors?.['required']">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</ng-container>
+                  <ng-container *ngIf="kgNameAr.errors?.['pattern']">{{ 'KG_MANAGEMENT.ARABIC_ONLY' | translate }}</ng-container>
+                  <ng-container *ngIf="kgNameAr.errors?.['minlength'] || kgNameAr.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
+                </div>
               </div>
               <div class="mb-3 col-md-6">
                 <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="kgNameEn" class="form-control" required minlength="3" maxlength="50"
-                  [(ngModel)]="createKgData.kg.nameEn" #kgNameEn="ngModel">
-                <div *ngIf="kgNameEn.invalid && kgNameEn.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</div>
+                  [(ngModel)]="createKgData.kg.nameEn" #kgNameEn="ngModel"
+                  pattern="^[A-Za-z\s]+$">
+                <div *ngIf="kgNameEn.invalid && kgNameEn.touched" class="text-danger small">
+                  <ng-container *ngIf="kgNameEn.errors?.['required']">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</ng-container>
+                  <ng-container *ngIf="kgNameEn.errors?.['pattern']">{{ 'KG_MANAGEMENT.ENGLISH_ONLY' | translate }}</ng-container>
+                  <ng-container *ngIf="kgNameEn.errors?.['minlength'] || kgNameEn.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -130,9 +143,9 @@
                   <thead class="table-light">
                     <tr>
                       <th>#</th>
-                      <th>{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }}</th>
-                      <th>{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }}</th>
-                      <th>{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.NAME_AR' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.NAME_EN' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.ADDRESS' | translate }}</th>
                       <th>{{ 'KG_MANAGEMENT.PHONE' | translate }}</th>
                       <th>{{ 'KG_MANAGEMENT.EMAIL' | translate }}</th>
                       <th style="width: 60px;"></th>
@@ -143,16 +156,22 @@
                       <td>{{ b + 1 }}</td>
                       <td>
                         <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_AR' | translate }}" required minlength="3" maxlength="50"
-                          [(ngModel)]="branch.nameAr" name="branchNameAr{{b}}" #branchNameAr="ngModel">
+                          [(ngModel)]="branch.nameAr" name="branchNameAr{{b}}" #branchNameAr="ngModel"
+                          pattern="^[\u0600-\u06FF\s]+$">
                         <div *ngIf="branchNameAr.invalid && branchNameAr.touched" class="text-danger small">
-                          {{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}
+                          <ng-container *ngIf="branchNameAr.errors?.['required']">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</ng-container>
+                          <ng-container *ngIf="branchNameAr.errors?.['pattern']">{{ 'KG_MANAGEMENT.ARABIC_ONLY' | translate }}</ng-container>
+                          <ng-container *ngIf="branchNameAr.errors?.['minlength'] || branchNameAr.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
                         </div>
                       </td>
                       <td>
                         <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_EN' | translate }}" required minlength="3" maxlength="50"
-                          [(ngModel)]="branch.nameEn" name="branchNameEn{{b}}" #branchNameEn="ngModel">
+                          [(ngModel)]="branch.nameEn" name="branchNameEn{{b}}" #branchNameEn="ngModel"
+                          pattern="^[A-Za-z\s]+$">
                         <div *ngIf="branchNameEn.invalid && branchNameEn.touched" class="text-danger small">
-                          {{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}
+                          <ng-container *ngIf="branchNameEn.errors?.['required']">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</ng-container>
+                          <ng-container *ngIf="branchNameEn.errors?.['pattern']">{{ 'KG_MANAGEMENT.ENGLISH_ONLY' | translate }}</ng-container>
+                          <ng-container *ngIf="branchNameEn.errors?.['minlength'] || branchNameEn.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
                         </div>
                       </td>
                       <td>
@@ -171,10 +190,10 @@
                       </td>
                       <td>
                         <input type="email" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.EMAIL' | translate }}" required minlength="1"
-                          [(ngModel)]="branch.email" name="branchEmail{{b}}" #branchEmail="ngModel">
+                          [(ngModel)]="branch.email" name="branchEmail{{b}}" #branchEmail="ngModel" (blur)="branchEmail.control.markAsTouched(); validateEmail(branchEmail)">
                         <div *ngIf="branchEmail.invalid && branchEmail.touched" class="text-danger small">
                           <ng-container *ngIf="branchEmail.errors?.['required']">{{ 'KG_MANAGEMENT.EMAIL_REQUIRED' | translate }}</ng-container>
-                          <ng-container *ngIf="branchEmail.errors?.['email']">{{ 'KG_MANAGEMENT.INVALID_EMAIL_FORMAT' | translate }}</ng-container>
+                          <ng-container *ngIf="branchEmail.errors?.['email'] || branchEmail.errors?.['customEmail']">{{ 'KG_MANAGEMENT.INVALID_EMAIL_FORMAT' | translate }}</ng-container>
                         </div>
                       </td>
                       <td class="text-center align-middle">
@@ -216,14 +235,24 @@
               <div class="mb-3 col-md-6">
                 <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="editKgNameAr" class="form-control" required minlength="3" maxlength="50"
-                  [(ngModel)]="editKgData.kg.nameAr" #editKgNameAr="ngModel">
-                <div *ngIf="editKgNameAr.invalid && editKgNameAr.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</div>
+                  [(ngModel)]="editKgData.kg.nameAr" #editKgNameAr="ngModel"
+                  pattern="^[\u0600-\u06FF\s]+$">
+                <div *ngIf="editKgNameAr.invalid && editKgNameAr.touched" class="text-danger small">
+                  <ng-container *ngIf="editKgNameAr.errors?.['required']">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</ng-container>
+                  <ng-container *ngIf="editKgNameAr.errors?.['pattern']">{{ 'KG_MANAGEMENT.ARABIC_ONLY' | translate }}</ng-container>
+                  <ng-container *ngIf="editKgNameAr.errors?.['minlength'] || editKgNameAr.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
+                </div>
               </div>
               <div class="mb-3 col-md-6">
                 <label class="form-label fw-semibold">{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" name="editKgNameEn" class="form-control" required minlength="3" maxlength="50"
-                  [(ngModel)]="editKgData.kg.nameEn" #editKgNameEn="ngModel">
-                <div *ngIf="editKgNameEn.invalid && editKgNameEn.touched" class="text-danger small">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</div>
+                  [(ngModel)]="editKgData.kg.nameEn" #editKgNameEn="ngModel"
+                  pattern="^[A-Za-z\s]+$">
+                <div *ngIf="editKgNameEn.invalid && editKgNameEn.touched" class="text-danger small">
+                  <ng-container *ngIf="editKgNameEn.errors?.['required']">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</ng-container>
+                  <ng-container *ngIf="editKgNameEn.errors?.['pattern']">{{ 'KG_MANAGEMENT.ENGLISH_ONLY' | translate }}</ng-container>
+                  <ng-container *ngIf="editKgNameEn.errors?.['minlength'] || editKgNameEn.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -245,9 +274,9 @@
                   <thead class="table-light">
                     <tr>
                       <th>#</th>
-                      <th>{{ 'KG_MANAGEMENT.KG_NAME_AR' | translate }}</th>
-                      <th>{{ 'KG_MANAGEMENT.KG_NAME_EN' | translate }}</th>
-                      <th>{{ 'KG_MANAGEMENT.KG_ADDRESS' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.NAME_AR' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.NAME_EN' | translate }}</th>
+                      <th>{{ 'KG_MANAGEMENT.ADDRESS' | translate }}</th>
                       <th>{{ 'KG_MANAGEMENT.PHONE' | translate }}</th>
                       <th>{{ 'KG_MANAGEMENT.BRANCH_CODE' | translate }}</th>
                       <th>{{ 'KG_MANAGEMENT.EMAIL' | translate }}</th>
@@ -259,16 +288,22 @@
                       <td>{{ b + 1 }}</td>
                       <td>
                         <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_AR' | translate }}" required minlength="3" maxlength="50"
-                          [(ngModel)]="branch.nameAr" name="editBranchNameAr{{b}}" #editBranchNameAr="ngModel">
+                          [(ngModel)]="branch.nameAr" name="editBranchNameAr{{b}}" #editBranchNameAr="ngModel"
+                          pattern="^[\u0600-\u06FF\s]+$">
                         <div *ngIf="editBranchNameAr.invalid && editBranchNameAr.touched" class="text-danger small">
-                          {{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}
+                          <ng-container *ngIf="editBranchNameAr.errors?.['required']">{{ 'KG_MANAGEMENT.ARABIC_NAME_REQUIRED' | translate }}</ng-container>
+                          <ng-container *ngIf="editBranchNameAr.errors?.['pattern']">{{ 'KG_MANAGEMENT.ARABIC_ONLY' | translate }}</ng-container>
+                          <ng-container *ngIf="editBranchNameAr.errors?.['minlength'] || editBranchNameAr.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
                         </div>
                       </td>
                       <td>
                         <input type="text" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.NAME_EN' | translate }}" required minlength="3" maxlength="50"
-                          [(ngModel)]="branch.nameEn" name="editBranchNameEn{{b}}" #editBranchNameEn="ngModel">
+                          [(ngModel)]="branch.nameEn" name="editBranchNameEn{{b}}" #editBranchNameEn="ngModel"
+                          pattern="^[A-Za-z\s]+$">
                         <div *ngIf="editBranchNameEn.invalid && editBranchNameEn.touched" class="text-danger small">
-                          {{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}
+                          <ng-container *ngIf="editBranchNameEn.errors?.['required']">{{ 'KG_MANAGEMENT.ENGLISH_NAME_REQUIRED' | translate }}</ng-container>
+                          <ng-container *ngIf="editBranchNameEn.errors?.['pattern']">{{ 'KG_MANAGEMENT.ENGLISH_ONLY' | translate }}</ng-container>
+                          <ng-container *ngIf="editBranchNameEn.errors?.['minlength'] || editBranchNameEn.errors?.['maxlength']">{{ 'KG_MANAGEMENT.LENGTH_3_50' | translate }}</ng-container>
                         </div>
                       </td>
                       <td>
@@ -290,10 +325,10 @@
                       </td>
                       <td>
                         <input type="email" class="form-control form-control-sm" placeholder="{{ 'KG_MANAGEMENT.EMAIL' | translate }}" required minlength="1"
-                          [(ngModel)]="branch.email" name="editBranchEmail{{b}}" #editBranchEmail="ngModel">
+                          [(ngModel)]="branch.email" name="editBranchEmail{{b}}" #editBranchEmail="ngModel" (blur)="editBranchEmail.control.markAsTouched(); validateEmail(editBranchEmail)">
                         <div *ngIf="editBranchEmail.invalid && editBranchEmail.touched" class="text-danger small">
                           <ng-container *ngIf="editBranchEmail.errors?.['required']">{{ 'KG_MANAGEMENT.EMAIL_REQUIRED' | translate }}</ng-container>
-                          <ng-container *ngIf="editBranchEmail.errors?.['email']">{{ 'KG_MANAGEMENT.INVALID_EMAIL_FORMAT' | translate }}</ng-container>
+                          <ng-container *ngIf="editBranchEmail.errors?.['email'] || editBranchEmail.errors?.['customEmail']">{{ 'KG_MANAGEMENT.INVALID_EMAIL_FORMAT' | translate }}</ng-container>
                         </div>
                       </td>
                       <td class="text-center align-middle">
@@ -307,6 +342,10 @@
               <div *ngIf="editKgData.branches.length === 0 && editKgForm.submitted" class="text-danger small mt-2">
                 {{ 'KG_MANAGEMENT.AT_LEAST_ONE_BRANCH_REQUIRED' | translate }}
               </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ 'KG_MANAGEMENT.USER_COMMENT_OPTIONAL' | translate }}</label>
+              <textarea class="form-control" name="editUserComment" [(ngModel)]="editUserComment" rows="2" maxlength="250"></textarea>
             </div>
           </form>
         </div>
@@ -414,5 +453,81 @@
         </li>
       </ul>
     </nav>
+  </div>
+
+  <!-- Delete KG Modal -->
+  <div class="modal fade show" tabindex="-1"
+       [ngStyle]="{display: showDeleteModal ? 'block' : 'none', background: showDeleteModal ? 'rgba(0,0,0,0.25)' : 'transparent'}"
+       *ngIf="showDeleteModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'KG_MANAGEMENT.CONFIRM_DELETE_TITLE' | translate }}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="cancelDeleteKgBranch()"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ 'KG_MANAGEMENT.CONFIRM_DELETE_MESSAGE' | translate }}</p>
+          <div class="mb-3">
+            <label class="form-label">{{ 'KG_MANAGEMENT.USER_COMMENT_OPTIONAL' | translate }}</label>
+            <textarea class="form-control" [(ngModel)]="deleteUserComment" rows="2" maxlength="250"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelDeleteKgBranch()">
+            {{ 'KG_MANAGEMENT.CANCEL' | translate }}
+          </button>
+          <button type="button" class="btn btn-danger" (click)="confirmDeleteKgBranch()">
+            {{ 'KG_MANAGEMENT.DELETE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KG History Modal -->
+  <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showHistoryModal ? 'block' : 'none', background: showHistoryModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showHistoryModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80vw; width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'KG_MANAGEMENT.HISTORY' | translate }}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeHistoryModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="historyLoading" class="text-center my-3">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+          </div>
+          <div *ngIf="!historyLoading && kgHistory && kgHistory.length">
+            <table class="table table-bordered table-sm">
+              <thead class="table-light">
+                <tr>
+                  <th>{{ 'KG_MANAGEMENT.HISTORY_ACTION' | translate }}</th>
+                  <th>{{ 'KG_MANAGEMENT.HISTORY_USER' | translate }}</th>
+                  <th>{{ 'KG_MANAGEMENT.HISTORY_DATE' | translate }}</th>
+                  <th>{{ 'KG_MANAGEMENT.HISTORY_COMMENT' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let h of kgHistory">
+                  <td>{{ h.action }}</td>
+                  <td>{{ h.user }}</td>
+                  <td>{{ h.date | customDate }}</td>
+                  <td>{{ h.comment }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="!historyLoading && (!kgHistory || !kgHistory.length)" class="alert alert-info">
+            {{ 'KG_MANAGEMENT.NO_HISTORY' | translate }}
+          </div>
+          <!-- Only show historyMessage if there is a message and there is history data -->
+          <div *ngIf="!historyLoading && historyMessage && kgHistory && kgHistory.length" class="alert alert-info">
+            {{ historyMessage }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeHistoryModal()">{{ 'KG_MANAGEMENT.CLOSE' | translate }}</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

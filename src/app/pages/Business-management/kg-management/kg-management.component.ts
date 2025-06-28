@@ -5,12 +5,13 @@ import { KGBranchDTO } from '../../../core/interface/kg-branch.interfaces';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BusinessManagementTranslator } from '../business-management-translator'; // ✅ import الترجمة
+import { CustomDatePipe } from '../../../shared/pipes/custom-date.pipe';
 
 
 @Component({
   selector: 'app-kg-management',
   standalone: true,
-  imports: [CommonModule, FormsModule , TranslateModule],
+  imports: [CommonModule, FormsModule , TranslateModule, CustomDatePipe],
   templateUrl: './kg-management.component.html',
   styleUrl: './kg-management.component.css'
 })
@@ -22,6 +23,8 @@ export class KgManagementComponent implements OnInit {
   showCreateKgModal = false;
   showEditKgModal = false;
   showDetailsKgModal = false;
+  showDeleteModal = false;
+  showHistoryModal = false;
 
   createKgData = {
     kg: {
@@ -34,8 +37,12 @@ export class KgManagementComponent implements OnInit {
 
   editKgData: any = null;
   editKgIndex: number | null = null;
+  editUserComment: string = '';
 
   detailsKgData: any = null;
+
+  deleteKgId: number | null = null;
+  deleteUserComment: string = '';
 
   // Pagination and table state
   page = 1;
@@ -50,6 +57,10 @@ export class KgManagementComponent implements OnInit {
   searchInput = '';
   sortBy: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
+
+  historyLoading = false;
+  kgHistory: any[] = [];
+  historyMessage: string | null = null;
 
   constructor(private kgBranchService: KGBranchService,
     private kgTranslator : BusinessManagementTranslator // ✅ Inject الترجمة
@@ -78,12 +89,13 @@ export class KgManagementComponent implements OnInit {
               nameAr: kg.nameAr,
               nameEn: kg.nameEn,
               kgCode: kg.kgCode,
-              address: kg.address
+              address: kg.address,
+              branches: kg.branches || []
             },
             branches: kg.branches || []
           }));
           this.totalCount = res.result.totalCount;
-          this.totalPages = res.result.totalPages;
+          this.totalPages = Math.ceil(this.totalCount / this.pageSize);
         } else {
           if (typeof res.result === 'string') {
             this.error = res.result;
@@ -108,6 +120,15 @@ export class KgManagementComponent implements OnInit {
 
   closeCreateKgModal() {
     this.showCreateKgModal = false;
+    // Reset the create model when closing the modal
+    this.createKgData = {
+      kg: {
+        nameAr: '',
+        nameEn: '',
+        address: ''
+      },
+      branches: []
+    };
   }
 
   addBranch() {
@@ -175,6 +196,7 @@ export class KgManagementComponent implements OnInit {
       branches: kgBranch.branches.map(b => ({ ...b }))
     };
     this.editKgIndex = index;
+    this.editUserComment = '';
     this.showEditKgModal = true;
   }
 
@@ -182,6 +204,7 @@ export class KgManagementComponent implements OnInit {
     this.showEditKgModal = false;
     this.editKgData = null;
     this.editKgIndex = null;
+    this.editUserComment = '';
   }
 
   allEditBranchesValid(): boolean {
@@ -219,30 +242,45 @@ export class KgManagementComponent implements OnInit {
       kindergartenId: kg.id,
       id: b.id ?? 0 // 0 for new branches
     }));
-    // console.log('Update KG DTO:', kg);
-    this.kgBranchService.update(kg).subscribe({
+    this.kgBranchService.update(kg, this.editUserComment).subscribe({
       next: (res) => {
-        // console.log('Update KG response:', res);
         this.fetchKgBranches();
         this.closeEditKgModal();
       },
       error: (err) => {
-        // console.log('Update KG error:', err);
         this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_UPDATE');
       }
     });
   }
 
   deleteKgBranch(kgId: number) {
-    if (!confirm(this.kgTranslator.instant('KG_MANAGEMENT.CONFIRM_DELETE'))) return;
-    this.kgBranchService.softDelete(kgId).subscribe({
+    this.deleteKgId = kgId;
+    this.deleteUserComment = '';
+    this.showDeleteModal = true;
+  }
+
+  confirmDeleteKgBranch() {
+    if (this.deleteKgId == null) return;
+    this.kgBranchService.softDelete(this.deleteKgId, this.deleteUserComment).subscribe({
       next: () => {
         this.fetchKgBranches();
+        this.showDeleteModal = false;
+        this.deleteKgId = null;
+        this.deleteUserComment = '';
       },
       error: (err) => {
         this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_DELETE');
+        this.showDeleteModal = false;
+        this.deleteKgId = null;
+        this.deleteUserComment = '';
       }
     });
+  }
+
+  cancelDeleteKgBranch() {
+    this.showDeleteModal = false;
+    this.deleteKgId = null;
+    this.deleteUserComment = '';
   }
 
   openDetailsKgModal(kgBranch: KGBranchDTO) {
@@ -256,6 +294,48 @@ export class KgManagementComponent implements OnInit {
   closeDetailsKgModal() {
     this.showDetailsKgModal = false;
     this.detailsKgData = null;
+  }
+
+  showKgHistory(kgId: number) {
+    this.showHistoryModal = true;
+    this.historyLoading = true;
+    this.kgHistory = [];
+    this.historyMessage = null;
+    this.kgBranchService.getKgHistory(kgId).subscribe({
+      next: (res) => {
+        if (Array.isArray(res.result)) {
+          // Map API keys to UI keys
+          this.kgHistory = res.result.map((h: any) => ({
+            action: h.actionType,
+            user: h.performedByUserName,
+            date: h.performedAt,
+            comment: h.userComment
+          }));
+          this.historyMessage = null;
+          console.log('KG History (array):', this.kgHistory);
+        } else if (typeof res.result === 'string') {
+          this.kgHistory = [];
+          this.historyMessage = res.result;
+          console.log('KG History (string):', this.historyMessage);
+        } else {
+          this.kgHistory = [];
+          this.historyMessage = this.kgTranslator.instant('KG_MANAGEMENT.NO_HISTORY');
+          console.log('KG History (unknown):', res.result);
+        }
+        this.historyLoading = false;
+      },
+      error: (err) => {
+        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_HISTORY');
+        this.historyLoading = false;
+        console.log('KG History (error):', err);
+      }
+    });
+  }
+
+  closeHistoryModal() {
+    this.showHistoryModal = false;
+    this.kgHistory = [];
+    this.historyMessage = null;
   }
 
   // Pagination logic
@@ -325,4 +405,21 @@ export class KgManagementComponent implements OnInit {
   }
 
   // Placeholder for future CRUD methods (add, edit, delete, etc.)
+  validateEmail(emailNgModel: any) {
+    const value = emailNgModel.model;
+    // Regex: must contain at least one character before and after @, and at least one dot after @
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (value && !emailPattern.test(value)) {
+      emailNgModel.control.setErrors({ ...(emailNgModel.control.errors || {}), customEmail: true });
+    } else {
+      if (emailNgModel.control.errors) {
+        const { customEmail, ...rest } = emailNgModel.control.errors;
+        if (Object.keys(rest).length) {
+          emailNgModel.control.setErrors(rest);
+        } else {
+          emailNgModel.control.setErrors(null);
+        }
+      }
+    }
+  }
 }

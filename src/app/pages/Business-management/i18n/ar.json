@@ -1,7 +1,4 @@
 {
-  "BUSINESS_LIST": {
-    "TITLE": "قائمة الأعمال"
-  },
   "KG_MANAGEMENT": {
     "CREATE_NEW_KG": "إنشاء حضانه جديد",
     "SEARCH_PLACEHOLDER": "بحث...",
@@ -31,12 +28,15 @@
     "KG_NAME_AR_REQUIRED": "الاسم العربي مطلوب (3-50 حرف).",
     "KG_NAME_EN_REQUIRED": "الاسم الإنجليزي مطلوب (3-50 حرف).",
     "KG_ADDRESS_REQUIRED": "العنوان مطلوب (10-100 حرف).",
-    "NAME_AR": "الاسم (عربي)",
-    "NAME_EN": "الاسم (إنجليزي)",
+    "NAME_AR": "اسم الفرع (عربي)",
+    "NAME_EN": "الاسم الفرع (إنجليزي)",
     "ADDRESS": "العنوان",
     "PHONE": "الهاتف",
-    "BRANCH_CODE": "كود الفرع",
     "EMAIL": "البريد الإلكتروني",
+    "KG_NAME_AR_PLACEHOLDER": "أدخل اسم الحضانة بالعربية",
+    "KG_NAME_EN_PLACEHOLDER": "أدخل اسم الحضانة بالإنجليزية",
+    "KG_ADDRESS_PLACEHOLDER": "أدخل عنوان الحضانة",
+    "FAILED_LOAD": "فشل في تحميل فروع الحضانة.",
     "ARABIC_NAME_REQUIRED": "الاسم العربي مطلوب (3-50 حرف).",
     "ENGLISH_NAME_REQUIRED": "الاسم الإنجليزي مطلوب (3-50 حرف).",
     "ADDRESS_REQUIRED": "العنوان مطلوب (10-100 حرف).",
@@ -45,10 +45,19 @@
     "INVALID_EMAIL_FORMAT": "تنسيق البريد الإلكتروني غير صحيح.",
     "REMOVE": "حذف",
     "AT_LEAST_ONE_BRANCH_REQUIRED": "يجب إضافة فرع واحد على الأقل.",
-    "FAILED_LOAD": "فشل في تحميل فروع الحضانة.",
-    "FAILED_CREATE": "فشل في إنشاء الحضانة.",
-    "FAILED_UPDATE": "فشل في تعديل الحضانة.",
-    "FAILED_DELETE": "فشل في حذف الحضانة.",
-    "CONFIRM_DELETE": "هل أنت متأكد أنك تريد حذف هذه الحضانة وجميع فروعها؟"
+    "BRANCH_CODE": "كود الفرع",
+    "ARABIC_ONLY": "يجب أن يكون الاسم باللغة العربية فقط.",
+    "LENGTH_3_50": "يجب أن يكون الطول بين 3 و50 حرفًا.",
+    "ENGLISH_ONLY": "يجب أن يكون الاسم باللغة الإنجليزية فقط.",
+    "HISTORY": "السجل",
+    "HISTORY_ACTION": "الإجراء",
+    "HISTORY_USER": "المستخدم",
+    "HISTORY_DATE": "التاريخ",
+    "HISTORY_COMMENT": "ملاحظة",
+    "NO_HISTORY": "لا يوجد سجل لهذا الحضانة.",
+    "FAILED_HISTORY": "فشل في تحميل السجل.",
+    "CONFIRM_DELETE_TITLE": "تأكيد الحذف",
+    "CONFIRM_DELETE_MESSAGE": "هل أنت متأكد أنك تريد حذف هذه الحضانة؟",
+    "USER_COMMENT_OPTIONAL": "تعليق المستخدم (اختياري)"
   }
 }

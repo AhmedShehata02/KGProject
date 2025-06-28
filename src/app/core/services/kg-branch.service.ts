@@ -2,7 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { KindergartenDTO, BranchDTO, KGBranchDTO } from '../interface/kg-branch.interfaces';
+import {
+  KindergartenDTO,
+  KindergartenCreateDTO,
+  KindergartenUpdateDTO,
+  KGBranchDTO,
+  BranchDTO,
+  BranchCreateDTO,
+  BranchUpdateDTO
+} from '../interface/kg-branch.interfaces';
 import { ApiResponse, PagedResult } from '../interface/api-response.interfaces';
 import { BaseService } from './base.service';
 
@@ -29,19 +37,38 @@ export class KGBranchService extends BaseService {
     return this.http.get<ApiResponse<KindergartenDTO>>(`${this.kgApiUrl}/GetById/${id}`, this.getAuthHeaders());
   }
 
-  create(dto: any): Observable<ApiResponse<KindergartenDTO>> {
+  create(dto: KindergartenCreateDTO): Observable<ApiResponse<KindergartenDTO>> {
     return this.http.post<ApiResponse<KindergartenDTO>>(`${this.kgApiUrl}/Create`, dto, this.getAuthHeaders());
   }
 
-  update(dto: any): Observable<ApiResponse<KindergartenDTO>> {
-    return this.http.put<ApiResponse<KindergartenDTO>>(`${this.kgApiUrl}/Update`, dto, this.getAuthHeaders());
+  update(dto: KindergartenUpdateDTO, userComment?: string): Observable<ApiResponse<KindergartenDTO>> {
+    let params = new HttpParams();
+    if (userComment) params = params.set('userComment', userComment);
+    return this.http.put<ApiResponse<KindergartenDTO>>(`${this.kgApiUrl}/Update`, dto, {
+      ...this.getAuthHeaders(),
+      params
+    });
   }
 
-  delete(id: number): Observable<ApiResponse<string>> {
-    return this.http.delete<ApiResponse<string>>(`${this.kgApiUrl}/Delete/${id}`, this.getAuthHeaders());
+  delete(id: number, userComment?: string): Observable<ApiResponse<string>> {
+    let params = new HttpParams();
+    if (userComment) params = params.set('userComment', userComment);
+    return this.http.delete<ApiResponse<string>>(`${this.kgApiUrl}/Delete/${id}`, {
+      ...this.getAuthHeaders(),
+      params
+    });
   }
 
-  softDelete(id: number): Observable<ApiResponse<string>> {
-    return this.http.put<ApiResponse<string>>(`${this.kgApiUrl}/SoftDelete/${id}`, {}, this.getAuthHeaders());
+  softDelete(id: number, userComment?: string): Observable<ApiResponse<string>> {
+    let params = new HttpParams();
+    if (userComment) params = params.set('userComment', userComment);
+    return this.http.put<ApiResponse<string>>(`${this.kgApiUrl}/SoftDelete/${id}`, {}, {
+      ...this.getAuthHeaders(),
+      params
+    });
+  }
+
+  getKgHistory(id: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.kgApiUrl}/History/${id}`, this.getAuthHeaders());
   }
 }
