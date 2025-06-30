@@ -99,6 +99,8 @@
     "FAILED_APPROVE": "Failed to approve profile.",
     "FAILED_REJECT": "Failed to reject profile.",
     "CONFIRM_REJECT_MESSAGE": "Are you sure you want to reject this profile?",
-    "REJECTION_REASON_REQUIRED": "Rejection reason is required."
+    "REJECTION_REASON_REQUIRED": "Rejection reason is required.",
+    "APPROVED_SUCCESS": "Profile approved successfully.",
+    "REJECTED_SUCCESS": "Profile rejected successfully."
   }
 }

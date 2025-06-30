@@ -99,6 +99,8 @@
     "FAILED_APPROVE": "فشل في الموافقة على الملف الشخصي.",
     "FAILED_REJECT": "فشل في رفض الملف الشخصي.",
     "CONFIRM_REJECT_MESSAGE": "هل أنت متأكد أنك تريد رفض هذا الملف الشخصي؟",
-    "REJECTION_REASON_REQUIRED": "سبب الرفض مطلوب."
+    "REJECTION_REASON_REQUIRED": "سبب الرفض مطلوب.",
+    "APPROVED_SUCCESS": "تمت الموافقة على الملف الشخصي بنجاح.",
+    "REJECTED_SUCCESS": "تم رفض الملف الشخصي بنجاح."
   }
 }
