@@ -32,7 +32,13 @@
     "FAILED_DELETE": "فشل في حذف الدور.",
     "CONFIRM_DELETE": "هل أنت متأكد أنك تريد حذف هذا الدور؟",
     "RELATED_USERS_TITLE": "المستخدمون في الدور: {{role}}",
-    "REMOVE_FROM_ROLE": "إزالة من الدور"
+    "REMOVE_FROM_ROLE": "إزالة من الدور",
+    "ROLE_NAME_REQUIRED": "اسم الدور مطلوب ويجب أن يكون على الأقل 3 أحرف.",
+    "STATUS_REQUIRED": "الحالة مطلوبة.",
+    "FAILED_LOAD_USERS": "فشل في تحميل المستخدمين لهذا الدور.",
+    "FAILED_REMOVE_USER": "فشل في إزالة المستخدم من الدور.",
+    "REMOVED_USER_SUCCESS": "تمت إزالة المستخدم من الدور بنجاح.",
+    "CONFIRM_REMOVE_USER_FROM_ROLE": "هل أنت متأكد أنك تريد إزالة {{user}} من هذا الدور؟"
   },
   "SECURED_ROUTE": {
     "CREATE_NEW": "إنشاء مسار محمي جديد",

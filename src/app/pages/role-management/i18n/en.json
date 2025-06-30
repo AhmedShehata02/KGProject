@@ -26,8 +26,19 @@
     "ROLE_DETAILS": "Role Details",
     "CLOSE": "Close",
     "SAVE": "Save",
+    "FAILED_LOAD": "Failed to load roles.",
+    "FAILED_CREATE": "Failed to create role.",
+    "FAILED_UPDATE": "Failed to update role.",
+    "FAILED_DELETE": "Failed to delete role.",
+    "CONFIRM_DELETE": "Are you sure you want to delete this role?",
     "RELATED_USERS_TITLE": "Users in role: {{role}}",
-    "REMOVE_FROM_ROLE": "Remove from Role"
+    "REMOVE_FROM_ROLE": "Remove from Role",
+    "ROLE_NAME_REQUIRED": "Role name is required and must be at least 3 characters.",
+    "STATUS_REQUIRED": "Status is required.",
+    "FAILED_LOAD_USERS": "Failed to load users for this role.",
+    "FAILED_REMOVE_USER": "Failed to remove user from role.",
+    "REMOVED_USER_SUCCESS": "User removed from role successfully.",
+    "CONFIRM_REMOVE_USER_FROM_ROLE": "Are you sure you want to remove {{user}} from this role?"
   },
   "SECURED_ROUTE": {
     "CREATE_NEW": "Create New Secured Route",
@@ -50,7 +61,12 @@
     "EDIT_ROUTE": "Edit Secured Route",
     "SAVE_CHANGES": "Save Changes",
     "DETAILS": "Secured Route Details",
-    "CLOSE": "Close"
+    "CLOSE": "Close",
+    "FAILED_LOAD": "Failed to load secured routes.",
+    "FAILED_CREATE": "Failed to create secured route.",
+    "FAILED_UPDATE": "Failed to update secured route.",
+    "FAILED_DELETE": "Failed to delete secured route.",
+    "CONFIRM_DELETE": "Are you sure you want to delete this secured route?"
   },
   "USER_MANAGEMENT": {
     "USERNAME": "Username",
