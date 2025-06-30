@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoleManagementService } from '../../../core/services/role-management.service';
 import { ApplicationRoleDTO, PagedResult } from '../../../core/interface/role-management.interfaces';
+import { ApplicationUserDTO } from '../../../core/interface/user-management.interfaces';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleManagementTranslator } from '../role-management-translator';
 
@@ -35,8 +36,13 @@ export class RoleManagementListComponent implements OnInit {
   showCreateRoleModal = false;
   showEditRoleModal = false;
   showDetailsRoleModal = false;
+  showRelatedUsersModal = false;
   selectedRole: ApplicationRoleDTO | null = null;
   editRoleIndex: number | null = null;
+  relatedUsers: ApplicationUserDTO[] = [];
+  relatedUsersLoading = false;
+  relatedUsersError: string | null = null;
+  selectedRoleForUsers: ApplicationRoleDTO | null = null;
 
   // Create role state
   createRoleData = { name: '' };
@@ -146,19 +152,42 @@ export class RoleManagementListComponent implements OnInit {
     this.selectedRole = null;
   }
 
-  deleteRole(role: ApplicationRoleDTO, index: number) {
-    if (confirm(this.roleTranslator.instant('ROLE_MANAGEMENT.CONFIRM_DELETE'))) {
-      this.loading = true;
-      this.roleService.deleteRole(role.id).subscribe({
-        next: () => {
-          this.fetchRoles();
-        },
-        error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_DELETE');
-          this.loading = false;
-        }
-      });
-    }
+  openRelatedUsersModal(role: ApplicationRoleDTO) {
+    this.selectedRoleForUsers = { ...role };
+    this.showRelatedUsersModal = true;
+    this.relatedUsers = [];
+    this.relatedUsersLoading = true;
+    this.relatedUsersError = null;
+    this.roleService.getUsersByRole(role.id).subscribe({
+      next: (res) => {
+        this.relatedUsers = res?.result || [];
+        this.relatedUsersLoading = false;
+      },
+      error: (err) => {
+        this.relatedUsersError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD_USERS');
+        this.relatedUsersLoading = false;
+      }
+    });
+  }
+  closeRelatedUsersModal() {
+    this.showRelatedUsersModal = false;
+    this.selectedRoleForUsers = null;
+    this.relatedUsers = [];
+    this.relatedUsersError = null;
+  }
+  removeUserFromRole(user: ApplicationUserDTO) {
+    if (!this.selectedRoleForUsers) return;
+    if (!confirm(this.roleTranslator.instant('ROLE_MANAGEMENT.CONFIRM_REMOVE_USER_FROM_ROLE', { user: user.userName || user.email || user.id }))) return;
+    this.relatedUsersLoading = true;
+    this.roleService.removeUserFromRole(this.selectedRoleForUsers.id, user.id).subscribe({
+      next: () => {
+        this.openRelatedUsersModal(this.selectedRoleForUsers!); // reload users
+      },
+      error: (err) => {
+        this.relatedUsersError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_REMOVE_USER');
+        this.relatedUsersLoading = false;
+      }
+    });
   }
 
   onCreateRole() {
@@ -206,6 +235,21 @@ export class RoleManagementListComponent implements OnInit {
         this.editingRole = false;
       }
     });
+  }
+
+  deleteRole(role: ApplicationRoleDTO, index: number) {
+    if (confirm(this.roleTranslator.instant('ROLE_MANAGEMENT.CONFIRM_DELETE'))) {
+      this.loading = true;
+      this.roleService.deleteRole(role.id).subscribe({
+        next: () => {
+          this.fetchRoles();
+        },
+        error: (err) => {
+          this.error = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_DELETE');
+          this.loading = false;
+        }
+      });
+    }
   }
 
   getPageArray(): (number | string)[] {

@@ -45,3 +45,8 @@ export interface DropdownRoleDTO {
   id: string;
   name: string;
 }
+
+export interface RemoveUserRoleDTO {
+  userId: string;
+  roleId: string;
+}

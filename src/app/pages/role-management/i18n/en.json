@@ -25,7 +25,9 @@
     "EDIT_ROLE": "Edit Role",
     "ROLE_DETAILS": "Role Details",
     "CLOSE": "Close",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "RELATED_USERS_TITLE": "Users in role: {{role}}",
+    "REMOVE_FROM_ROLE": "Remove from Role"
   },
   "SECURED_ROUTE": {
     "CREATE_NEW": "Create New Secured Route",
@@ -49,5 +51,9 @@
     "SAVE_CHANGES": "Save Changes",
     "DETAILS": "Secured Route Details",
     "CLOSE": "Close"
+  },
+  "USER_MANAGEMENT": {
+    "USERNAME": "Username",
+    "EMAIL": "Email"
   }
 }

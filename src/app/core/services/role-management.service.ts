@@ -8,8 +8,10 @@ import {
   ToggleRoleStatusDTO,
   RoleWithRoutesDTO,
   ApiResponse,
-  PagedResult
+  PagedResult,
+  DropdownRoleDTO
 } from '../interface/role-management.interfaces';
+import { ApplicationUserDTO } from '../interface/user-management.interfaces';
 import { environment } from '../../../environments/environment';
 import { BaseService } from './base.service';
 
@@ -28,11 +30,13 @@ export class RoleManagementService extends BaseService {
   }
 
   updateRole(dto: UpdateRoleDTO): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/update`, dto, this.getAuthHeaders());
+    // Backend expects: PUT /update/{id} with dto in body
+    return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/update/${dto.id}`, dto, this.getAuthHeaders());
   }
 
-  toggleRoleStatus(dto: ToggleRoleStatusDTO): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/toggle-status`, dto, this.getAuthHeaders());
+  toggleRoleStatus(roleId: string): Observable<ApiResponse<boolean>> {
+    // Backend expects: PUT /toggle-status/{id}
+    return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/toggle-status/${roleId}`, null, this.getAuthHeaders());
   }
 
   getRolesWithRoutes(): Observable<ApiResponse<RoleWithRoutesDTO[]>> {
@@ -52,5 +56,31 @@ export class RoleManagementService extends BaseService {
       SortDirection: sortDirection || 'asc'
     };
     return this.http.get<ApiResponse<PagedResult<ApplicationRoleDTO>>>(`${this.baseUrl}/getAllPaginated`, { ...this.getAuthHeaders(), params });
+  }
+
+  getDropdownRoles(): Observable<ApiResponse<DropdownRoleDTO[]>> {
+    return this.http.get<ApiResponse<DropdownRoleDTO[]>>(`${this.baseUrl}/roles-dropdown`, this.getAuthHeaders());
+  }
+
+  /**
+   * Get all users assigned to a specific role
+   * Backend: GET /api/RoleManagement/{roleId}/users
+   */
+  getUsersByRole(roleId: string): Observable<ApiResponse<ApplicationUserDTO[]>> {
+    return this.http.get<ApiResponse<ApplicationUserDTO[]>>(
+      `${this.baseUrl}/${roleId}/users`,
+      this.getAuthHeaders()
+    );
+  }
+
+  /**
+   * Remove a user from a specific role
+   * Backend: DELETE /api/RoleManagement/{roleId}/users/{userId}
+   */
+  removeUserFromRole(roleId: string, userId: string): Observable<ApiResponse<boolean>> {
+    return this.http.delete<ApiResponse<boolean>>(
+      `${this.baseUrl}/${roleId}/users/${userId}`,
+      this.getAuthHeaders()
+    );
   }
 }

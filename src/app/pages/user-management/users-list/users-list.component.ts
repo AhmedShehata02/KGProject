@@ -6,6 +6,8 @@ import { RoleManagementService } from '../../../core/services/role-management.se
 import { UserManagementTranslator } from '../user-management-translator';
 import { LanguageService } from '../../../shared/services/language.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ClaimDTO } from '../../../core/interface/user-management.interfaces';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-users-list',
@@ -29,9 +31,9 @@ export class UsersListComponent implements OnInit {
   editUserRolesLoading = false;
   editUserClaimsLoading = false;
   allRoles: string[] = [];
-  allClaims: string[] = [];
+  allClaims: ClaimDTO[] = [];
   selectedUserRoles: string[] = [];
-  selectedUserClaims: string[] = [];
+  selectedUserClaims: ClaimDTO[] = [];
   @ViewChild('editUserModal') editUserModal!: ElementRef;
   @ViewChild('createUserNgForm') createUserNgForm!: NgForm;
   createUserForm: any = {
@@ -57,7 +59,8 @@ export class UsersListComponent implements OnInit {
     private roleService: RoleManagementService,
     private userManagementTranslator: UserManagementTranslator,
     private languageService: LanguageService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private toast: ToastService
   ) {}
 
   ngOnInit() {
@@ -89,7 +92,6 @@ export class UsersListComponent implements OnInit {
       sortDirection: this.sortDirection
     }).subscribe({
       next: (result) => {
-        // result is already res.result from the service
         this.users = result.data || [];
         this.totalCount = result.totalCount || 0;
         this.totalPages = result.totalPages || 1;
@@ -98,7 +100,9 @@ export class UsersListComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = this.userManagementTranslator.instant('USER_LIST.FAILED_LOAD');
+        console.error('Failed to load users:', err);
+        this.toast.showError(this.userManagementTranslator.instant('USER_LIST.FAILED_LOAD'));
+        this.error = '';
         this.loading = false;
       }
     });
@@ -199,47 +203,55 @@ export class UsersListComponent implements OnInit {
     }
   }
 
-  onClaimCheckboxChange(claim: string, event: any) {
+  onClaimCheckboxChange(claim: ClaimDTO, event: any) {
     if (event.target.checked) {
-      if (!this.selectedUserClaims.includes(claim)) {
+      if (!this.selectedUserClaims.some(c => c.type === claim.type)) {
         this.selectedUserClaims.push(claim);
       }
     } else {
-      this.selectedUserClaims = this.selectedUserClaims.filter(c => c !== claim);
+      this.selectedUserClaims = this.selectedUserClaims.filter(c => c.type !== claim.type);
     }
   }
 
+  isClaimSelected(claim: ClaimDTO): boolean {
+    return this.selectedUserClaims.some(c => c.type === claim.type);
+  }
+
   saveUser() {
-    // Save user name and email (email is disabled but must be sent to backend)
+    // Save user name, email, phoneNumber, isAgree (all required by UpdateApplicationUserDTO)
     const payload = {
-      Id: this.selectedUser.id,
-      UserName: this.selectedUser.userName,
-      Email: this.selectedUser.email
+      id: this.selectedUser.id,
+      userName: this.selectedUser.userName,
+      phoneNumber: this.selectedUser.phoneNumber || '',
+      isAgree: this.selectedUser.isAgree ?? false
     };
-    console.log('saveUser payload:', payload, 'id:', this.selectedUser.id);
     this.userService.updateUser(this.selectedUser.id, payload).subscribe({
       next: () => {
         // Save roles
         this.userService.updateUserRoles(this.selectedUser.id, this.selectedUserRoles).subscribe({
           next: () => {
-            // Save claims
-            this.userService.updateUserClaims(this.selectedUser.id, this.selectedUserClaims).subscribe({
+            // Save claims (send array of claim types)
+            const claimTypes = this.selectedUserClaims.map(c => c.type);
+            this.userService.updateUserClaims(this.selectedUser.id, claimTypes).subscribe({
               next: () => {
-                // Close modal after all updates succeed
                 (window as any).bootstrap.Modal.getOrCreateInstance(this.editUserModal.nativeElement).hide();
+                this.toast.showSuccess(this.userManagementTranslator.instant('USER_LIST.UPDATED_SUCCESS'));
                 this.fetchUsers();
               },
               error: () => {
+                this.toast.showError(this.userManagementTranslator.instant('USER_LIST.FAILED_UPDATE_CLAIMS'));
                 this.fetchUsers();
               }
             });
           },
           error: () => {
+            this.toast.showError(this.userManagementTranslator.instant('USER_LIST.FAILED_UPDATE_ROLES'));
             this.fetchUsers();
           }
         });
       },
       error: () => {
+        this.toast.showError(this.userManagementTranslator.instant('USER_LIST.FAILED_UPDATE'));
         this.fetchUsers();
       }
     });
@@ -250,11 +262,12 @@ export class UsersListComponent implements OnInit {
       this.loading = true;
       this.userService.deleteUser(user.id).subscribe({
         next: () => {
+          this.toast.showSuccess(this.userManagementTranslator.instant('USER_LIST.DELETED_SUCCESS'));
           this.fetchUsers();
           this.loading = false;
         },
         error: (err) => {
-          this.error = this.userManagementTranslator.instant('USER_LIST.FAILED_DELETE');
+          this.toast.showError(this.userManagementTranslator.instant('USER_LIST.FAILED_DELETE'));
           this.loading = false;
         }
       });
@@ -287,88 +300,75 @@ export class UsersListComponent implements OnInit {
 
   submitCreateUser() {
     this.createUserFormTouched = true;
-    // Prevent submit if invalid (frontend validation)
     if (!this.createUserForm.firstName || this.createUserForm.firstName.length < 2 || this.createUserForm.firstName.length > 50 ||
         !this.createUserForm.lastName || this.createUserForm.lastName.length < 2 || this.createUserForm.lastName.length > 50 ||
         !this.createUserForm.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.createUserForm.email) ||
         (this.createUserForm.phoneNumber && !/^\+?[0-9]{7,15}$/.test(this.createUserForm.phoneNumber)) ||
         !this.createUserForm.roles || !this.createUserForm.roles.length ||
         !this.createUserForm.redirectUrlAfterResetPassword) {
-      this.createUserError = this.userManagementTranslator.instant('USER_LIST.CREATE_USER_VALIDATION');
+      this.toast.showError(this.userManagementTranslator.instant('USER_LIST.CREATE_USER_VALIDATION'));
       this.createUserLoading = false;
       return;
     }
     this.createUserLoading = true;
     this.createUserError = '';
     this.createUserSuccess = '';
-    console.log('Payload sent to backend:', this.createUserForm); // Debug: log payload
     this.userService.createUserByAdmin(this.createUserForm).subscribe({
       next: (res) => {
-        if (res && res.code === 200) {
-          this.createUserSuccess = res.result?.Message || res.result?.message || this.userManagementTranslator.instant('USER_LIST.CREATED_SUCCESS');
-          // Reset the create user form model after successful creation
-          this.createUserForm = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phoneNumber: '',
-            roles: [],
-            redirectUrlAfterResetPassword: window.location.origin + '/reset-temporary-password'
-          };
-          this.createUserFormTouched = false;
-          // Reset validation state of the form
-          setTimeout(() => {
-            if (this.createUserNgForm) {
-              this.createUserNgForm.resetForm({
-                firstName: '',
-                lastName: '',
-                email: '',
-                phoneNumber: '',
-                roles: [],
-                redirectUrlAfterResetPassword: window.location.origin + '/reset-temporary-password'
-              });
-            }
-          });
-        } else if (res && res.result) {
-          // Display error(s) from backend
-          if (Array.isArray(res.result)) {
-            this.createUserError = res.result;
-          } else if (typeof res.result === 'string') {
-            this.createUserError = res.result;
-          } else if (res.result.Message || res.result.message) {
-            this.createUserError = res.result.Message || res.result.message;
-          } else {
-            this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
-          }
+        const message = res?.Message || res?.message || (typeof res === 'string' ? res : null);
+        if (message) {
+          this.toast.showSuccess(message);
         } else {
-          this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
+          this.toast.showSuccess(this.userManagementTranslator.instant('USER_LIST.CREATED_SUCCESS'));
         }
+        this.createUserForm = {
+          firstName: '',
+          lastName: '',
+          email: '',
+          phoneNumber: '',
+          roles: [],
+          redirectUrlAfterResetPassword: window.location.origin + '/reset-temporary-password'
+        };
+        this.createUserFormTouched = false;
+        setTimeout(() => {
+          if (this.createUserNgForm) {
+            this.createUserNgForm.resetForm({
+              firstName: '',
+              lastName: '',
+              email: '',
+              phoneNumber: '',
+              roles: [],
+              redirectUrlAfterResetPassword: window.location.origin + '/reset-temporary-password'
+            });
+          }
+        });
         this.createUserLoading = false;
-        // Only close modal and refresh if success
-        if (this.createUserSuccess) {
-          setTimeout(() => {
-            (window as any).bootstrap.Modal.getOrCreateInstance(document.getElementById('createUserModal')).hide();
-            this.fetchUsers();
-          }, 1200);
-        }
+        setTimeout(() => {
+          (window as any).bootstrap.Modal.getOrCreateInstance(document.getElementById('createUserModal')).hide();
+          this.fetchUsers();
+        }, 1200);
       },
       error: (err) => {
-        // Try to extract error message(s) from backend
+        let errorMsg = '';
         if (err?.error?.result) {
           if (Array.isArray(err.error.result)) {
-            this.createUserError = err.error.result;
+            errorMsg = err.error.result.join(', ');
           } else if (typeof err.error.result === 'string') {
-            this.createUserError = err.error.result;
+            errorMsg = err.error.result;
           } else if (err.error.result.Message || err.error.result.message) {
-            this.createUserError = err.error.result.Message || err.error.result.message;
+            errorMsg = err.error.result.Message || err.error.result.message;
           } else {
-            this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
+            errorMsg = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
           }
         } else if (err?.error?.Message || err?.error?.message) {
-          this.createUserError = err.error.Message || err.error.message;
+          errorMsg = err.error.Message || err.error.message;
         } else {
-          this.createUserError = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
+          errorMsg = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
         }
+        if (!errorMsg || !errorMsg.trim()) {
+          errorMsg = this.userManagementTranslator.instant('USER_LIST.FAILED_CREATE');
+        }
+        this.toast.showError(errorMsg);
         this.createUserLoading = false;
       }
     });

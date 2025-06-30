@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserManagementTranslator } from '../user-management-translator';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-review-profiles',
@@ -39,7 +40,8 @@ export class ReviewProfilesComponent implements OnInit {
 
   constructor(
     private usersProfilesService: UsersProfilesService,
-    private roleTranslator: UserManagementTranslator
+    private roleTranslator: UserManagementTranslator,
+    private toast: ToastService
   ) {}
 
   async ngOnInit() {
@@ -63,9 +65,11 @@ export class ReviewProfilesComponent implements OnInit {
           this.totalCount = res?.result?.totalCount || 0;
           this.totalPages = res?.result?.totalPages || 1;
           this.loading = false;
+          // Show success toast if needed (optional)
         },
         error: (err: any) => {
-          this.error = this.roleTranslator.instant('REVIEW_PROFILES.FAILED_LOAD');
+          this.toast.showError(this.roleTranslator.instant('REVIEW_PROFILES.FAILED_LOAD'));
+          this.error = '';
           this.loading = false;
         },
       });
@@ -157,20 +161,11 @@ export class ReviewProfilesComponent implements OnInit {
           }
           this.showProfileModal = false;
           this.actionError = '';
+          this.toast.showSuccess(this.roleTranslator.instant('REVIEW_PROFILES.APPROVED_SUCCESS'));
         },
         error: (err: any) => {
           this.actionLoading = false;
-          const idx = this.profiles.findIndex(
-            (p) =>
-              (p.userId || p.UserId || p.id || p.Id) ===
-              (profile.userId || profile.UserId || profile.id || profile.Id)
-          );
-          if (idx === -1) {
-            this.actionError = '';
-          } else {
-            this.actionError =
-              err?.error?.result || this.roleTranslator.instant('REVIEW_PROFILES.FAILED_APPROVE');
-          }
+          this.toast.showError(err?.error?.result || this.roleTranslator.instant('REVIEW_PROFILES.FAILED_APPROVE'));
         },
       });
   }
@@ -214,10 +209,11 @@ export class ReviewProfilesComponent implements OnInit {
           }
           this.showRejectionModal = false;
           this.actionError = '';
+          this.toast.showSuccess(this.roleTranslator.instant('REVIEW_PROFILES.REJECTED_SUCCESS'));
         },
         error: (err: any) => {
           this.actionLoading = false;
-          this.actionError = err?.error?.result || this.roleTranslator.instant('REVIEW_PROFILES.FAILED_REJECT');
+          this.toast.showError(err?.error?.result || this.roleTranslator.instant('REVIEW_PROFILES.FAILED_REJECT'));
         },
       });
   }

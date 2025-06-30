@@ -3,8 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
-import { ApiResponse } from '../interface/api-response.interfaces';
+import { ApiResponse, PagedResult } from '../interface/api-response.interfaces';
 import { BaseService } from './base.service';
+import {
+  ApplicationUserDTO,
+  CreateApplicationUserDTO,
+  UpdateApplicationUserDTO,
+  CreateUserByAdminDTO,
+  ClaimDTO
+} from '../interface/user-management.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends BaseService {
@@ -12,23 +19,17 @@ export class UserService extends BaseService {
 
   constructor(private http: HttpClient) { super(); }
 
-  getUserById(id: string): Observable<any> {
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${id}`, this.getAuthHeaders())
+  getUserById(id: string): Observable<ApplicationUserDTO> {
+    return this.http.get<ApiResponse<ApplicationUserDTO>>(`${this.apiUrl}/${id}`, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
 
-  updateUser(id: string, user: any): Observable<any> {
-    // Ensure property names match backend ApplicationUser model (Id, UserName, Email)
-    const payload = {
-      Id: user.id || user.Id,
-      UserName: user.userName || user.UserName,
-      Email: user.email || user.Email
-    };
-    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/${id}`, payload, this.getAuthHeaders())
+  updateUser(id: string, user: UpdateApplicationUserDTO): Observable<ApplicationUserDTO> {
+    return this.http.put<ApiResponse<ApplicationUserDTO>>(`${this.apiUrl}/${id}`, user, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
 
-  deleteUser(id: string): Observable<any> {
+  deleteUser(id: string): Observable<string> {
     return this.http.delete<ApiResponse<string>>(`${this.apiUrl}/${id}`, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
@@ -40,32 +41,32 @@ export class UserService extends BaseService {
   }
 
   // Get all claims in the system (returns array of {type, value})
-  getAllClaims(): Observable<string[]> {
-    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/allclaims`, this.getAuthHeaders())
-      .pipe(map(res => res.result.map((c: any) => c.type || c.value || (typeof c === 'string' ? c : JSON.stringify(c)))));
+  getAllClaims(): Observable<ClaimDTO[]> {
+    return this.http.get<ApiResponse<ClaimDTO[]>>(`${this.apiUrl}/allclaims`, this.getAuthHeaders())
+      .pipe(map(res => res.result));
   }
 
   // Get user roles by user id
   getUserRoles(id: string): Observable<string[]> {
-    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/${id}/roles`, this.getAuthHeaders())
+    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/roles/${id}`, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
 
   // Update user roles by user id
   updateUserRoles(id: string, roles: string[]): Observable<string[]> {
-    return this.http.post<ApiResponse<string[]>>(`${this.apiUrl}/${id}/roles`, roles, this.getAuthHeaders())
+    return this.http.post<ApiResponse<string[]>>(`${this.apiUrl}/roles/${id}`, roles, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
 
   // Get user claims by user id (returns array of claim types)
-  getUserClaims(id: string): Observable<string[]> {
-    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/${id}/claims`, this.getAuthHeaders())
+  getUserClaims(id: string): Observable<ClaimDTO[]> {
+    return this.http.get<ApiResponse<ClaimDTO[]>>(`${this.apiUrl}/claims/${id}`, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
 
   // Update user claims by user id (send array of claim types)
-  updateUserClaims(id: string, claims: string[]): Observable<string[]> {
-    return this.http.post<ApiResponse<string[]>>(`${this.apiUrl}/${id}/claims`, claims, this.getAuthHeaders())
+  updateUserClaims(id: string, claims: string[]): Observable<ClaimDTO[]> {
+    return this.http.post<ApiResponse<ClaimDTO[]>>(`${this.apiUrl}/claims/${id}`, claims, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
 
@@ -77,14 +78,7 @@ export class UserService extends BaseService {
    *   - Validation Error: { code, status, result: string[] }
    *   - Error: { code, status, result: { Message, Details } }
    */
-  createUserByAdmin(userData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber?: string;
-    roles: string[];
-    redirectUrlAfterResetPassword: string;
-  }): Observable<any> {
+  createUserByAdmin(userData: CreateUserByAdminDTO): Observable<any> {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/create-by-admin`, userData, this.getAuthHeaders())
       .pipe(map(res => res.result));
   }
@@ -101,8 +95,8 @@ export class UserService extends BaseService {
     searchText?: string;
     sortBy?: string;
     sortDirection?: 'asc' | 'desc';
-  }): Observable<any> {
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/GetAllPaginated`, { params: filter as any, ...this.getAuthHeaders() })
+  }): Observable<PagedResult<ApplicationUserDTO>> {
+    return this.http.get<ApiResponse<PagedResult<ApplicationUserDTO>>>(`${this.apiUrl}/GetAllPaginated`, { params: filter as any, ...this.getAuthHeaders() })
       .pipe(map(res => res.result));
   }
 }

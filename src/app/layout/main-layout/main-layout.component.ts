@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
+import { ToastComponent } from '../../shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [NavbarComponent, SidebarComponent, RouterModule],
+  imports: [NavbarComponent, SidebarComponent, RouterModule, ToastComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css',
 })

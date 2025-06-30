@@ -93,6 +93,9 @@
               <button class="btn btn-xs btn-outline-primary px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="deleteRole(role, i)" [title]="'ROLE_MANAGEMENT.DELETE' | translate">
                 <i class="bi bi-trash"></i>
               </button>
+              <button class="btn btn-xs btn-outline-info px-2 py-0" style="font-size:1.1rem;min-width:36px;" (click)="openRelatedUsersModal(role)" [title]="'ROLE_MANAGEMENT.RELATED_USERS' | translate">
+                <i class="bi bi-people"></i>
+              </button>
             </div>
           </td>
         </tr>
@@ -204,6 +207,55 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeDetailsRoleModal()">{{ 'ROLE_MANAGEMENT.CLOSE' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Related Users Modal -->
+  <div class="modal fade show" tabindex="-1" [ngStyle]="{display: showRelatedUsersModal ? 'block' : 'none', background: showRelatedUsersModal ? 'rgba(0,0,0,0.25)' : 'transparent'}" *ngIf="showRelatedUsersModal">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header d-flex justify-content-between align-items-center">
+          <h5 class="modal-title mb-0">{{ 'ROLE_MANAGEMENT.RELATED_USERS_TITLE' | translate:{role:selectedRoleForUsers?.name} }}</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeRelatedUsersModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="relatedUsersLoading" class="text-center my-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">{{ 'ROLE_MANAGEMENT.LOADING' | translate }}</span>
+            </div>
+          </div>
+          <div *ngIf="relatedUsersError" class="alert alert-danger">{{ relatedUsersError }}</div>
+          <div *ngIf="!relatedUsersLoading && !relatedUsersError && relatedUsers.length === 0" class="alert alert-info">
+            {{ 'ROLE_MANAGEMENT.NO_USERS_FOR_ROLE' | translate }}
+          </div>
+          <div *ngIf="!relatedUsersLoading && !relatedUsersError && relatedUsers.length > 0" class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>#</th>
+                  <th>{{ 'USER_MANAGEMENT.USERNAME' | translate }}</th>
+                  <th>{{ 'USER_MANAGEMENT.EMAIL' | translate }}</th>
+                  <th class="text-center">{{ 'ROLE_MANAGEMENT.ACTIONS' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of relatedUsers; let j = index">
+                  <td>{{ j + 1 }}</td>
+                  <td>{{ user.userName }}</td>
+                  <td>{{ user.email }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-xs btn-outline-danger px-2 py-0" (click)="removeUserFromRole(user)">
+                      <i class="bi bi-person-dash"></i> {{ 'ROLE_MANAGEMENT.REMOVE_FROM_ROLE' | translate }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeRelatedUsersModal()">{{ 'ROLE_MANAGEMENT.CLOSE' | translate }}</button>
         </div>
       </div>
     </div>

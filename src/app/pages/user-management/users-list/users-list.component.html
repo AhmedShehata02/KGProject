@@ -138,9 +138,11 @@
                     <div class="col-3" *ngFor="let claim of allClaims; let i = index">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" [id]="'claimCheckbox' + i" [value]="claim"
-                          [checked]="selectedUserClaims.includes(claim)"
+                          [checked]="isClaimSelected(claim)"
                           (change)="onClaimCheckboxChange(claim, $event)" />
-                        <label class="form-check-label" [for]="'claimCheckbox' + i">{{ claim }}</label>
+                        <label class="form-check-label" [for]="'claimCheckbox' + i">
+                          {{ claim.type }}
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -171,12 +173,6 @@
         </div>
         <form #createUserNgForm="ngForm" (ngSubmit)="submitCreateUser()">
           <div class="modal-body">
-            <div *ngIf="createUserSuccess" class="alert alert-success">{{ createUserSuccess }}</div>
-            <div *ngIf="createUserErrorList.length" class="alert alert-danger">
-              <ul class="mb-0">
-                <li *ngFor="let err of createUserErrorList">{{ err }}</li>
-              </ul>
-            </div>
             <div class="mb-3">
               <label class="form-label">{{ 'USER_LIST.FIRST_NAME' | translate }}</label>
               <input type="text" class="form-control" [(ngModel)]="createUserForm.firstName" name="firstName" required minlength="2" maxlength="50" #firstName="ngModel" />
