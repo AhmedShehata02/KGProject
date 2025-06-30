@@ -28,6 +28,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('name')">
               <span>{{ 'ROLE_MANAGEMENT.ROLE_NAME' | translate }}</span>
               <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'name'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'name' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'name' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
               </span>
             </button>
           </th>
@@ -35,6 +38,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('isActive')">
               <span>{{ 'ROLE_MANAGEMENT.STATUS' | translate }}</span>
               <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'isActive'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'isActive' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'isActive' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
               </span>
             </button>
           </th>
@@ -42,6 +48,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('isExternal')">
               <span>{{ 'ROLE_MANAGEMENT.IS_EXTERNAL' | translate }}</span>
               <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'isExternal'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'isExternal' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'isExternal' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
               </span>
             </button>
           </th>
@@ -49,6 +58,9 @@
             <button class="btn btn-link p-0 m-0 align-baseline sort-header text-white" (click)="onSortToggle('createdOn')">
               <span>{{ 'ROLE_MANAGEMENT.CREATED_ON' | translate }}</span>
               <span class="sort-icons ms-1">
+                <i *ngIf="sortBy !== 'createdOn'" class="bi bi-caret-down-fill text-white-50" style="opacity:0.45;"></i>
+                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'asc'" class="bi bi-caret-up-fill text-white" style="opacity:1;"></i>
+                <i *ngIf="sortBy === 'createdOn' && sortDirection === 'desc'" class="bi bi-caret-down-fill text-white" style="opacity:1;"></i>
               </span>
             </button>
           </th>

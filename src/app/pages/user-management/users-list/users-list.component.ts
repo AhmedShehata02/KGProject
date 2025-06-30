@@ -66,16 +66,11 @@ export class UsersListComponent implements OnInit {
       this.userManagementTranslator.loadTranslations();
     });
     this.fetchUsers();
-    // Fetch all roles for create/edit user modals from RoleManagementService
-    this.roleService.getAllRolesPaginated(1, 1000).subscribe({
-      next: (res) => {
-        if (res && res.code === 200 && res.status === 'Success') {
-          this.createUserAllRoles = res.result.data.map((r: any) => r.name || r.Name || r.roleName || r.RoleName);
-          this.allRoles = this.createUserAllRoles;
-        } else {
-          this.createUserAllRoles = [];
-          this.allRoles = [];
-        }
+    // Fetch all roles for create/edit user modals from UserService
+    this.userService.getAllRoles().subscribe({
+      next: (roles) => {
+        this.createUserAllRoles = roles || [];
+        this.allRoles = this.createUserAllRoles;
       },
       error: () => {
         this.createUserAllRoles = [];
@@ -93,19 +88,13 @@ export class UsersListComponent implements OnInit {
       sortBy: this.sortBy,
       sortDirection: this.sortDirection
     }).subscribe({
-      next: (res) => {
-        if (res && res.code === 200 && res.status === 'Success') {
-          this.users = res.result.data;
-          this.totalCount = res.result.totalCount;
-          this.totalPages = res.result.totalPages;
-          this.currentPage = res.result.page;
-          this.pagedUsers = this.users; // Already paged from backend
-        } else {
-          this.users = [];
-          this.pagedUsers = [];
-          this.totalCount = 0;
-          this.totalPages = 1;
-        }
+      next: (result) => {
+        // result is already res.result from the service
+        this.users = result.data || [];
+        this.totalCount = result.totalCount || 0;
+        this.totalPages = result.totalPages || 1;
+        this.currentPage = result.page || 1;
+        this.pagedUsers = this.users;
         this.loading = false;
       },
       error: (err) => {

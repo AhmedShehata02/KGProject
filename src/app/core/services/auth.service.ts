@@ -59,7 +59,10 @@ export class AuthService extends BaseService {
           // Check IsFirstLogin claim in JWT
           const decoded = decodeJwt(res.result);
           // --- Log roles and secured routes ---
-          // ---
+          // Log all user info after login
+          if (decoded) {
+            console.log('User info after login:', decoded);
+          }
           if (decoded && (decoded.IsFirstLogin === true || decoded.IsFirstLogin === 'true' || decoded.IsFirstLogin === 1 || decoded.IsFirstLogin === '1')) {
             this.router.navigate(['/auth/change-password-first-time']);
             return;
@@ -209,8 +212,11 @@ export class AuthService extends BaseService {
   getRoles(): string[] {
     const decoded = this.getDecodedToken();
     if (!decoded) return [];
+    // Support both 'roles' (array or string), 'role' (array or string), and 'Roles' (array or string)
     if (Array.isArray(decoded.roles)) return decoded.roles;
     if (typeof decoded.roles === 'string') return [decoded.roles];
+    if (Array.isArray(decoded.Roles)) return decoded.Roles;
+    if (typeof decoded.Roles === 'string') return [decoded.Roles];
     if (typeof decoded['role'] === 'string') return [decoded['role']];
     if (Array.isArray(decoded['role'])) return decoded['role'];
     return [];
@@ -226,12 +232,13 @@ export class AuthService extends BaseService {
   getSecuredRoutes(): string[] {
     const decoded = this.getDecodedToken();
     if (!decoded) return [];
-    // Handle both single and multiple claims
+    // Handle both single and multiple claims, and different casing
     if (Array.isArray(decoded.SecuredRoute)) return decoded.SecuredRoute;
     if (typeof decoded.SecuredRoute === 'string') return [decoded.SecuredRoute];
-    // Fallback: check for multiple claims with different casing
     if (Array.isArray(decoded.securedRoute)) return decoded.securedRoute;
     if (typeof decoded.securedRoute === 'string') return [decoded.securedRoute];
+    if (Array.isArray(decoded.securedRoutes)) return decoded.securedRoutes;
+    if (typeof decoded.securedRoutes === 'string') return [decoded.securedRoutes];
     return [];
   }
 

@@ -41,6 +41,9 @@ export class ChangePasswordComponent {
         if (res && res.code === 200 && res.status === 'Success') {
           this.success = Array.isArray(res.result) ? res.result.join(' ') : (res.result || 'Password changed successfully.');
           this.changePasswordForm.reset();
+          setTimeout(() => {
+            this.router.navigate(['/auth/login']);
+          }, 1500); // Redirect after 1.5 seconds
         } else if (res && res.result) {
           this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
         } else {

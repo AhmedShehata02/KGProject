@@ -103,32 +103,36 @@ export class SidebarComponent implements OnInit {
     const securedRoutes = this.auth.getSecuredRoutes();
     const userRoles = this.auth.getRoles();
     const isSuperAdmin = userRoles.includes('Super Admin');
-    const isAllowed = (route?: string, label?: string) => {
-      const dashboardLabels = [
-        'dashboard', 'لوحة القيادة', 'لوحه القياده', 'لوحة تحكم', 'لوحة التحكم', 'لوحه التحكم'
-      ];
-      const normalizedLabel = (label || '').replace(/\s/g, '').toLowerCase();
-      if (dashboardLabels.map(l => l.replace(/\s/g, '').toLowerCase()).includes(normalizedLabel)) return true;
+    const isAllowed = (route?: string) => {
       if (isSuperAdmin) return true;
-      if (!route) return true;
-      if (!securedRoutes || securedRoutes.length === 0) return true; // fallback: show all if no securedRoutes
+      if (!route) return false;
+      if (!securedRoutes || securedRoutes.length === 0) return false;
       return securedRoutes.some(allowed =>
         route === allowed || route.startsWith(allowed + '/') || allowed === '/'
       );
     };
-    this.allowedMenuItems = items
-      .map(item => {
-        const children = item.children?.filter(child => isAllowed(child.route, child.label));
-        if (children && children.length > 0) {
-          return { ...item, children };
-        } else if (!item.children && isAllowed(item.route, item.label)) {
-          return item;
-        } else if (children?.length === 0 && isAllowed(item.route, item.label)) {
-          return { ...item, children: [] };
-        }
-        return null;
-      })
-      .filter(Boolean) as SidebarItem[];
+    // Recursively filter items and children
+    const filterItems = (items: SidebarItem[]): SidebarItem[] => {
+      return items
+        .map(item => {
+          const filteredChildren = item.children ? filterItems(item.children) : [];
+          if (filteredChildren.length > 0) {
+            return { ...item, children: filteredChildren };
+          } else if (isAllowed(item.route)) {
+            return { ...item, children: [] };
+          }
+          return null;
+        })
+        .filter(Boolean) as SidebarItem[];
+    };
+    if (isSuperAdmin) {
+      this.allowedMenuItems = items;
+    } else if (!securedRoutes || securedRoutes.length === 0) {
+      // Only show dashboard if no secured routes
+      this.allowedMenuItems = items.filter(item => item.route === '/dashboard');
+    } else {
+      this.allowedMenuItems = filterItems(items);
+    }
   }
 
   filterMenuItems() {

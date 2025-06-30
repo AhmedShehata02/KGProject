@@ -68,18 +68,16 @@ export class RoleManagementListComponent implements OnInit {
       this.sortDirection
     ).subscribe({
       next: (res) => {
-        if (res && res.code === 200 && res.status === 'Success') {
-          this.roles = res.result.data || [];
-          this.totalCount = res.result.totalCount;
-          this.totalPages = res.result.totalPages;
+        // Updated: match new backend response structure
+        if (res && res.result) {
+          const paged = res.result;
+          this.roles = paged.data || [];
+          this.totalCount = paged.totalCount || 0;
+          this.totalPages = paged.totalPages || 1;
         } else {
-          if (typeof res.result === 'string') {
-            this.error = res.result;
-          } else if (Array.isArray(res.result)) {
-            this.error = res.result.join(' ');
-          } else {
-            this.error = this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD');
-          }
+          this.roles = [];
+          this.totalCount = 0;
+          this.totalPages = 1;
         }
         this.loading = false;
       },

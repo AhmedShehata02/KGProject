@@ -38,5 +38,10 @@ export interface PagedResult<T> {
   totalCount: number;
   page: number;
   pageSize: number;
-  totalPages: number;
+  totalPages?: number;
+}
+
+export interface DropdownRoleDTO {
+  id: string;
+  name: string;
 }
