@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 function passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
   const password = form.get('password')?.value;
@@ -36,7 +37,7 @@ export class RegisterComponent {
   loading = false;
   error: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toast: ToastService) {
     this.registerForm = this.fb.group({
       userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email, Validators.minLength(1)]],
@@ -48,26 +49,26 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.loading = true;
-      this.error = null;
       this.authService.register(this.registerForm.value).subscribe({
         next: (res: any) => {
           this.loading = false;
           if (res && res.code === 200 && res.status === 'Success') {
+            this.toast.showSuccess('Registration successful! Please login.');
             this.router.navigate(['/auth/login']);
           } else if (res && res.result) {
-            this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
+            this.toast.showError(Array.isArray(res.result) ? res.result.join(' ') : res.result);
           } else {
-            this.error = 'Registration failed.';
+            this.toast.showError('Registration failed.');
           }
         },
         error: (err: any) => {
           this.loading = false;
           if (err?.error?.result) {
-            this.error = Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result;
+            this.toast.showError(Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result);
           } else if (err?.error?.message) {
-            this.error = err.error.message;
+            this.toast.showError(err.error.message);
           } else {
-            this.error = 'Registration failed.';
+            this.toast.showError('Registration failed.');
           }
         }
       });

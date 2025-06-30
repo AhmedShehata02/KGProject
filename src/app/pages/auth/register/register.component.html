@@ -36,7 +36,7 @@
           <div *ngIf="registerForm.get('confirmPassword')?.errors?.['mismatch']">Passwords do not match</div>
         </div>
       </div>
-      <div *ngIf="error" class="alert alert-danger py-2 small">{{ error }}</div>
+      <!-- All API feedback is now via ToastService. Only validation errors remain inline. -->
       <div class="d-grid mb-2">
         <button type="submit" class="btn btn-success rounded-pill fw-semibold" [disabled]="registerForm.invalid || loading">
           <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>

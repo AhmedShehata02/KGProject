@@ -7,6 +7,7 @@ import { SecuredRouteDTO, PagedResult } from '../../../core/interface/secured-ro
 import { ApplicationRoleDTO } from '../../../core/interface/role-management.interfaces';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleManagementTranslator } from '../role-management-translator';
+import { ToastService } from '../../../shared/services/toast.service';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class SecuredRouteListComponent implements OnInit {
   constructor(
     private securedRouteService: SecuredRouteService,
     private roleService: RoleManagementService,
-    private roleTranslator: RoleManagementTranslator
+    private roleTranslator: RoleManagementTranslator,
+    private toast: ToastService
   ) {}
 
   async ngOnInit() {
@@ -89,18 +91,13 @@ export class SecuredRouteListComponent implements OnInit {
           this.totalCount = res.result.totalCount;
           this.totalPages = res.result.totalPages;
         } else {
-          if (typeof res.result === 'string') {
-            this.error = res.result;
-          } else if (Array.isArray(res.result)) {
-            this.error = res.result.join(' ');
-          } else {
-            this.error = 'Failed to load secured routes.';
-          }
+          this.toast.showError(typeof res.result === 'string' ? res.result : 'Failed to load secured routes.');
         }
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || 'Failed to load secured routes.');
+        this.toast.showError(err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || 'Failed to load secured routes.'));
+        this.error = null;
         this.loading = false;
       }
     });
@@ -193,16 +190,17 @@ export class SecuredRouteListComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         if (res && (res.code === 200 || res.code === 201) && (res.status === 'Success' || res.status === 'Created')) {
+          this.toast.showSuccess(this.roleTranslator.instant('SECURED_ROUTE.CREATED_SUCCESS'));
           this.fetchRoutes();
           this.closeCreateModal();
           this.creating = false;
         } else {
-          this.createError = typeof res?.result === 'string' ? res.result : 'Failed to create route.';
+          this.toast.showError(typeof res?.result === 'string' ? res.result : 'Failed to create route.');
           this.creating = false;
         }
       },
       error: (err) => {
-        this.createError = err?.error?.result || err?.error?.message || 'Failed to create route.';
+        this.toast.showError(err?.error?.result || err?.error?.message || 'Failed to create route.');
         this.creating = false;
       }
     });
@@ -219,20 +217,21 @@ export class SecuredRouteListComponent implements OnInit {
       id: this.editRouteData.id,
       basePath: this.editRouteData.basePath,
       description: this.editRouteData.description,
-      roleIds: this.editRouteData.assignedRoles // ✅ أرسل الأدوار مباشرة
+      roleIds: this.editRouteData.assignedRoles
     }).subscribe({
       next: (res) => {
         if (res && res.code === 200 && res.status === 'Success') {
+          this.toast.showSuccess(this.roleTranslator.instant('SECURED_ROUTE.UPDATED_SUCCESS'));
           this.fetchRoutes();
           this.closeEditModal();
           this.editing = false;
         } else {
-          this.editError = 'Failed to update route.';
+          this.toast.showError('Failed to update route.');
           this.editing = false;
         }
       },
       error: (err) => {
-        this.editError = err?.error?.result || err?.error?.message || 'Failed to update route.';
+        this.toast.showError(err?.error?.result || err?.error?.message || 'Failed to update route.');
         this.editing = false;
       }
     });
@@ -242,9 +241,12 @@ export class SecuredRouteListComponent implements OnInit {
     if (!confirm('Are you sure you want to delete this secured route?')) return;
     this.loading = true;
     this.securedRouteService.deleteRoute(route.id).subscribe({
-      next: () => { this.fetchRoutes(); },
+      next: () => {
+        this.toast.showSuccess(this.roleTranslator.instant('SECURED_ROUTE.DELETED_SUCCESS'));
+        this.fetchRoutes();
+      },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || 'Failed to delete route.';
+        this.toast.showError(err?.error?.result || err?.error?.message || 'Failed to delete route.');
         this.loading = false;
       }
     });

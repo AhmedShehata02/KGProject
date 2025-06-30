@@ -432,8 +432,8 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <div *ngIf="!loading && !error && !kgBranches.length" class="alert alert-info">{{ 'KG_MANAGEMENT.NO_KG_BRANCHES_FOUND' | translate }}</div>
+  <div *ngIf="error" class="alert alert-danger" style="display:none">{{ error }}</div>
+  <div *ngIf="!loading && !error && !kgBranches.length" class="alert alert-info" style="display:none">{{ 'KG_MANAGEMENT.NO_KG_BRANCHES_FOUND' | translate }}</div>
   <!-- Pagination and page info row -->
   <div *ngIf="kgBranches.length > 0" class="pagination-container mt-2 d-flex justify-content-between align-items-center">
     <div class="text-muted small ms-2">
@@ -516,11 +516,10 @@
               </tbody>
             </table>
           </div>
-          <div *ngIf="!historyLoading && (!kgHistory || !kgHistory.length)" class="alert alert-info">
+          <div *ngIf="!historyLoading && (!kgHistory || !kgHistory.length)" class="alert alert-info" style="display:none">
             {{ 'KG_MANAGEMENT.NO_HISTORY' | translate }}
           </div>
-          <!-- Only show historyMessage if there is a message and there is history data -->
-          <div *ngIf="!historyLoading && historyMessage && kgHistory && kgHistory.length" class="alert alert-info">
+          <div *ngIf="!historyLoading && historyMessage && kgHistory && kgHistory.length" class="alert alert-info" style="display:none">
             {{ historyMessage }}
           </div>
         </div>

@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-forget-password',
@@ -18,7 +19,7 @@ export class ForgetPasswordComponent {
   success: string | null = null;
   emailInvalid = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private toast: ToastService) {}
 
   getLoginUrl(): string {
     // You can customize this if you want a different redirect
@@ -31,11 +32,9 @@ export class ForgetPasswordComponent {
 
   onSubmit(event: Event) {
     event.preventDefault();
-    this.error = null;
-    this.success = null;
-    this.emailInvalid = !!this.email && !/^\S+@\S+\.\S+$/.test(this.email);
+    this.emailInvalid = !!this.email && !/^[\S]+@[\S]+\.[\S]+$/.test(this.email);
     if (!this.email || this.emailInvalid) {
-      this.error = 'Please enter a valid email address.';
+      this.toast.showError('Please enter a valid email address.');
       return;
     }
     this.loading = true;
@@ -43,21 +42,21 @@ export class ForgetPasswordComponent {
       next: (res) => {
         this.loading = false;
         if (res && res.code === 200 && res.status === 'Success') {
-          this.success = Array.isArray(res.result) ? res.result.join(' ') : (res.result || 'If the email is registered, a new password has been sent.');
+          this.toast.showSuccess(Array.isArray(res.result) ? res.result.join(' ') : (res.result || 'If the email is registered, a new password has been sent.'));
         } else if (res && res.result) {
-          this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
+          this.toast.showError(Array.isArray(res.result) ? res.result.join(' ') : res.result);
         } else {
-          this.error = 'An error occurred. Please try again.';
+          this.toast.showError('An error occurred. Please try again.');
         }
       },
       error: (err) => {
         this.loading = false;
         if (err?.error?.result) {
-          this.error = Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result;
+          this.toast.showError(Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result);
         } else if (err?.error?.message) {
-          this.error = err.error.message;
+          this.toast.showError(err.error.message);
         } else {
-          this.error = 'An error occurred. Please try again.';
+          this.toast.showError('An error occurred. Please try again.');
         }
       }
     });

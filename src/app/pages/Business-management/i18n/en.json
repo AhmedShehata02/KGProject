@@ -58,6 +58,12 @@
     "FAILED_HISTORY": "Failed to load history.",
     "CONFIRM_DELETE_TITLE": "Confirm Delete",
     "CONFIRM_DELETE_MESSAGE": "Are you sure you want to delete this kindergarten?",
-    "USER_COMMENT_OPTIONAL": "User comment (optional)"
+    "USER_COMMENT_OPTIONAL": "User comment (optional)",
+    "CREATED_SUCCESS": "Kindergarten created successfully.",
+    "UPDATED_SUCCESS": "Kindergarten updated successfully.",
+    "DELETED_SUCCESS": "Kindergarten deleted successfully.",
+    "FAILED_CREATE": "Failed to create kindergarten.",
+    "FAILED_UPDATE": "Failed to update kindergarten.",
+    "FAILED_DELETE": "Failed to delete kindergarten."
   }
 }

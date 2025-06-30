@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BusinessManagementTranslator } from '../business-management-translator'; // ✅ import الترجمة
 import { CustomDatePipe } from '../../../shared/pipes/custom-date.pipe';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 
 @Component({
@@ -63,7 +64,8 @@ export class KgManagementComponent implements OnInit {
   historyMessage: string | null = null;
 
   constructor(private kgBranchService: KGBranchService,
-    private kgTranslator : BusinessManagementTranslator // ✅ Inject الترجمة
+    private kgTranslator : BusinessManagementTranslator, // ✅ Inject الترجمة
+    private toast: ToastService // ✅ Inject ToastService
     ) {}
 
   async ngOnInit() {
@@ -83,32 +85,17 @@ export class KgManagementComponent implements OnInit {
     ).subscribe({
       next: (res) => {
         if (res && res.code === 200 && res.status === 'Success') {
-          this.kgBranches = (res.result.data || []).map((kg: any) => ({
-            kg: {
-              id: kg.id,
-              nameAr: kg.nameAr,
-              nameEn: kg.nameEn,
-              kgCode: kg.kgCode,
-              address: kg.address,
-              branches: kg.branches || []
-            },
-            branches: kg.branches || []
-          }));
+          // Map KindergartenDTO[] to KGBranchDTO[]
+          this.kgBranches = (res.result.data || []).map((k: any) => ({ kg: k, branches: k.branches || [] }));
           this.totalCount = res.result.totalCount;
-          this.totalPages = Math.ceil(this.totalCount / this.pageSize);
+          this.totalPages = res.result.totalPages;
         } else {
-          if (typeof res.result === 'string') {
-            this.error = res.result;
-          } else if (Array.isArray(res.result)) {
-            this.error = res.result.join(' ');
-          } else {
-            this.error = this.kgTranslator.instant('KG_MANAGEMENT.FAILED_LOAD');
-          }
+          this.toast.showError(typeof res.result === 'string' ? res.result : this.kgTranslator.instant('KG_MANAGEMENT.FAILED_LOAD'));
         }
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_LOAD'));
+        this.toast.showError(err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_LOAD')));
         this.loading = false;
       }
     });
@@ -179,13 +166,16 @@ export class KgManagementComponent implements OnInit {
     // console.log('Create KG DTO:', kg);
     this.kgBranchService.create(kg).subscribe({
       next: (res) => {
-        // console.log('Create KG response:', res);
-        this.fetchKgBranches();
-        this.closeCreateKgModal();
+        if (res && (res.code === 200 || res.code === 201) && (res.status === 'Success' || res.status === 'Created')) {
+          this.toast.showSuccess(this.kgTranslator.instant('KG_MANAGEMENT.CREATED_SUCCESS'));
+          this.fetchKgBranches();
+          this.closeCreateKgModal();
+        } else {
+          this.toast.showError(typeof res?.result === 'string' ? res.result : this.kgTranslator.instant('KG_MANAGEMENT.FAILED_CREATE'));
+        }
       },
       error: (err) => {
-        // console.log('Create KG error:', err);
-        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_CREATE');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_CREATE'));
       }
     });
   }
@@ -244,11 +234,16 @@ export class KgManagementComponent implements OnInit {
     }));
     this.kgBranchService.update(kg, this.editUserComment).subscribe({
       next: (res) => {
-        this.fetchKgBranches();
-        this.closeEditKgModal();
+        if (res && res.code === 200 && res.status === 'Success') {
+          this.toast.showSuccess(this.kgTranslator.instant('KG_MANAGEMENT.UPDATED_SUCCESS'));
+          this.fetchKgBranches();
+          this.closeEditKgModal();
+        } else {
+          this.toast.showError(typeof res?.result === 'string' ? res.result : this.kgTranslator.instant('KG_MANAGEMENT.FAILED_UPDATE'));
+        }
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_UPDATE');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_UPDATE'));
       }
     });
   }
@@ -262,17 +257,17 @@ export class KgManagementComponent implements OnInit {
   confirmDeleteKgBranch() {
     if (this.deleteKgId == null) return;
     this.kgBranchService.softDelete(this.deleteKgId, this.deleteUserComment).subscribe({
-      next: () => {
-        this.fetchKgBranches();
-        this.showDeleteModal = false;
-        this.deleteKgId = null;
-        this.deleteUserComment = '';
+      next: (res) => {
+        if (res && res.code === 200 && res.status === 'Success') {
+          this.toast.showSuccess(this.kgTranslator.instant('KG_MANAGEMENT.DELETED_SUCCESS'));
+          this.fetchKgBranches();
+          this.cancelDeleteKgBranch();
+        } else {
+          this.toast.showError(typeof res?.result === 'string' ? res.result : this.kgTranslator.instant('KG_MANAGEMENT.FAILED_DELETE'));
+        }
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_DELETE');
-        this.showDeleteModal = false;
-        this.deleteKgId = null;
-        this.deleteUserComment = '';
+        this.toast.showError(err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_DELETE'));
       }
     });
   }
@@ -303,31 +298,19 @@ export class KgManagementComponent implements OnInit {
     this.historyMessage = null;
     this.kgBranchService.getKgHistory(kgId).subscribe({
       next: (res) => {
-        if (Array.isArray(res.result)) {
-          // Map API keys to UI keys
-          this.kgHistory = res.result.map((h: any) => ({
-            action: h.actionType,
-            user: h.performedByUserName,
-            date: h.performedAt,
-            comment: h.userComment
-          }));
-          this.historyMessage = null;
-          console.log('KG History (array):', this.kgHistory);
-        } else if (typeof res.result === 'string') {
-          this.kgHistory = [];
-          this.historyMessage = res.result;
-          console.log('KG History (string):', this.historyMessage);
+        if (res && res.code === 200 && res.status === 'Success') {
+          this.kgHistory = res.result.data || [];
+          if (!this.kgHistory.length) {
+            this.historyMessage = this.kgTranslator.instant('KG_MANAGEMENT.NO_HISTORY');
+          }
         } else {
-          this.kgHistory = [];
-          this.historyMessage = this.kgTranslator.instant('KG_MANAGEMENT.NO_HISTORY');
-          console.log('KG History (unknown):', res.result);
+          this.toast.showError(typeof res?.result === 'string' ? res.result : this.kgTranslator.instant('KG_MANAGEMENT.FAILED_HISTORY'));
         }
         this.historyLoading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_HISTORY');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.kgTranslator.instant('KG_MANAGEMENT.FAILED_HISTORY'));
         this.historyLoading = false;
-        console.log('KG History (error):', err);
       }
     });
   }

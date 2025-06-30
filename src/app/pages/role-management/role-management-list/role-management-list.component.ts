@@ -6,6 +6,7 @@ import { ApplicationRoleDTO, PagedResult } from '../../../core/interface/role-ma
 import { ApplicationUserDTO } from '../../../core/interface/user-management.interfaces';
 import { TranslateModule } from '@ngx-translate/core';
 import { RoleManagementTranslator } from '../role-management-translator';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-role-management-list',
@@ -55,7 +56,8 @@ export class RoleManagementListComponent implements OnInit {
 
   constructor(
     private roleService: RoleManagementService,
-    private roleTranslator: RoleManagementTranslator
+    private roleTranslator: RoleManagementTranslator,
+    private toast: ToastService
   ) {}
 
   async ngOnInit() {
@@ -88,7 +90,8 @@ export class RoleManagementListComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD'));
+        this.toast.showError(err?.error?.result ? (Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result) : (err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD')));
+        this.error = null;
         this.loading = false;
       }
     });
@@ -164,7 +167,8 @@ export class RoleManagementListComponent implements OnInit {
         this.relatedUsersLoading = false;
       },
       error: (err) => {
-        this.relatedUsersError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD_USERS');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_LOAD_USERS'));
+        this.relatedUsersError = null;
         this.relatedUsersLoading = false;
       }
     });
@@ -181,10 +185,12 @@ export class RoleManagementListComponent implements OnInit {
     this.relatedUsersLoading = true;
     this.roleService.removeUserFromRole(this.selectedRoleForUsers.id, user.id).subscribe({
       next: () => {
+        this.toast.showSuccess(this.roleTranslator.instant('ROLE_MANAGEMENT.REMOVED_USER_SUCCESS'));
         this.openRelatedUsersModal(this.selectedRoleForUsers!); // reload users
       },
       error: (err) => {
-        this.relatedUsersError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_REMOVE_USER');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_REMOVE_USER'));
+        this.relatedUsersError = null;
         this.relatedUsersLoading = false;
       }
     });
@@ -201,13 +207,15 @@ export class RoleManagementListComponent implements OnInit {
       name: this.createRoleData.name
     }).subscribe({
       next: (res) => {
+        this.toast.showSuccess(this.roleTranslator.instant('ROLE_MANAGEMENT.CREATED_SUCCESS'));
         this.closeCreateRoleModal();
         this.createRoleData = { name: '' };
         this.fetchRoles();
         this.creatingRole = false;
       },
       error: (err) => {
-        this.createRoleError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_CREATE');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_CREATE'));
+        this.createRoleError = null;
         this.creatingRole = false;
       }
     });
@@ -226,12 +234,14 @@ export class RoleManagementListComponent implements OnInit {
       isActive: this.selectedRole.isActive
     }).subscribe({
       next: (res) => {
+        this.toast.showSuccess(this.roleTranslator.instant('ROLE_MANAGEMENT.UPDATED_SUCCESS'));
         this.closeEditRoleModal();
         this.fetchRoles();
         this.editingRole = false;
       },
       error: (err) => {
-        this.editRoleError = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_UPDATE');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_UPDATE'));
+        this.editRoleError = null;
         this.editingRole = false;
       }
     });
@@ -242,10 +252,11 @@ export class RoleManagementListComponent implements OnInit {
       this.loading = true;
       this.roleService.deleteRole(role.id).subscribe({
         next: () => {
+          this.toast.showSuccess(this.roleTranslator.instant('ROLE_MANAGEMENT.DELETED_SUCCESS'));
           this.fetchRoles();
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_DELETE');
+          this.toast.showError(err?.error?.result || err?.error?.message || this.roleTranslator.instant('ROLE_MANAGEMENT.FAILED_DELETE'));
           this.loading = false;
         }
       });

@@ -58,6 +58,12 @@
     "FAILED_HISTORY": "فشل في تحميل السجل.",
     "CONFIRM_DELETE_TITLE": "تأكيد الحذف",
     "CONFIRM_DELETE_MESSAGE": "هل أنت متأكد أنك تريد حذف هذه الحضانة؟",
-    "USER_COMMENT_OPTIONAL": "تعليق المستخدم (اختياري)"
+    "USER_COMMENT_OPTIONAL": "تعليق المستخدم (اختياري)",
+    "CREATED_SUCCESS": "تم إنشاء الحضانة بنجاح.",
+    "UPDATED_SUCCESS": "تم تحديث بيانات الحضانة بنجاح.",
+    "DELETED_SUCCESS": "تم حذف الحضانة بنجاح.",
+    "FAILED_CREATE": "فشل في إنشاء الحضانة.",
+    "FAILED_UPDATE": "فشل في تحديث بيانات الحضانة.",
+    "FAILED_DELETE": "فشل في حذف الحضانة."
   }
 }

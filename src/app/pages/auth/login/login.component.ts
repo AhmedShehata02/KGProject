@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
   loading = false;
   error: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toast: ToastService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: [
@@ -33,7 +34,6 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       this.loading = true;
-      this.error = null;
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
           this.loading = false;
@@ -41,7 +41,7 @@ export class LoginComponent {
         },
         error: (err: any) => {
           this.loading = false;
-          this.error = err?.error?.message || 'Login failed';
+          this.toast.showError(err?.error?.message || 'Login failed');
         }
       });
     }

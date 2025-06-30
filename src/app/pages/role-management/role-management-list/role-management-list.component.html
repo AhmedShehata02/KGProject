@@ -107,7 +107,6 @@
       <span class="visually-hidden">{{ 'ROLE_MANAGEMENT.LOADING' | translate }}</span>
     </div>
   </div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
   <div *ngIf="!loading && !error && !roles.length" class="alert alert-info">{{ 'ROLE_MANAGEMENT.NO_ROLES_FOUND' | translate }}</div>
   <!-- Pagination and page info row -->
   <div *ngIf="roles.length > 0" class="pagination-container mt-2 d-flex justify-content-between align-items-center">

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SystemManagementTranslator } from '../system-management-translator';
 import { TranslateModule } from '@ngx-translate/core';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 
 @Component({
@@ -61,7 +62,8 @@ export class SidebarManagementComponent implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(private sidebarService: SidebarService ,
-              private systemManagementTranslator: SystemManagementTranslator
+              private systemManagementTranslator: SystemManagementTranslator,
+              private toast: ToastService // ✅ Inject ToastService
   ) {
     // محاولة جلب اللغة الحالية من الترجمة
     if ((this.systemManagementTranslator as any).translate?.currentLang) {
@@ -100,12 +102,12 @@ export class SidebarManagementComponent implements OnInit {
           this.totalPages = res.result.totalPages;
         } else {
           this.sidebarItems = [];
-          this.error = this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_LOAD');
+          this.toast.showError(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_LOAD'));
         }
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_LOAD');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_LOAD'));
         this.loading = false;
       }
     });
@@ -134,11 +136,12 @@ export class SidebarManagementComponent implements OnInit {
     if (!this.createHasSubItem) {
       this.sidebarService.create(this.createSidebarData).subscribe({
         next: () => {
+          this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.CREATED_SUCCESS'));
           this.fetchSidebarItems();
           this.closeCreateSidebarModal();
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_CREATE');
+          this.toast.showError(err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_CREATE'));
         }
       });
     } else {
@@ -151,16 +154,18 @@ export class SidebarManagementComponent implements OnInit {
           });
           if (subCreates.length) {
             Promise.all(subCreates.map(obs => obs.toPromise())).then(() => {
+              this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.CREATED_SUCCESS'));
               this.fetchSidebarItems();
               this.closeCreateSidebarModal();
             });
           } else {
+            this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.CREATED_SUCCESS'));
             this.fetchSidebarItems();
             this.closeCreateSidebarModal();
           }
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_CREATE');
+          this.toast.showError(err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_CREATE'));
         }
       });
     }
@@ -212,10 +217,11 @@ export class SidebarManagementComponent implements OnInit {
       if (!confirm(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.CONFIRM_DELETE_SUB'))) return;
       this.sidebarService.delete(sub.id).subscribe({
         next: () => {
+          this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.DELETED_SUCCESS'));
           this.editSubItems.splice(index, 1);
         },
         error: (err) => {
-          this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_DELETE_SUB');
+          this.toast.showError(err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_DELETE_SUB'));
         }
       });
     } else {
@@ -245,20 +251,23 @@ export class SidebarManagementComponent implements OnInit {
           });
           if (subUpdates.length) {
             Promise.all(subUpdates.map(obs => obs.toPromise())).then(() => {
+              this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.UPDATED_SUCCESS'));
               this.fetchSidebarItems();
               this.closeEditSidebarModal();
             });
           } else {
+            this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.UPDATED_SUCCESS'));
             this.fetchSidebarItems();
             this.closeEditSidebarModal();
           }
         } else {
+          this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.UPDATED_SUCCESS'));
           this.fetchSidebarItems();
           this.closeEditSidebarModal();
         }
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_UPDATE');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_UPDATE'));
       }
     });
   }
@@ -267,10 +276,11 @@ export class SidebarManagementComponent implements OnInit {
     if (!confirm(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.CONFIRM_DELETE'))) return;
     this.sidebarService.delete(id).subscribe({
       next: () => {
+        this.toast.showSuccess(this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.DELETED_SUCCESS'));
         this.fetchSidebarItems();
       },
       error: (err) => {
-        this.error = err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_DELETE');
+        this.toast.showError(err?.error?.result || err?.error?.message || this.systemManagementTranslator.instant('SIDEBAR_MANAGEMENT.FAILED_DELETE'));
       }
     });
   }

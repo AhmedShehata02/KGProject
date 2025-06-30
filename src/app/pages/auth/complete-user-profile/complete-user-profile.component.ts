@@ -8,6 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service'; // <-- Import AuthService
 import { UsersProfilesService } from '../../../core/services/users-profiles.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-complete-user-profile',
@@ -34,9 +35,10 @@ export class CompleteUserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private usersProfilesService: UsersProfilesService,
     private fileUploadService: FileUploadService,
-    public router: Router, // changed from private to public
+    public router: Router,
     private http: HttpClient,
-    private authService: AuthService // <-- Add AuthService for logout
+    private authService: AuthService,
+    private toast: ToastService // Inject ToastService
   ) {
     this.profileForm = this.fb.group({
       fullName: ['', [
@@ -77,7 +79,7 @@ export class CompleteUserProfileComponent implements OnInit {
     // Get userId from JWT token
     const token = localStorage.getItem('jwt_token');
     if (!token) {
-      this.errorMsg = 'Authentication token not found. Please log in again.';
+      this.toast.showError('Authentication token not found. Please log in again.');
       this.statusLoading = false;
       return;
     }
@@ -86,12 +88,12 @@ export class CompleteUserProfileComponent implements OnInit {
       const decoded: any = jwtDecode(token);
       userId = decoded.nameid || decoded.sub || decoded.userId || decoded.id;
     } catch (e) {
-      this.errorMsg = 'Invalid authentication token. Please log in again.';
+      this.toast.showError('Invalid authentication token. Please log in again.');
       this.statusLoading = false;
       return;
     }
     if (!userId) {
-      this.errorMsg = 'User ID not found in token. Please log in again.';
+      this.toast.showError('User ID not found in token. Please log in again.');
       this.statusLoading = false;
       return;
     }
@@ -143,7 +145,7 @@ export class CompleteUserProfileComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        this.errorMsg = 'Failed to get profile status.';
+        this.toast.showError('Failed to get profile status.');
         this.statusLoading = false;
       }
     });
@@ -175,14 +177,12 @@ export class CompleteUserProfileComponent implements OnInit {
 
   async submit() {
     this.submitted = true;
-    this.errorMsg = '';
-    this.successMsg = '';
     if (this.profileForm.invalid) return;
     this.loading = true;
     // Get userId from JWT token
     const token = localStorage.getItem('jwt_token');
     if (!token) {
-      this.errorMsg = 'Authentication token not found. Please log in again.';
+      this.toast.showError('Authentication token not found. Please log in again.');
       this.loading = false;
       return;
     }
@@ -191,12 +191,12 @@ export class CompleteUserProfileComponent implements OnInit {
       const decoded: any = jwtDecode(token);
       userId = decoded.nameid || decoded.sub || decoded.userId || decoded.id;
     } catch (e) {
-      this.errorMsg = 'Invalid authentication token. Please log in again.';
+      this.toast.showError('Invalid authentication token. Please log in again.');
       this.loading = false;
       return;
     }
     if (!userId) {
-      this.errorMsg = 'User ID not found in token. Please log in again.';
+      this.toast.showError('User ID not found in token. Please log in again.');
       this.loading = false;
       return;
     }
@@ -225,31 +225,28 @@ export class CompleteUserProfileComponent implements OnInit {
       };
       this.usersProfilesService.completeBasicProfile(userId, dto).subscribe({
         next: () => {
-          this.successMsg = 'Profile submitted successfully!';
+          this.toast.showSuccess('Profile submitted successfully!');
           this.loading = false;
           // Instead of navigating, refresh the profile status to update the UI
           this.statusLoading = true;
           this.usersProfilesService.getUserRequestStatus(userId!).subscribe({
             next: (res: any) => {
               this.profileStatus = res?.result?.status || 'Draft';
-              console.log('Profile status (after submit):', this.profileStatus);
               this.statusLoading = false;
             },
             error: (err: any) => {
-              this.errorMsg = 'Failed to get profile status.';
+              this.toast.showError('Failed to get profile status.');
               this.statusLoading = false;
             }
           });
         },
         error: (err: any) => {
-          console.error('Profile submit error:', err);
-          this.errorMsg = err?.error?.result || 'Submission failed.';
+          this.toast.showError(err?.error?.result || 'Submission failed.');
           this.loading = false;
         }
       });
     } catch (err) {
-      console.error('File upload failed:', err);
-      this.errorMsg = 'File upload failed.';
+      this.toast.showError('File upload failed.');
       this.loading = false;
     }
   }

@@ -258,8 +258,7 @@
       </button>
     </div>
     <div class="form-status">
-      <div class="success" *ngIf="successMsg">{{ successMsg }}</div>
-      <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+      <!-- All API feedback is now via ToastService. Only validation errors remain inline. -->
       <div class="error" *ngIf="submitted && profileForm.invalid">
         Please correct the errors above and try again.
       </div>

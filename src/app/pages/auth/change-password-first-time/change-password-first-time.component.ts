@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   selector: 'app-change-password-first-time',
@@ -17,7 +18,7 @@ export class ChangePasswordFirstTimeComponent {
   error: string | null = null;
   success: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toast: ToastService) {
     this.changePasswordForm = this.fb.group({
       oldPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -30,8 +31,6 @@ export class ChangePasswordFirstTimeComponent {
   }
 
   onSubmit() {
-    this.error = null;
-    this.success = null;
     if (this.changePasswordForm.invalid) return;
     this.loading = true;
     const { oldPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
@@ -42,26 +41,26 @@ export class ChangePasswordFirstTimeComponent {
           if (res.result) {
             localStorage.setItem('jwt_token', res.result);
           }
-          this.success = 'Password changed successfully! Redirecting...';
+          this.toast.showSuccess('Password changed successfully! Redirecting...');
           setTimeout(() => {
             this.router.navigate(['/dashboard']);
           }, 1200);
         } else if (res && res.result) {
-          this.error = Array.isArray(res.result) ? res.result.join(' ') : res.result;
+          this.toast.showError(Array.isArray(res.result) ? res.result.join(' ') : res.result);
         } else {
-          this.error = 'Unexpected response from server.';
+          this.toast.showError('Unexpected response from server.');
         }
       },
       error: (err) => {
         this.loading = false;
         if (err?.error?.result) {
-          this.error = Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result;
+          this.toast.showError(Array.isArray(err.error.result) ? err.error.result.join(' ') : err.error.result);
         } else if (err?.error?.message) {
-          this.error = err.error.message;
+          this.toast.showError(err.error.message);
         } else if (err?.status === 401) {
-          this.error = 'Old password is incorrect.';
+          this.toast.showError('Old password is incorrect.');
         } else {
-          this.error = err?.error?.title || err?.error || 'Failed to change password.';
+          this.toast.showError(err?.error?.title || err?.error || 'Failed to change password.');
         }
       }
     });
