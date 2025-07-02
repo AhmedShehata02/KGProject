@@ -127,11 +127,15 @@ export class SidebarComponent implements OnInit {
     };
     if (isSuperAdmin) {
       this.allowedMenuItems = items;
-    } else if (!securedRoutes || securedRoutes.length === 0) {
-      // Only show dashboard if no secured routes
-      this.allowedMenuItems = items.filter(item => item.route === '/dashboard');
     } else {
-      this.allowedMenuItems = filterItems(items);
+      // Always include dashboard for all users
+      const dashboardItem = items.find(item => item.route === '/dashboard');
+      const filtered = filterItems(items);
+      // Add dashboard at the top if not already present
+      this.allowedMenuItems = [
+        ...(dashboardItem ? [dashboardItem] : []),
+        ...filtered.filter(item => item.route !== '/dashboard')
+      ];
     }
   }
 
