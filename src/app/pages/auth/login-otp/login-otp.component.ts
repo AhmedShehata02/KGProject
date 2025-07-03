@@ -41,12 +41,15 @@ export class LoginOtpComponent {
           this.loading = false;
           let backendMsg = undefined;
           if (res && res.result) {
-            // Only use message property for feedback, never show JWT
+            // Only use message property or array for feedback, never show JWT
             if (typeof res.result === 'object' && (res.result as any).message) {
               backendMsg = (res.result as any).message;
+            } else if (Array.isArray(res.result)) {
+              backendMsg = (res.result as any[]).join(', ');
             }
           }
           if (res && res.status === 'Success') {
+            // If result is a JWT string, do not show it in toastr
             this.toast.showSuccess(backendMsg || 'Login successful!');
             if (res.result && typeof res.result === 'string') {
               localStorage.setItem('jwt_token', res.result);
@@ -58,14 +61,13 @@ export class LoginOtpComponent {
               return;
             }
           } else {
-            // Show backend error message if available, else fallback
-            const errorMsg = backendMsg || (typeof res?.result === 'string' ? undefined : undefined);
-            this.toast.showError(errorMsg || 'Invalid OTP or server error.');
+            this.toast.showError(backendMsg || 'Invalid OTP or server error.');
           }
         },
         error: (err) => {
           this.loading = false;
-          const backendMsg = err?.error?.result || err?.error?.message || err?.message;
+          let backendMsg = err?.error?.result || err?.error?.message || err?.message;
+          if (Array.isArray(backendMsg)) backendMsg = (backendMsg as any[]).join(', ');
           this.toast.showError(backendMsg || 'OTP verification failed');
         }
       });

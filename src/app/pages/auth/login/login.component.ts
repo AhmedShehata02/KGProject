@@ -42,24 +42,34 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res: any) => {
           this.loading = false;
-          if (res && res.status === 'OtpRequired') {
-            // Show OTP required message from backend if available
-            let backendMsg = undefined;
-            if (res.result && typeof res.result === 'object' && res.result.message) {
+          // Handle all ApiResponse cases
+          let backendMsg = undefined;
+          if (res && res.result) {
+            if (typeof res.result === 'string') {
+              backendMsg = res.result;
+            } else if (typeof res.result === 'object' && res.result.message) {
               backendMsg = res.result.message;
+            } else if (Array.isArray(res.result)) {
+              backendMsg = res.result.join(', ');
             }
-            this.toast.showSuccess(backendMsg || 'Please enter the OTP sent to your registered contact.');
-            this.showOtp = true;
-            // Use email as userId for OTP, or backend can return userId
-            this.otpUserId = this.loginForm.value.email;
-            // Navigate to OTP page and pass userId (email)
-            this.router.navigate(['/auth/login-otp'], { queryParams: { userId: this.otpUserId } });
           }
-          // Do not navigate here for success; AuthService handles navigation based on IsFirstLogin
+          if (res && res.status === 'OtpRequired') {
+            this.toast.showInfo(backendMsg || 'Please enter the OTP sent to your registered contact.');
+            this.showOtp = true;
+            this.otpUserId = this.loginForm.value.email;
+            this.router.navigate(['/auth/login-otp'], { queryParams: { userId: this.otpUserId } });
+          } else if (res && res.status === 'Success') {
+            this.toast.showSuccess(backendMsg || 'Login successful!');
+            // Navigation handled by AuthService for IsFirstLogin
+          } else {
+            this.toast.showError(backendMsg || 'Login failed');
+          }
         },
         error: (err: any) => {
           this.loading = false;
-          this.toast.showError(err?.error?.message || 'Login failed');
+          let backendMsg = err?.error?.result || err?.error?.message || err?.message;
+          if (Array.isArray(backendMsg)) backendMsg = backendMsg.join(', ');
+          this.toast.showError(backendMsg || 'Login failed');
         }
       });
     }
