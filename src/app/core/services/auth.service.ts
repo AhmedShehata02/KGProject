@@ -1,3 +1,4 @@
+// #endregion
 // #region Imports
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -46,23 +47,23 @@ export class AuthService extends BaseService {
 
   // #region Auth Methods
   /**
-   * Login user and store JWT token
+   * Login user and handle OTP-required or JWT token response.
+   * Navigates to OTP page if needed, or stores JWT and navigates to dashboard.
    */
-  login(data: { email: string; password: string }): Observable<ApiResponse<string>> {
-    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/login`, data).pipe(
-      tap((res: ApiResponse<string>) => {
-        // Handle ApiResponse structure
-        if (res && res.code === 200 && res.status === 'Success' && res.result) {
+  login(data: { email: string; password: string }): Observable<ApiResponse<string | { Message: string; Email: string }>> {
+    return this.http.post<ApiResponse<string | { Message: string; Email: string }>>(`${this.apiUrl}/login`, data).pipe(
+      tap((res: ApiResponse<string | { Message: string; Email: string }>) => {
+        if (res && res.code === 200 && res.status === 'OtpRequired') {
+          // Navigate to OTP verification page, passing email and password (optionally use a shared service for password)
+          this.router.navigate(['/auth/login-otp'], { queryParams: { email: data.email, password: data.password } });
+          return;
+        }
+        if (res && res.code === 200 && res.status === 'Success' && typeof res.result === 'string') {
           localStorage.setItem('jwt_token', res.result);
-          this.startAutoLogout(); // Start timer after login
+          this.startAutoLogout();
           this.updateAuthSubjects();
-          // Check IsFirstLogin claim in JWT
           const decoded = decodeJwt(res.result);
-          // --- Log roles and secured routes ---
-          // Log all user info after login
-          if (decoded) {
-            console.log('User info after login:', decoded);
-          }
+          // Removed console.log for production
           if (decoded && (decoded.IsFirstLogin === true || decoded.IsFirstLogin === 'true' || decoded.IsFirstLogin === 1 || decoded.IsFirstLogin === '1')) {
             this.router.navigate(['/auth/change-password-first-time']);
             return;
@@ -71,6 +72,14 @@ export class AuthService extends BaseService {
         }
       })
     );
+  }
+
+
+  /**
+   * Verify OTP and get JWT token
+   */
+  public verifyOtp(data: { email: string; code: string }): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/verify-otp`, data);
   }
 
   /**

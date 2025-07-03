@@ -6,10 +6,12 @@ import { ForgetPasswordComponent } from './forget-password/forget-password.compo
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ChangePasswordFirstTimeComponent } from './change-password-first-time/change-password-first-time.component';
 import { CompleteUserProfileComponent } from './complete-user-profile/complete-user-profile.component';
+import { LoginOtpComponent } from './login-otp/login-otp.component';
 
 
 export const authRoutes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'login-otp', component: LoginOtpComponent },
   // { path: 'register', component: RegisterComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'change-password', component: ChangePasswordComponent },
