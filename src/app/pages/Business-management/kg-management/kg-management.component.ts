@@ -298,8 +298,17 @@ export class KgManagementComponent implements OnInit {
     this.historyMessage = null;
     this.kgBranchService.getKgHistory(kgId).subscribe({
       next: (res) => {
+        // Log the full response for debugging
+        console.log('[KG History Response]', res);
         if (res && res.code === 200 && res.status === 'Success') {
-          this.kgHistory = res.result.data || [];
+          // Accept both array and object with data property
+          if (Array.isArray(res.result)) {
+            this.kgHistory = res.result;
+          } else if (res.result && Array.isArray(res.result.data)) {
+            this.kgHistory = res.result.data;
+          } else {
+            this.kgHistory = [];
+          }
           if (!this.kgHistory.length) {
             this.historyMessage = this.kgTranslator.instant('KG_MANAGEMENT.NO_HISTORY');
           }

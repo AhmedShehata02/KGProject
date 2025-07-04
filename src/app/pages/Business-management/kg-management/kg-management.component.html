@@ -508,10 +508,10 @@
               </thead>
               <tbody>
                 <tr *ngFor="let h of kgHistory">
-                  <td>{{ h.action }}</td>
-                  <td>{{ h.user }}</td>
-                  <td>{{ h.date | customDate }}</td>
-                  <td>{{ h.comment }}</td>
+                  <td>{{ h.actionType || h.action || '-' }}</td>
+                  <td>{{ h.performedByUserName || h.user || '-' }}</td>
+                  <td>{{ h.performedAt ? (h.performedAt | customDate) : (h.date | customDate) }}</td>
+                  <td>{{ h.userComment || h.comment || '-' }}</td>
                 </tr>
               </tbody>
             </table>
